@@ -3,12 +3,17 @@
 
     <sitemap>
         <loc>https://centyuan.github.io/post-sitemap.xml</loc>
-        <lastmod>2019-03-02T09:34:46.652Z</lastmod>
+        <lastmod>2019-03-03T07:47:06.442Z</lastmod>
     </sitemap>
 
     <sitemap>
         <loc>https://centyuan.github.io/page-sitemap.xml</loc>
         <lastmod>2019-03-02T13:43:57.306Z</lastmod>
+    </sitemap>
+
+    <sitemap>
+        <loc>https://centyuan.github.io/tag-sitemap.xml</loc>
+        <lastmod>2019-03-03T07:47:06.442Z</lastmod>
     </sitemap>
 
 </sitemapindex>
