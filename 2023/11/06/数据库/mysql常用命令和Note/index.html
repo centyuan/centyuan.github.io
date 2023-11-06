@@ -1,0 +1,1313 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/person_fluid.jpg">
+  <link rel="icon" href="/img/person_fluid.jpg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="hlyuan">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="mysql:单进程多线程模型,一个SQL语句无法利用多个cpu core 一:基本命令 0.查看当前连接数 show global status like &#x27;Thread$&#x27;; show variables like &quot;%timeout%&quot;; show variables like &quot;log_%&quot;; 1.查看当前连接状态 show pro">
+<meta property="og:type" content="article">
+<meta property="og:title" content="mysql常用操作命令和性能优化">
+<meta property="og:url" content="https://centyuan.github.io/2023/11/06/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E5%92%8CNote/index.html">
+<meta property="og:site_name" content="centyuan Blog">
+<meta property="og:description" content="mysql:单进程多线程模型,一个SQL语句无法利用多个cpu core 一:基本命令 0.查看当前连接数 show global status like &#x27;Thread$&#x27;; show variables like &quot;%timeout%&quot;; show variables like &quot;log_%&quot;; 1.查看当前连接状态 show pro">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-11-06T07:02:11.046Z">
+<meta property="article:modified_time" content="2023-11-06T07:15:55.134Z">
+<meta property="article:author" content="hlyuan">
+<meta property="article:tag" content="mysql">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>mysql常用操作命令和性能优化 - centyuan Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"centyuan.github.io","root":"/","version":"1.9.5","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.0.0"><link rel="alternate" href="/atom.xml" title="centyuan Blog" type="application/atom+xml">
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>centyuan</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="mysql常用操作命令和性能优化"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-11-06 15:02" pubdate>
+          2023年11月6日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          16k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          138 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">mysql常用操作命令和性能优化</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>mysql:单进程多线程模型,一个SQL语句无法利用多个cpu core</p>
+<h3 id="一-基本命令">一:基本命令</h3>
+<p><strong>0.查看当前连接数</strong></p>
+<div class="code-wrapper"><pre><code class="hljs sql"><span class="hljs-keyword">show</span> <span class="hljs-keyword">global</span> status <span class="hljs-keyword">like</span> <span class="hljs-string">&#x27;Thread$&#x27;</span>;
+<span class="hljs-keyword">show</span> variables <span class="hljs-keyword">like</span> &quot;%timeout%&quot;;
+<span class="hljs-keyword">show</span> variables <span class="hljs-keyword">like</span> &quot;log_%&quot;;</code></pre></div>
+<p><strong>1.查看当前连接状态</strong></p>
+<div class="code-wrapper"><pre><code class="hljs sql"><span class="hljs-keyword">show</span> processlist;</code></pre></div>
+<p><strong>2.数据库连接</strong></p>
+<div class="code-wrapper"><pre><code class="hljs sql">mysql <span class="hljs-operator">-</span>h 主机名 <span class="hljs-operator">-</span>u root <span class="hljs-operator">-</span>ppassword</code></pre></div>
+<p><strong>3.添加用户</strong></p>
+<div class="code-wrapper"><pre><code class="hljs sql"><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> <span class="hljs-keyword">user</span> (host,<span class="hljs-keyword">user</span>,password,select_priv,insert_priv,update_priv) <span class="hljs-keyword">values</span> (<span class="hljs-string">&#x27;localhost&#x27;</span>,<span class="hljs-string">&#x27;guest&#x27;</span>,password(<span class="hljs-string">&#x27;guest123&#x27;</span>),<span class="hljs-string">&#x27;Y&#x27;</span>,<span class="hljs-string">&#x27;Y&#x27;</span>,<span class="hljs-string">&#x27;Y&#x27;</span>);</code></pre></div>
+<p><strong>4.创建用户</strong></p>
+<div class="code-wrapper"><pre><code class="hljs sql"><span class="hljs-keyword">create</span> <span class="hljs-keyword">user</span> <span class="hljs-string">&#x27;username&#x27;</span>@<span class="hljs-string">&#x27;host&#x27;</span> identified <span class="hljs-keyword">by</span> <span class="hljs-string">&#x27;password&#x27;</span>;
+<span class="hljs-keyword">create</span> <span class="hljs-keyword">user</span> <span class="hljs-string">&#x27;username&#x27;</span>@<span class="hljs-string">&#x27;%&#x27;</span> identified <span class="hljs-keyword">by</span> <span class="hljs-string">&#x27;password&#x27;</span>;</code></pre></div>
+<div class="code-wrapper"><pre><code class="hljs sql">#新创建用户无法登陆问题?
+use mysql；
+<span class="hljs-keyword">delete</span> <span class="hljs-keyword">from</span> <span class="hljs-keyword">user</span> <span class="hljs-keyword">where</span> <span class="hljs-keyword">user</span><span class="hljs-operator">=</span><span class="hljs-string">&#x27;&#x27;</span>;
+flush privileges;
+
+# 对db_name下所有表都有查询(<span class="hljs-keyword">SELECT</span>)权限
+<span class="hljs-keyword">grant</span> <span class="hljs-keyword">select</span> <span class="hljs-keyword">on</span> db_name.<span class="hljs-operator">*</span> <span class="hljs-keyword">to</span> <span class="hljs-string">&#x27;username&#x27;</span>@<span class="hljs-string">&#x27;%&#x27;</span>;
+
+# 对所有表有全部权限
+<span class="hljs-keyword">grant</span> <span class="hljs-keyword">all</span> <span class="hljs-keyword">on</span> <span class="hljs-operator">*</span>.<span class="hljs-operator">*</span> <span class="hljs-keyword">to</span> <span class="hljs-string">&#x27;username&#x27;</span>@<span class="hljs-string">&#x27;%&#x27;</span>;</code></pre></div>
+<p><strong>5.删除用户</strong></p>
+<div class="code-wrapper"><pre><code class="hljs sql"><span class="hljs-keyword">drop</span> <span class="hljs-keyword">user</span> <span class="hljs-string">&#x27;username&#x27;</span>@<span class="hljs-string">&#x27;host&#x27;</span>;</code></pre></div>
+<p><strong>6.修改用户密码</strong></p>
+<div class="code-wrapper"><pre><code class="hljs sql"><span class="hljs-keyword">set</span> password <span class="hljs-keyword">for</span> <span class="hljs-string">&#x27;username&#x27;</span>@<span class="hljs-string">&#x27;host&#x27;</span> <span class="hljs-operator">=</span> password(<span class="hljs-string">&#x27;123password&#x27;</span>);
+<span class="hljs-keyword">update</span> <span class="hljs-keyword">user</span> <span class="hljs-keyword">set</span> password<span class="hljs-operator">=</span>password(&quot;你的新密码&quot;) <span class="hljs-keyword">where</span> <span class="hljs-keyword">user</span><span class="hljs-operator">=</span>&quot;root&quot;;</code></pre></div>
+<p><strong>7.创建数据库病设置字符集和排序规则</strong></p>
+<div class="code-wrapper"><pre><code class="hljs sql"><span class="hljs-keyword">create</span> database data_name;
+<span class="hljs-keyword">create</span> database data_name <span class="hljs-type">character</span> <span class="hljs-keyword">set</span> utf8 <span class="hljs-keyword">collate</span> utf8_general_ci;</code></pre></div>
+<p><strong>8.删除数据库</strong></p>
+<div class="code-wrapper"><pre><code class="hljs sql"><span class="hljs-keyword">drop</span> database data_name;</code></pre></div>
+<h3 id="二-操作命令">二:操作命令</h3>
+<p><strong>1.删除表</strong></p>
+<div class="code-wrapper"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span> concat(<span class="hljs-string">&#x27;DROP TABLE IF EXISTS &#x27;</span>, table_name, <span class="hljs-string">&#x27;;&#x27;</span>)<span class="hljs-keyword">FROM</span> information_schema.tablesWHERE table_schema <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;mydb&#x27;</span>;
+# 或者
+<span class="hljs-keyword">drop</span> <span class="hljs-keyword">table</span> table_name;</code></pre></div>
+<p><strong>2.显示表属性</strong></p>
+<div class="code-wrapper"><pre><code class="hljs sql"><span class="hljs-keyword">desc</span> user_table;
+<span class="hljs-keyword">show</span> columns <span class="hljs-keyword">from</span> user_table;</code></pre></div>
+<p><strong>3.显示数据表的索引信息</strong></p>
+<div class="code-wrapper"><pre><code class="hljs sql"><span class="hljs-keyword">show</span> index <span class="hljs-keyword">from</span> user_table;</code></pre></div>
+<p><strong>4.显示数据库所有以run开头的表信息</strong></p>
+<div class="code-wrapper"><pre><code class="hljs sql"><span class="hljs-keyword">show</span> <span class="hljs-keyword">table</span> status <span class="hljs-keyword">like</span><span class="hljs-string">&#x27;run%&#x27;</span>;</code></pre></div>
+<p><strong>5.创建表,engine=指定存储引擎,每张表都可以指定存储引擎</strong></p>
+<div class="code-wrapper"><pre><code class="hljs sql"># <span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> IF <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">EXISTS</span> `table_test`(
+<span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span>  `table_test`(
+   `t_id` <span class="hljs-type">INT</span> UNSIGNED AUTO_INCREMENT,
+   `t_title` <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">100</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,
+   `t_author` <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">40</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,
+   `sub_date` <span class="hljs-type">DATE</span>,
+   <span class="hljs-keyword">PRIMARY</span> KEY(`t_id`)
+)ENGINE<span class="hljs-operator">=</span>InnoDB <span class="hljs-keyword">DEFAULT</span> CHARSET<span class="hljs-operator">=</span>utf8;</code></pre></div>
+<p><strong>6.插入数据</strong></p>
+<div class="code-wrapper"><pre><code class="hljs sql"><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> table_name(field1,field2,field3,field4) <span class="hljs-keyword">values</span>(value1,value2,value3,value4);</code></pre></div>
+<p><strong>7.更改字段类型</strong></p>
+<div class="code-wrapper"><pre><code class="hljs sql"><span class="hljs-keyword">alter</span> <span class="hljs-keyword">table</span> system_info modify <span class="hljs-keyword">column</span> ip <span class="hljs-type">varchar</span>(<span class="hljs-number">100</span>) ;</code></pre></div>
+<p><strong>8.更改字段为非空</strong></p>
+<div class="code-wrapper"><pre><code class="hljs sql"><span class="hljs-keyword">alter</span> <span class="hljs-keyword">table</span> system_info <span class="hljs-keyword">alter</span> <span class="hljs-keyword">column</span> ip <span class="hljs-keyword">set</span> <span class="hljs-keyword">not</span> <span class="hljs-keyword">null</span>;</code></pre></div>
+<p><strong>9.添加字段</strong></p>
+<div class="code-wrapper"><pre><code class="hljs sql"><span class="hljs-keyword">alter</span> <span class="hljs-keyword">table</span> system_info <span class="hljs-keyword">add</span> email <span class="hljs-type">varchar</span>(<span class="hljs-number">30</span>);</code></pre></div>
+<p><strong>10.删除字段</strong></p>
+<div class="code-wrapper"><pre><code class="hljs sql"><span class="hljs-keyword">alter</span> <span class="hljs-keyword">table</span> system_info <span class="hljs-keyword">drop</span> <span class="hljs-keyword">column</span> email;</code></pre></div>
+<p><strong>11.字段改名</strong></p>
+<div class="code-wrapper"><pre><code class="hljs sql"><span class="hljs-keyword">alter</span> <span class="hljs-keyword">table</span> system_info rename email <span class="hljs-keyword">to</span> new_email;</code></pre></div>
+<p><strong>12.清空表或删除记录</strong></p>
+<div class="code-wrapper"><pre><code class="hljs sql"><span class="hljs-comment">/* 清空表记录三种方式 */</span>
+# <span class="hljs-number">1.</span> <span class="hljs-keyword">delete</span>
+<span class="hljs-keyword">delete</span> <span class="hljs-keyword">from</span> table_name; 或 <span class="hljs-keyword">delete</span> <span class="hljs-keyword">from</span> table_name <span class="hljs-keyword">where</span> id<span class="hljs-operator">=</span><span class="hljs-number">1</span>;
+# 删除<span class="hljs-keyword">select</span>记录报错:mysql不允许对同一个表同时进行查询和更新
+# 解决方案:对查询结果生产一个派生表,对派生表查询
+<span class="hljs-keyword">delete</span> <span class="hljs-keyword">from</span> table_user  <span class="hljs-keyword">where</span> id <span class="hljs-keyword">in</span> (<span class="hljs-keyword">select</span> id <span class="hljs-keyword">from</span> (<span class="hljs-keyword">select</span> id  <span class="hljs-keyword">from</span> table_user <span class="hljs-keyword">where</span> sex <span class="hljs-keyword">is</span> <span class="hljs-keyword">null</span>) <span class="hljs-keyword">as</span> tmp);
+
+# <span class="hljs-number">2.</span><span class="hljs-keyword">truncate</span>
+<span class="hljs-keyword">truncate</span> table_name 
+
+# <span class="hljs-number">3.</span>use information_schema 清空所有表记录
+<span class="hljs-keyword">select</span> table_name,table_schema <span class="hljs-keyword">from</span> information_schema.tables <span class="hljs-keyword">where</span> table_schema<span class="hljs-operator">=</span><span class="hljs-string">&#x27;alphacapture_bigai&#x27;</span>
+<span class="hljs-keyword">select</span> table_name,table_schema <span class="hljs-keyword">from</span> information_schema.tables <span class="hljs-keyword">where</span> table_schema <span class="hljs-keyword">like</span> <span class="hljs-string">&#x27;%alphacapture_bigai%&#x27;</span>
+<span class="hljs-keyword">select</span> concat(<span class="hljs-string">&#x27;truncate table&#x27;</span>,table_schema,<span class="hljs-string">&#x27;.&#x27;</span>,table_name,<span class="hljs-string">&#x27;;&#x27;</span>) <span class="hljs-keyword">from</span> information_schema.tables <span class="hljs-keyword">where</span> table_schema <span class="hljs-keyword">in</span> (<span class="hljs-string">&#x27;数据库1&#x27;</span>,<span class="hljs-string">&#x27;数据库2&#x27;</span>)</code></pre></div>
+<p><strong>13.插入记录</strong></p>
+<div class="code-wrapper"><pre><code class="hljs sql"><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> table_name(field1,field2,field3) <span class="hljs-keyword">values</span>(value1,value2,value3);</code></pre></div>
+<p><strong>1.更新记录</strong></p>
+<div class="code-wrapper"><pre><code class="hljs sql"><span class="hljs-keyword">update</span> table_name <span class="hljs-keyword">set</span> field2<span class="hljs-operator">=</span>&quot;张三&quot; <span class="hljs-keyword">where</span> id <span class="hljs-operator">=</span><span class="hljs-number">3</span>;``</code></pre></div>
+<p><strong>15.修改表名</strong></p>
+<div class="code-wrapper"><pre><code class="hljs sql"><span class="hljs-keyword">alter</span> <span class="hljs-keyword">table</span> table_name rename <span class="hljs-keyword">to</span> new_table_name;</code></pre></div>
+<p><strong>16.模糊查询,%表示任意字符</strong></p>
+<div class="code-wrapper"><pre><code class="hljs sql"><span class="hljs-keyword">select</span> <span class="hljs-operator">*</span>  <span class="hljs-keyword">from</span> Student <span class="hljs-keyword">where</span> name <span class="hljs-keyword">like</span> &quot;%三%&quot;</code></pre></div>
+<p><strong>17.多条件查询and,or</strong></p>
+<div class="code-wrapper"><pre><code class="hljs sql"><span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> Sudent <span class="hljs-keyword">where</span> age <span class="hljs-keyword">between</span> <span class="hljs-number">18</span> <span class="hljs-keyword">and</span> <span class="hljs-number">50</span>;
+<span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> Student <span class="hljs-keyword">where</span> age <span class="hljs-operator">&gt;</span><span class="hljs-number">18</span> <span class="hljs-keyword">and</span> age <span class="hljs-operator">&lt;</span><span class="hljs-number">60</span> <span class="hljs-keyword">and</span> address<span class="hljs-operator">=</span><span class="hljs-string">&#x27;上海&#x27;</span></code></pre></div>
+<p><strong>18.去重</strong></p>
+<div class="code-wrapper"><pre><code class="hljs sql"><span class="hljs-keyword">select</span> <span class="hljs-keyword">distinct</span> address <span class="hljs-keyword">from</span> Student;</code></pre></div>
+<p><strong>19.排序:asc升序,desc倒序</strong></p>
+<div class="code-wrapper"><pre><code class="hljs sql"><span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> Student <span class="hljs-keyword">order</span> <span class="hljs-keyword">by</span> age <span class="hljs-keyword">desc</span>;</code></pre></div>
+<p><strong>20.查询上做计算</strong></p>
+<div class="code-wrapper"><pre><code class="hljs sql"><span class="hljs-keyword">select</span> age<span class="hljs-operator">*</span><span class="hljs-number">3</span> name <span class="hljs-keyword">from</span> Student;</code></pre></div>
+<p><strong>21.最大max,最小min,平均avg,求和sum,个数count</strong></p>
+<div class="code-wrapper"><pre><code class="hljs sql"><span class="hljs-keyword">select</span> <span class="hljs-built_in">count</span>(id) <span class="hljs-keyword">from</span> Student;</code></pre></div>
+<p><strong>22.分组查询 group by 将某一列相同数据视为一组</strong></p>
+<div class="code-wrapper"><pre><code class="hljs sql">#使用了<span class="hljs-keyword">group</span> <span class="hljs-keyword">by</span>,<span class="hljs-keyword">select</span>后只能跟分组列和聚合函数
+#查询人数大于<span class="hljs-number">3</span>的地区的最大年龄
+<span class="hljs-keyword">select</span> address,<span class="hljs-built_in">max</span>(age) <span class="hljs-keyword">from</span> Student <span class="hljs-keyword">group</span> <span class="hljs-keyword">by</span> address <span class="hljs-keyword">having</span> <span class="hljs-built_in">count</span>(<span class="hljs-operator">*</span>)<span class="hljs-operator">&gt;</span><span class="hljs-number">3</span>;</code></pre></div>
+<p><strong>23.分页</strong></p>
+<div class="code-wrapper"><pre><code class="hljs sql"><span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> Student limit <span class="hljs-number">3</span>,<span class="hljs-number">5</span>; # 从第三条记录,查询五条
+<span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> Student limit (n<span class="hljs-number">-1</span>)<span class="hljs-operator">*</span>m,m; # 第n也查询m条记录</code></pre></div>
+<p><strong>24.join连表查询 on 条件</strong></p>
+<div class="code-wrapper"><pre><code class="hljs sql"><span class="hljs-keyword">select</span> Sites.id,Sites.name,Log.count,Log.date <span class="hljs-keyword">from</span> Sites <span class="hljs-keyword">inner</span> <span class="hljs-keyword">join</span> Log <span class="hljs-keyword">on</span> Sites.id<span class="hljs-operator">=</span>Log.site_id;</code></pre></div>
+<p><strong>24.查看表占用磁盘空间大小,M单位</strong></p>
+<div class="code-wrapper"><pre><code class="hljs sql"># 查看单个表
+<span class="hljs-keyword">select</span> concat(round(<span class="hljs-built_in">sum</span>(DATA_LENGTH<span class="hljs-operator">/</span><span class="hljs-number">1024</span><span class="hljs-operator">/</span><span class="hljs-number">1024</span>),<span class="hljs-number">2</span>),<span class="hljs-string">&#x27;M&#x27;</span>) <span class="hljs-keyword">as</span> table_size  <span class="hljs-keyword">from</span> information_schema.tables <span class="hljs-keyword">where</span> table_schema<span class="hljs-operator">=</span><span class="hljs-string">&#x27;csjdemo&#x27;</span> <span class="hljs-keyword">AND</span> table_name<span class="hljs-operator">=</span><span class="hljs-string">&#x27;demo2&#x27;</span>;
+<span class="hljs-keyword">SELECT</span> (`DATA_LENGTH`<span class="hljs-operator">+</span> `INDEX_LENGTH`)<span class="hljs-operator">/</span><span class="hljs-number">1024</span><span class="hljs-operator">/</span><span class="hljs-number">1024</span>  <span class="hljs-keyword">as</span> `table_data_size`  <span class="hljs-keyword">from</span> `TABLES` <span class="hljs-keyword">WHERE</span> TABLE_NAME <span class="hljs-operator">=</span><span class="hljs-string">&#x27;tableName&#x27;</span> <span class="hljs-keyword">and</span> TABLE_SCHEMA<span class="hljs-operator">=</span><span class="hljs-string">&#x27;dbName&#x27;</span>;
+#查看数据库
+<span class="hljs-keyword">SELECT</span> (<span class="hljs-built_in">sum</span>(`DATA_LENGTH`) <span class="hljs-operator">+</span><span class="hljs-built_in">sum</span>(`INDEX_LENGTH`))<span class="hljs-operator">/</span><span class="hljs-number">1024</span><span class="hljs-operator">/</span><span class="hljs-number">1024</span>   <span class="hljs-keyword">as</span> `db_data_size`  <span class="hljs-keyword">from</span> `TABLES` <span class="hljs-keyword">where</span> `TABLE_SCHEMA`<span class="hljs-operator">=</span><span class="hljs-string">&#x27;dbName&#x27;</span>;</code></pre></div>
+<p><strong>25.创建主键primary三种方式</strong></p>
+<div class="code-wrapper"><pre><code class="hljs sql"><span class="hljs-keyword">create</span> <span class="hljs-keyword">table</span> table_name(
+    uid <span class="hljs-type">INT</span> <span class="hljs-keyword">PRIMARY</span> KEY,
+    uname <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">10</span>),
+)
+<span class="hljs-keyword">create</span> <span class="hljs-keyword">table</span> table_name(
+    uid <span class="hljs-type">INT</span>,
+    uname <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">10</span>),
+    <span class="hljs-keyword">PRIMARY</span> KEY(uid),  # 或者<span class="hljs-keyword">PRIMARY</span> KEY(uid,uname)联合主键
+)
+<span class="hljs-keyword">alter</span> <span class="hljs-keyword">table</span> table_name <span class="hljs-keyword">add</span> PRIAMRY KEY(udi);  # 添加主键约束
+<span class="hljs-keyword">alter</span> <span class="hljs-keyword">table</span> table_name <span class="hljs-keyword">drop</span> <span class="hljs-keyword">PRIMARY</span> KEY;      # 删除主键约束</code></pre></div>
+<p><strong>26.创建唯一索引三种方式</strong></p>
+<div class="code-wrapper"><pre><code class="hljs sql"><span class="hljs-keyword">create</span> <span class="hljs-keyword">table</span> table_name(
+    uid <span class="hljs-type">INT</span>,
+    uname <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">10</span>),
+    <span class="hljs-keyword">UNIQUE</span> []
+)
+<span class="hljs-keyword">alter</span> <span class="hljs-keyword">table</span> table_name <span class="hljs-keyword">unique</span> index(filed_name,filed_name)
+<span class="hljs-keyword">create</span> <span class="hljs-keyword">UNIQUE</span> INDEX indexName <span class="hljs-keyword">on</span> table_name(filed_name,filed_name)</code></pre></div>
+<h3 id="三-复制-导入导出数据">三: 复制,导入导出数据</h3>
+<p><strong>1.复制n条记录并创建</strong></p>
+<div class="code-wrapper"><pre><code class="hljs sql"><span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">into</span> reyo (num,overtime) <span class="hljs-keyword">SELECT</span> num,overtime <span class="hljs-keyword">from</span> reyo <span class="hljs-keyword">where</span> id <span class="hljs-keyword">IN</span>(<span class="hljs-number">1</span>,<span class="hljs-number">3</span>,<span class="hljs-number">5</span>,<span class="hljs-number">6</span>,<span class="hljs-number">7</span>,<span class="hljs-number">9</span>);
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">into</span> reyo (`num`,`overtime`) <span class="hljs-keyword">SELECT</span> `num`,`overtime` <span class="hljs-keyword">from</span> reyo <span class="hljs-keyword">where</span> id <span class="hljs-keyword">IN</span>(<span class="hljs-number">1</span>,<span class="hljs-number">3</span>,<span class="hljs-number">5</span>,<span class="hljs-number">6</span>,<span class="hljs-number">7</span>,<span class="hljs-number">9</span>);</code></pre></div>
+<p>2.导出整个数据库</p>
+<div class="code-wrapper"><pre><code class="hljs sql">mysqldump <span class="hljs-operator">-</span>u root <span class="hljs-operator">-</span>p dbname<span class="hljs-operator">&gt;</span>dbname.sql</code></pre></div>
+<p><strong>3.导出表 show variables like '%secure%'查看安全目录</strong></p>
+<div class="code-wrapper"><pre><code class="hljs sql">mysqldump <span class="hljs-operator">-</span>u root <span class="hljs-operator">-</span>p dbname users<span class="hljs-operator">&gt;</span>dbname_users.sql
+<span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> runoob_tbl  <span class="hljs-keyword">INTO</span> OUTFILE <span class="hljs-string">&#x27;/var/lib/mysql-files/Dbug_manangement.txt&#x27;</span>;
+<span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> users  <span class="hljs-keyword">INTO</span> OUTFILE <span class="hljs-string">&#x27;/var/lib/mysql-files/users.sql&#x27;</span>;</code></pre></div>
+<p><strong>4.导入备份的整个数据库</strong></p>
+<div class="code-wrapper"><pre><code class="hljs sql">mysql <span class="hljs-operator">-</span>u root <span class="hljs-operator">-</span>p <span class="hljs-operator">&lt;</span> Detector.sql     # 需要再<span class="hljs-keyword">sql</span>文件创建或指定数据库
+mysql<span class="hljs-operator">&gt;</span>source <span class="hljs-operator">/</span>home<span class="hljs-operator">/</span>abc<span class="hljs-operator">/</span>abc.sql      # 进入数据库下use Detector</code></pre></div>
+<p><strong>5.插入数据到某个表</strong></p>
+<div class="code-wrapper"><pre><code class="hljs sql">load data <span class="hljs-keyword">local</span> infile &quot;/var/lib/mysql-files/CaseUrl.sql&quot; <span class="hljs-keyword">into</span> <span class="hljs-keyword">table</span> CaseUrl;
+load data <span class="hljs-keyword">local</span> infile &quot;/var/lib/mysql-files/CaseUrl.sql&quot; <span class="hljs-keyword">into</span> <span class="hljs-keyword">table</span> CaseUrl
+(id,name, url, status_code, <span class="hljs-keyword">result</span>, processresult, proposal,<span class="hljs-variable">@create_time</span>,test_time,case_id) FIELDS TERMINATED <span class="hljs-keyword">BY</span> <span class="hljs-string">&#x27;, &#x27;</span>
+<span class="hljs-keyword">set</span> create_time<span class="hljs-operator">=</span>DATE_FORMAT(<span class="hljs-variable">@create_time</span>,&quot;%Y-%m-%d %H:%i:%s&quot;)</code></pre></div>
+<h3 id="四-mysql性能优化-四个维度-1-架构-2-硬件-3-DB优化-4-sql优化">四:mysql性能优化(四个维度:1.架构,2.硬件,3.DB优化,4.sql优化)</h3>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>架构:集群读写分离,数据库分库，分表,redis缓存</p>
+</li>
+<li class="lvl-2">
+<p>硬件:高效的磁盘读写性能</p>
+</li>
+<li class="lvl-2">
+<p>DB:参数优化(日志不能笑,缓存足够大,连接够用)</p>
+<ul class="lvl-2">
+<li class="lvl-5">
+<p>my.ini或my.cnf配置文件:</p>
+<ol>
+<li class="lvl-8">sort/join/read/rnd buffer:4M或8M或16M</li>
+<li class="lvl-8">tmp/heap table:96M或128M</li>
+<li class="lvl-8">innodb_flush_log_at_trx_commit:对redo日志刷盘频率的设定<br>
+0:缓冲区的redo log会每秒写入到磁盘的日志文件。但每次事务提交不会有任何影响，也就是 log buffer 的刷写操作和事务提交操作没有关系。在这种情况下，MySQL性能最好，但如果 mysqld 进程崩溃，通常会导致最后 1s 的日志丢失。<br>
+1:每次事务提交时,缓冲区redo log保证一定会被写入到磁盘的日志文件。这也是默认值。这是最安全的配置，但由于每次事务都需要进行磁盘I/O，所以也最慢。<br>
+2:每次事务提交时,缓冲区redo log异步写入(不保证)到磁盘的日志文件。这时如果 mysqld 进程崩溃，由于日志已经写入到系统缓存，所以并不会丢失数据；在操作系统崩溃的情况下，通常会导致最后 1s 的日志丢失。<br>
+sync_binlog:binlog刷盘的频率</li>
+<li class="lvl-8">(保证主库和主从库的一致性:innodb_flush_log_at_trx_commit和sync_binlog都设置为1)</li>
+<li class="lvl-8">interactive_timeout:交互模式下超时时间,五分钟或十分钟</li>
+<li class="lvl-8">lock_wait_timeout:表锁锁定时间</li>
+<li class="lvl-8">time_zone:使用datetime减少性能消耗</li>
+<li class="lvl-8">wait_timeout:程序连接mysql超时时间,五分钟或十分钟</li>
+<li class="lvl-8">innodb_buffer_pool_size:缓冲池大小(越大,磁盘I/O减少)2个G左右</li>
+<li class="lvl-9">innodb_buffer_pool_instances:配置多个缓冲池实例</li>
+<li class="lvl-9">tmp_table_size:临时表的最大大小</li>
+</ol>
+</li>
+</ul>
+</li>
+<li class="lvl-2">
+<p>sql优化</p>
+<p><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/486105337/answer/2538190061">https://www.zhihu.com/question/486105337/answer/2538190061</a></p>
+<p>explain检查sql语句定位优化点或开启慢查询定位优化点优化方向:(避免不要的列|分页优化|索引优化|JOIN优化|排序优化|union优化)</p>
+<div class="code-wrapper"><pre><code class="hljs">  	1.  避免不要的列
+ 	- 避免使用select *
+ 	- 多用limit
+ 	- 选择合理的字段类型
+  	2.  分页优化(数据量较大)
+ - 延迟关联
+ - 书签方式
+  	3.  索引优化
+ - 合理使用索引(一个表索引不超过5个),避免索引失效
+ - 利用覆盖索引
+ - 正确使用联合索引
+ - 避免索引失效情况
+  	4.  JOIN优化
+ 	- join表不宜过多(不超过5个)
+ 	- 小表驱动大表
+ 	- 用连接查询代替子查询
+  	5.  排序优化
+ 	- 利用索引排序
+  	6.  union优化
+ - 使用UNION ALL(不去重,所有数据)替代UNION(去重)
+</code></pre></div>
+</li>
+</ul>
+<blockquote>
+<p><strong>索引失效情况:</strong></p>
+<p>(1)联合索引不满足最左匹配原则,联合索引最左边字段必须出现在查询条件中<br>
+(2)错误使用like,以%开头如 like ‘%abc’,(当like以%结尾索引有效)<br>
+(3)错误使用or,or两边字段有一个没有创建索引(where id=2 or name=“Tom”)或两边为范围查询(where id&gt;10 or id&lt;20),导致失效<br>
+(4)索引列参与运算, 如where id-1=10 或使用了函数 where SUBSTR(id_no,1,3)=100<br>
+(5)类型隐式转换,where条件上进行了类型转换,比如字段是字符串类型,却填上了数字<br>
+(6)两列做比较,即使两列都有索引,也会失效 where id&gt;age<br>
+(7)不等于比较,where name!=“Tom” 或 where id&lt;&gt;“11” 有可能不走索引,查询结果集较小货走索引否则不走索引<br>
+(8)非空判断(is not null / is null / not in / in / exists / not exists/ )<br>
+使用where id_no is not null不走索引,is null走索引使用not exists 不走索引使用where id not in (2,3)普通索引则失效,主键走索引<br>
+(9)当mysql估计全表扫描速度比索引速度快的时候不会使用索引(order by就是如果是select *则有大量回表,索引不走索引,走全表扫描到内存去排序)</p>
+</blockquote>
+<h3 id="五-索引详解">五:索引详解</h3>
+<blockquote>
+<p>操作系统和内存:最小单位是页page<br>
+操作系统和磁盘:最小单位是块block<br>
+磁盘I/O:文件系统每次读取一块(默认4K)单位大小到内存<br>
+mysql:存储数据以页(page默认16k)为单位,mysql读取一页页读取</p>
+</blockquote>
+<p><strong>1.索引演化史?</strong></p>
+<blockquote>
+<p><strong>二叉查找树-&gt;AVL平衡二叉树-&gt;B-Tree(多路平衡查找树)-&gt;B+Tree:</strong><br>
+B-Tree:多路平衡查找树,每个节点包含多对(父节点指针,子节点指针,键key,值data),相比于AVL缩减了节点数,减少了树的高度<br>
+B+Tree:1.非叶子节点(双向链表)只存储键值+叶子节点指针,2.值data顺序存在同一层的叶子节点上，相比于B-Tree每个节点能存储更多的key减少了树的高度和磁盘I/O次数，3.叶子节点之间有指针,链表支持范围查找通过非叶子节点的二分查找以及指针确定数据在哪个页中,进而去数据页查找数据一般高度为1-3:叶子节点16k(一条数据一般1k)存16条数据,非叶子节点存1170个指针=1170<em>1170</em>16=21902400**</p>
+</blockquote>
+<p><strong>2.什么是索引?</strong></p>
+<blockquote>
+<p>对一列或多列值进行排序的数据结构(类似目录排序好了的,在小文件查找)</p>
+</blockquote>
+<p><strong>3.mysql有哪些索引?那些字段可以建立对应索引?</strong></p>
+<blockquote>
+<p>普通索引主键索引(聚簇索引,唯一索引unique唯一且不为NULL),<br>
+复合索引(最多包含16列:where多条件最左原则):可用于包含所有列或第一列,前两列,前三列…等,blob和text也能创建索引, 但是必须指定前面多少位全文索引(char、varchar，text 列上可以创建全文索引,一般不使用,不是mysql专长)<br>
+唯一索引(innodb不是聚簇索引),<br>
+空间索引(对空间数据类型字段建立索引,mysql有四种:GEOMETRY,POINT,LINESTRING,POLYGON)</p>
+</blockquote>
+<p><strong>4.聚集索引和非聚集索引区别?</strong></p>
+<blockquote>
+<p><strong>都是B+Tree数据结构</strong><br>
+聚簇索引:叶子节点存储索引和数据,找到索引就找到数据(其他为辅助索引,存储索引id,没有去覆盖索引的话要回表查找主键索引找到数据)。非聚簇索引:叶子节点存储索引和数据行的地址,根据索引找到数据行的位置在去磁盘取出数据。</p>
+</blockquote>
+<p><strong>5.什么是回表?</strong></p>
+<blockquote>
+<p>通过非主键索引查询,select所获取的字段不能通过非主键索引获取到,需要回表查询主键索引。</p>
+</blockquote>
+<p><strong>6.覆盖索引,非覆盖索引?</strong></p>
+<blockquote>
+<p>覆盖索引:所查的字段在当前索引叶子节点上存在,不用回表,直接作为结果返回</p>
+</blockquote>
+<p><strong>7.什么是索引下推?</strong></p>
+<blockquote>
+<p>where多条件判断,对索引中包含的字段先做判断,再去回表没有索引的字段(减少回表次数)</p>
+</blockquote>
+<p><strong>8.什么情况下不推荐使用索引?</strong></p>
+<blockquote>
+<p><strong>目的是:索引是为了查询更快,占用空间更小</strong><br>
+1.数据唯一性差(比如性别只有两种数据)<br>
+2.频繁更新的字段不用索引<br>
+3.不用无序的的值如身份证,uuid无序不能作为索引<br>
+4.字段不在where语句后出现(where含IS NULL/IS NULL/IS NOT NULL/like &quot;%&quot;等,不用索引)<br>
+5.过长的字段使用前缀索引<br>
+6.参与计算的字段不适合建立索引</p>
+<p><strong>那些情况适合建立索引?</strong></p>
+<ol>
+<li class="lvl-3">
+<p>频繁作为where条件语句查询的字段</p>
+</li>
+<li class="lvl-3">
+<p>关联字段需要建立索引，例如外键字段，student表中的classid,   classes表中的schoolid 等</p>
+</li>
+<li class="lvl-3">
+<p>排序字段可以建立索引</p>
+</li>
+</ol>
+</blockquote>
+<h3 id="六-InnoDB和MyISAM区别">六:InnoDB和MyISAM区别</h3>
+<blockquote>
+<p>MyISAM:不支持事务,支持表级别锁(限制了读/写的性能),拥有较高的插入和查询速度,B+的非聚簇索引,通常用于只读或以读为主的场景.<br>
+怎么快速向数据库插入100万条数据?先用MyISAM插入数据,然后修改存储引擎为InnoDB<br>
+InnoDB:支持事务,支持行/表级别锁,/外键(数据的完整性和一致性更高),采用B+的聚簇索引,通常用于经常更新的场景.</p>
+</blockquote>
+<p><strong>1.InnoDB和MyISAM索引区别</strong></p>
+<blockquote>
+<p>InnoBD主键索引采用B+的聚簇索引:</p>
+<p>​	每个InnoDB表都有且只有一个特殊的索引，称为聚簇索引 ，用于存储行数据。通常，聚簇索引与主键同义 。</p>
+<div class="code-wrapper"><pre><code class="hljs">  1. 表定义了主键,则pk就是聚集索引
+  2. 没有定义主键,第一个非空唯一索引列就是聚集索引
+  3. 否则,InnoDB会创建一个隐藏的row-id作为聚集索引
+</code></pre></div>
+<p>MyISAM索引采用B+的非聚簇索引:</p>
+<p>​	不存储全部数据,只存储数据行的地址</p>
+</blockquote>
+<h3 id="七-mysql预编译-sql执行前会进行解析和校验-参数带入">七:mysql预编译(sql执行前会进行解析和校验),参数带入</h3>
+<blockquote>
+<p><strong>益处</strong>:加快执行速度,防止sql注入<br>
+<strong>场景</strong>:SQL语句一样,参数不一样,可以对SQL语句预编译<br>
+<strong>sql语句执行流程:</strong><br>
+连接层(处理连接/鉴权/安全管理)-&gt;服务层(系统管理/sql接口/缓存/解析/预处理/优化)-&gt;引擎层(具体与文件系统打交道)-&gt;存储层<br>
+sql语句-&gt;查询缓存(默认关闭不推荐使用,sql语句必须相同,且表数据表动大)-&gt;语法解析预处理器(检查是否有语法错误)-&gt;优化器-&gt;执行器<br>
+<strong>语法</strong>:prepare name from statement;</p>
+<ol>
+<li class="lvl-6">定义:prepare statement_1 from ‘select * from user where id=?’; # 通过?进行占位</li>
+<li class="lvl-6">参数:set @id=2;</li>
+<li class="lvl-6">执行.execute statement_1 using @id;</li>
+</ol>
+<p>怎么预防sql注入？</p>
+<ol>
+<li class="lvl-5">
+<p>不信任用户提交的数据(参数过滤,严格检查参数类型,转义,限制长度)</p>
+</li>
+<li class="lvl-5">
+<p>.mysql预编译(参数化查询,变量绑定)</p>
+</li>
+</ol>
+</blockquote>
+<h3 id="八-mysql-事务-不在分割的操作集合-acid实现原理">八:mysql 事务(不在分割的操作集合)acid实现原理</h3>
+<p><strong>1.ACID?：</strong></p>
+<blockquote>
+<p><strong>原子性(Atomicity)</strong>:(undo log回滚日志实现)指一个事务不可分割,是一个最小的操作单元(包含若干个操作),要么全部成功,要么全部失败<br>
+<strong>隔离性(Isolation)</strong>:(锁和mvcc实现)多个事务并发执行,事务之间相互隔离<br>
+<strong>持久性(Durability)</strong>:(redo log实现)InnoDB提供了一个缓存Buffer,读取和写入都先在Buffer中(并同时把操作记录到redo log,防止数据丢失)<br>
+<strong>一致性(Consistency)</strong>:数据处于合法状态(满足预定约束就是合法)<br>
+从数据库层面，数据库通过原子性、隔离性、持久性来保证一致性。也就是说ACID四大特性之中，C(一致性)是目的，A(原子性)、I(隔离性)、D(持久性)是手段，是为了保证一致性，数据库提供的手段。数据库必须要实现AID三大特性，才有可能实现一致性。从应用层面，通过代码判断数据库数据是否有效，然后决定回滚还是提交数据。Innodb如何实现事务的?<br>
+以update为例<br>
+(1).开启事务,Innodb根据接受的update语句,找到数据所在页,并加该页缓存在Buffer pool(change buffer)中<br>
+(2).执行update,修改Buffer pool中数据<br>
+(3).记录 undo log日志(便于事务回滚和mvcc)并写入Log Buffer中并关联redo log(可刷盘)<br>
+(4).记录 redo log(prepare状态)日志(便于断电恢复数据)并写入Log Buffer中(可刷盘)<br>
+(5).记录bin log(数据表结构变更日志:用于主从复制和数据库恢复)<br>
+(6-1).事务提交,redo log(改为commit状态),可触发redo log刷盘机制<br>
+(6-2).事务回滚,则利用undo log日志进行回滚</p>
+</blockquote>
+<p><strong>3.mysql有几种日志?</strong></p>
+<blockquote>
+<p>bin log(记录sql),redo log(),undo log,slog log,一般日志</p>
+</blockquote>
+<p><strong>4.mysql日志是否实时写入磁盘?(log buffer)</strong></p>
+<blockquote>
+<p>bin log:<br>
+sync_binlog=0:每次提交事务后不会马上写入到磁盘,先写到page cache,由操作系统决定写入什么时候写入磁盘(有丢失事务日志的风险)<br>
+sync_binlog=1:每次提交事务都会执行fsync写入磁盘(强一致性,性能较低)<br>
+sync_binlog=n:每次提交事务,先写到page cache,积累n个事务才fsync到磁盘(有丢失n个事务日志的风险)<br>
+redo log()和undo log:<br>
+innodb_flush_log_at_trx_commit=0:每秒(log buffer中提交的事务)写入磁盘,系统并调用fsync写入磁盘(可能丢失一秒的数据)<br>
+innodb_flush_log_at_trx_commit=1:有事务提交立即调用fsync写入磁盘(不会丢失,性能差)<br>
+innodb_flush_log_at_trx_commit=2:有事务提交都写给操作系统的page cache,由操作系统决定什么时候调用fsync写入磁盘(一系列丢失)</p>
+</blockquote>
+<p><strong>5.binlog有几种录入格式?</strong></p>
+<blockquote>
+<p>STATEMENT:默认方式,基于SQL语句的复制记录sql语句,文件较小<br>
+ROW:基于行的复制,文件较大<br>
+MIXED:前两种混合</p>
+</blockquote>
+<p><strong>6.为什么将redo log的数据写到磁盘比将Buffer数据持久化到磁盘要快?</strong></p>
+<blockquote>
+<p>1.Buffer数据持久化是随机写I/O,redo log是追加,顺序IO<br>
+2.Buffer数据持久化是以页page为单位,redo log只需要写入的真正部分(减少了无效I/O)</p>
+</blockquote>
+<p><strong>7.bin log和redo log(两段提交)区别？</strong></p>
+<blockquote>
+<p>1.写入redo log(prepare状态)<br>
+2.写入bing log<br>
+3.提交事务,redo log(改为commit)</p>
+</blockquote>
+<h3 id="九-主从同步">九:主从同步</h3>
+<blockquote>
+<p>Mysql主从复制中有三个线程:Master(binlog dump thread) Slave(I/O thread,SQL thread)<br>
+使用binlog+position偏移量进行增量同步</p>
+</blockquote>
+<p><strong>1.同步过程</strong></p>
+<div class="code-wrapper"><pre><code class="hljs">1. Master所有变更都记录到binlog中去(MySQL Server层的实现)
+1. 主节点binlog dump线程,当binlog有变动时,binlog dump线程读取内容并发送给从节点
+1. 从节点I/O线程接收binlog,并写入到relay log(中继日志)中
+1. 从节点SQL线程读取relay log并对数据进行重放
+</code></pre></div>
+<p><strong>2.同步策略</strong></p>
+<ul class="lvl-0">
+<li class="lvl-3">
+<p>同步策略:Master会等待所有的Slave回应后才提交(这个策略严重影响性能)</p>
+</li>
+<li class="lvl-3">
+<p>半同步策略:Master至少等待一个Slave回应后才提交</p>
+</li>
+<li class="lvl-3">
+<p>异步策略:Master不会等待Slave回应就可以提交(默认)</p>
+</li>
+<li class="lvl-3">
+<p>延迟策略:Slave落后Master指定的时间</p>
+</li>
+</ul>
+<h3 id="十-mysql主从方案">十:mysql主从方案</h3>
+<blockquote>
+<p>mysql如何保证主从数据的一致性的？</p>
+<p>分片中间件:myCat/shardingSphere</p>
+</blockquote>
+<p><strong>一主多从:缓解读压力</strong></p>
+<ol>
+<li class="lvl-4">
+<p>主服务配置mysql.cnf:</p>
+<blockquote>
+<p>#主服务还需要创建对应权限的用户用于数据同步</p>
+<p>log-bin=mysql-bin   # 表示启用二进制文件-文件名称<br>
+server-id=3307      # 表示server编号</p>
+</blockquote>
+</li>
+<li class="lvl-4">
+<p>从服务执行sql命令</p>
+<blockquote>
+<p># 1.配置主服务</p>
+<p>change master to master_host=“192.168.1.2”,master_port=3306,master_user=“copy”,master_password=“123456”,master_log_file=“mysql-bin.00001”,master_log_pos=154;</p>
+<p># 2.开启主从同步</p>
+<p>start slave</p>
+<p># 3.查看是否成功</p>
+<p>show slave status \G;</p>
+</blockquote>
+</li>
+</ol>
+<p><strong>双主双从:缓解写压力</strong></p>
+<ol>
+<li class="lvl-4">
+<p>主1配置</p>
+<blockquote>
+<p>log-bin=mysql-bin</p>
+<p>server-id=3301</p>
+<p>auto_increment_increment=2 # 主键递增步长</p>
+<p>auto_increment_offset=1   # 从1开始</p>
+<p>log-slave-updates      # 是否记录binglog</p>
+<p>sync-binlog=1        # 几次事务记录binlog</p>
+</blockquote>
+</li>
+<li class="lvl-4">
+<p>主2配置</p>
+<blockquote>
+<p>log-bin=mysql-bin</p>
+<p>server-id=3302</p>
+<p>auto_increment_increment=2 # 主键递增步长</p>
+<p>auto_increment_offset=2   # 从1开始</p>
+<p>log-slave-updates      # 是否记录binglog</p>
+<p>sync-binlog=1        # 几次事务记录binlog</p>
+</blockquote>
+</li>
+</ol>
+<h3 id="十一-主键方案-自增id-uuid-雪花算法">十一:主键方案(自增id/uuid/雪花算法)</h3>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/397289720">https://www.zhihu.com/question/397289720</a><br>
+<a target="_blank" rel="noopener" href="https://juejin.cn/post/7153273187366043661">https://juejin.cn/post/7153273187366043661</a></p>
+</blockquote>
+<p><strong>三种方案:</strong></p>
+<div class="code-wrapper"><pre><code class="hljs">1. 自增id
+2. uuid: uuid导致页分裂,性能问题,存储空间较大
+3. 雪花算法及其改进算法
+</code></pre></div>
+<p><strong>分布式id实现方式:</strong></p>
+<blockquote>
+<p>uuid/单机数据库自增ID+步长/Redis自增ID/跳跃式自增ID/Snowflake及其改进算法</p>
+</blockquote>
+<p><strong>雪花算法(保证递增性)</strong>:64位</p>
+<blockquote>
+<p>1位:符号位<br>
+43位:时间戳<br>
+10位:机器id<br>
+12位:一个节点一毫秒产生ID的数量(4096)</p>
+</blockquote>
+<h3 id="十二-性能极限">十二:性能极限</h3>
+<p><strong>mysql性能极限</strong></p>
+<blockquote>
+<p>mysql单表字段数:建议20-50<br>
+mysql默认单字段大小：存储最大空间为1M,可以修改max_allowed_packet=16<br>
+mysql单表：老版mysql3.22中,还是ISAM存储引擎,单表限制为4GB<br>
+之后为INNODB 单表限制64TB<br>
+数据库:<br>
+Cmshelp 团队做CMS 系统评测时的结果来看,<br>
+MySQL单表大约在2千万条记录（4G）下能够良好运行，经过数据库的优化后5千万条记录（10G）下运行良好。阿里巴巴《Java 开发手册》提出单表行数超过 500 万行或者单表容量超过 2GB，才推荐进行分库分表。</p>
+</blockquote>
+<p><strong>PostgreSQL性能极限</strong></p>
+<blockquote>
+<p>最大单个数据库大小:不限最大数据单表大小:32TB<br>
+单条记录大小:1.6TB<br>
+单字段最大允许:1GB<br>
+单表允许最大记录数:不限单表最大字段数:250-1600取决于字段类型单表最大索引数:不限</p>
+</blockquote>
+<h3 id="十三-额外问题及思路">十三 额外问题及思路</h3>
+<p><strong>“Lost connection to MySQL server during query” ?</strong></p>
+<blockquote>
+<p>1网络延迟高<br>
+2.读/写:导致数据传输超时，net_read_timeout/net_write_timeout<br>
+3.连接初始化超时,connect_timeout 默认30s<br>
+4.传输中使用了较大的string field或blob field 导致超过了max_allowed_packet<br>
+<a target="_blank" rel="noopener" href="https://blog.csdn.net/zyself/article/details/91376690">https://blog.csdn.net/zyself/article/details/91376690</a></p>
+</blockquote>
+<p><strong>数据库的三大范？</strong></p>
+<blockquote>
+<p>为设计冗余小,结构合理的数据库,设计数据库时必须满足一定范式(规则)<br>
+一般设计都是反范式,通过冗余的数据避免跨表垮库查询,利用空间换时间,提高性能第一范式:表中所有字段是不可分解的原子值第二范式:表中每一列都和主键相关,而不能只与主键一部分相关(针对联合主键)(表中只保存一种数据,不可以把多种数据保存在同一个表中)<br>
+第三范式:确保每列都和主键直接相关而不是间接相关</p>
+</blockquote>
+<p><strong>varcahr和char区别？</strong></p>
+<blockquote>
+<p>char(最多存放255个字节)适用数据大小固定/较小/经常更新/不容易产生内存碎片:<br>
+1.长度固定,插入数据小于固定长度则用空格填充<br>
+2.存取速度比varchar快很多(甚至50%),空间换时间<br>
+varchar(最多存放65532个字节,等价于21845字符):<br>
+1.varchar=长度+N(实际长度n&gt;255,用两个字节存放长度.小于255,用一个字节存放长度)<br>
+2.长度可变,按实际插入数据来存储()<br>
+3.填写2的n次方,varchar(8),varchar(64)</p>
+</blockquote>
+<blockquote>
+<p>InnoDB表索引前缀长度为767字节,utf-8编码为255(255*3=765)<br>
+对text,只能添加前缀索引,前缀索引最大能达到1000字节当varchar大于某些值:<br>
+varchar大于255自动变为tinytext<br>
+varchar大于500自动变为tinytext<br>
+varchar大于20000自动变为tinytext<br>
+当varchar&gt;255,使用varchar或text没有区别</p>
+</blockquote>
+<p><strong>blob和text区别？</strong></p>
+<blockquote>
+<p>blob:二进制大对象(存储二进制数据,没有字符集)最大长度16k<br>
+text:大对象,存储大字符串,有字符集(根据字符集的校对规则对值进行排序比较)最大长度16k</p>
+</blockquote>
+<p><strong>DATETIME和TIMESTAMP区别？</strong></p>
+<blockquote>
+<p>都表示日期和时间,格式一致,存储秒后6位小数区别日期范围:DATETIME(1000-01-01到9999-12-31),TIMESTAMP(1970-01-01到2038-01-09)<br>
+存储空间:DATETIM为8字节,TIMESTAMP为4字节时区:DATETIME与时区无关,TIMESTAMP与时区有关默认值:DATETIME默认为null,TIMESTAMP默认为当前时间,不为空(not null)</p>
+</blockquote>
+<p><strong>in和exists的区别？</strong></p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/jinjiniao1/article/details/92666614">https://blog.csdn.net/jinjiniao1/article/details/92666614</a></p>
+</blockquote>
+<p><strong>DECIMAL记录货币？</strong></p>
+<blockquote>
+<p>float和double是二进制存储,有误差<br>
+decimal是字符串存储</p>
+</blockquote>
+<p><strong>怎么存储表情包emoji?</strong></p>
+<blockquote>
+<p>字符串存储utf-8+mb4编码</p>
+</blockquote>
+<p><strong>大量外键问题？</strong></p>
+<blockquote>
+<p>不影响select，影响update/insert/delete(当对子表进行写入操作,父表会被加上共享锁,对子表进行高并发时,父表的共享锁长时间不能释放,就不能对父表进行写入而只能读)</p>
+</blockquote>
+<blockquote>
+<p>WAL技术(Write-Ahead Logging)RedoLog(对所有页面的操作写入日志文件,实现事务的持久性)</p>
+</blockquote>
+<p><strong>delete删除记录使用binlog回滚？</strong></p>
+<blockquote>
+<p>恢复数据时可以先备份,在停止所有写入操作:flush tables with read lock或 set global read_only=1同时配置文件里设置read_only防止重启失效</p>
+<ol>
+<li class="lvl-4">
+<p>查看binglog是否开启</p>
+<div class="code-wrapper"><pre><code class="hljs sql"><span class="hljs-keyword">show</span> variables <span class="hljs-keyword">like</span> <span class="hljs-string">&#x27;%log_bin%&#x27;</span>;</code></pre></div>
+</li>
+<li class="lvl-6">
+<p>查看数据文件存放路径</p>
+<div class="code-wrapper"><pre><code class="hljs sql"><span class="hljs-keyword">show</span> variables <span class="hljs-keyword">like</span> <span class="hljs-string">&#x27;%datadir%&#x27;</span>;
+<span class="hljs-keyword">show</span> master status;  # 查看当前正在写入的binlog
+<span class="hljs-keyword">show</span> master logs;    # 查看所有binlog  <span class="hljs-keyword">show</span> <span class="hljs-type">binary</span> logs;</code></pre></div>
+</li>
+<li class="lvl-6">
+<p>查看binlog日志内容</p>
+<div class="code-wrapper"><pre><code class="hljs sql"><span class="hljs-keyword">show</span> binlog events <span class="hljs-keyword">in</span> <span class="hljs-string">&#x27;mysql-bin.000001&#x27;</span>\G;  # 确定需要回滚的事务的position</code></pre></div>
+</li>
+<li class="lvl-6">
+<p>将需要恢复的事务里的操作转为sql</p>
+<div class="code-wrapper"><pre><code class="hljs shell">/opt/bitnami/mysql/bin/mysqlbinlog  --no-defaults -v --database=database_name --start-position=&quot;966048&quot; --stop-position=&quot;981142&quot; /bitnami/mysql/data/mysql-bin.000007 &gt; /tmp/mysqllog.sql</code></pre></div>
+</li>
+<li class="lvl-7">
+<p>将导出导出sql的delete转换为insert</p>
+</li>
+</ol>
+<div class="code-wrapper"><pre><code class="hljs">  <pre><code class="hljs shell">cat srliao.sql.bak| sed -n &#x27;/###/p&#x27; | sed &#x27;s/### //g;s/\/\*.*/,/g;s/DELETE FROM/;INSERT INTO/g;s/WHERE/SELECT/g;&#x27; |sed -r &#x27;s/(@17.*),/\1;/g&#x27; | sed &#x27;s/@1=//g&#x27;| sed &#x27;s/@[1-9]=/,/g&#x27; | sed &#x27;s/@[1-9][0-9]=/,/g&#x27; &gt; mysqllogOK.sql</code></pre></div>
+</code></pre>
+<ol start="6">
+<li class="lvl-6">
+<p>执行insert sql</p>
+<div class="code-wrapper"><pre><code class="hljs shell">source /tmp/mysqllogOK.sql</code></pre></div>
+</li>
+</ol>
+</blockquote>
+<p><strong>大公司为什么不使用外键强关联问题？</strong></p>
+<blockquote>
+<p>主要存在以下问题<br>
+1.在该表进行增删改查会触发查询关联表的记录是否存在,该性能消耗系统是允许的<br>
+2.数据一致性全部交给数据库,数据库是否能承受<br>
+3.查询关联表上会做一个内部锁,是否存在高并发死锁情况<br>
+4.后期的分库分表,外键约束格外离谱这些问题在互联网公司显得很严重,访问量大的时候,mysql系统上无法得到解决的<br>
+<a target="_blank" rel="noopener" href="https://www.cnblogs.com/JethroYu/p/13570630.html">https://www.cnblogs.com/JethroYu/p/13570630.html</a></p>
+</blockquote>
+<p><strong>delete,truncate,drop有什么区别?</strong><br>
+<strong>执行速度</strong>:drop&gt;truncate&gt;delete</p>
+<p><strong>1.delete</strong></p>
+<blockquote>
+<p>1.属于数据库DML操作语言,只删数据不删表结构,会走事务,执行时触发trigger<br>
+2.delete执行时,会将删除数据缓存到rollback segement中,事务commit之后生效<br>
+3.delete删除全部数据,MyISAM会立刻释放磁盘空间,InnoDB不会释放<br>
+4.delete from table_name where 带条件的MyISAM和InnoDB都不会释放磁盘空间<br>
+5.delete之后optimize table table_name会立刻释放磁盘空间,不管MyISAM或InnoDB<br>
+6.delete操作是一行一行删除,且产生删除操作日志,并记录到redo和undo<br>
+7.delete删除后id会继续递增<br>
+ALTER TABLE TableName AUTO_INCREMENT=1； # 将auto_increment重置</p>
+</blockquote>
+<p><strong>2.truncate</strong></p>
+<blockquote>
+<p>1.属于DDL定义语言,不走事务,原数据不放到rollback segement中,执行不触发trigger<br>
+2.truncate table table_name会立刻释放磁盘空间不论MyISAM或InnoDB,类似drop table然后create table,做了优化<br>
+3.快速清空表,并重置auto_increment的值<br>
+MyISAM：truncate会重置auto_increment为1,delete后不变<br>
+InnoDB: truncate会重置auto_incrment为1,delete后不变(delete之后重启则auto_increment为1)<br>
+也就是说，InnoDB的表本身是无法持久保存auto_increment。delete表之后auto_increment仍然保存在内存，但是重启后就丢失了，只能从1开始。实质上重启后的auto_increment会从 SELECT 1+MAX(ai_col) FROM t 开始。</p>
+</blockquote>
+<blockquote>
+<p>SET FOREIGN_KEY_CHECKS=0;            #取消外键约束<br>
+TRUNCATE TABLE  table_name;<br>
+SET FOREIGN_KEY_CHECKS=1;            #设置外键约束:</p>
+</blockquote>
+<p><strong>3.drop</strong></p>
+<blockquote>
+<p>1.属于DDL定义的语言<br>
+2.drop之后立刻释放磁盘空间,不管是MyISAM或InnoDB<br>
+3.drop且删除表结构,被依赖的约束(constrain),触发器(trigger),索引(index)<br>
+4.依赖该表的存储过程/函数将保留,状态为invalid<br>
+delete是把目录撕了，truncate是把书的内容撕下来烧了，drop是把书烧了</p>
+</blockquote>
+<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/" class="category-chain-item">数据库</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/mysql/" class="print-no-link">#mysql</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>mysql常用操作命令和性能优化</div>
+      <div>https://centyuan.github.io/2023/11/06/数据库/mysql常用命令和Note/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>hlyuan</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年11月6日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/11/06/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql%E7%9A%84deletetruncatedrop%E5%AF%B9%E6%AF%94%E5%92%8Cbinlog%E6%97%A5%E5%BF%97%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D/" title="">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile"></span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/11/06/%E7%88%AC%E8%99%AB/%E5%B8%B8%E8%A7%81%E5%8F%8D%E7%88%AC%E6%9C%BA%E5%88%B6/" title="常见反爬机制">
+                        <span class="hidden-mobile">常见反爬机制</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://gitee/centyuan" target="_blank" rel="nofollow noopener"><span>centyuan</span></a> <i class="iconfont icon-love"></i> <a href="https://centyuan.github.io" target="_blank" rel="nofollow noopener"><span>BLog</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
