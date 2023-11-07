@@ -16,24 +16,24 @@
   <meta name="author" content="hlyuan">
   <meta name="keywords" content="">
   
-    <meta name="description" content="一.PostgreSQL相对于MySQL的优势  在SQL的标准实现上要比MySQL完善，而且功能实现比较严谨； 存储过程的功能支持要比MySQL好，具备本地缓存执行计划的能力； 对表连接支持较完整，优化器的功能较完整，支持的索引类型很多，复杂查询能力较强； PG主表采用堆表存放，MySQL采用索引组织表，能够支持比MySQL更大的数据量。 PG的主备复制属于物理复制，相对于MySQL基于binl">
+    <meta name="description" content="一:server配置  参考Nginx  1.root:匹配时:root定义的路径+port后面的路径 http:&#x2F;&#x2F;ww.xxx.com&#x2F;img&#x2F;xjj.png location ^~ &#x2F;img &#123;     root &#x2F;var&#x2F;www&#x2F;static&#x2F;; &#125; 最终:会找到&#x2F;var&#x2F;www&#x2F;static&#x2F;img&#x2F;xjj.png 2.alias:匹配是:alias定义的路径+loc">
 <meta property="og:type" content="article">
-<meta property="og:title" content="PG VS Mysql">
-<meta property="og:url" content="https://centyuan.github.io/2023/11/06/%E6%95%B0%E6%8D%AE%E5%BA%93/PostgreSQL%20VS%20MySQL/index.html">
+<meta property="og:title" content="nginx配置说明">
+<meta property="og:url" content="https://centyuan.github.io/2023/11/07/%E4%B8%AD%E9%97%B4%E4%BB%B6/nginx%E9%85%8D%E7%BD%AE%E8%AF%A6%E8%A7%A3/index.html">
 <meta property="og:site_name" content="centyuan Blog">
-<meta property="og:description" content="一.PostgreSQL相对于MySQL的优势  在SQL的标准实现上要比MySQL完善，而且功能实现比较严谨； 存储过程的功能支持要比MySQL好，具备本地缓存执行计划的能力； 对表连接支持较完整，优化器的功能较完整，支持的索引类型很多，复杂查询能力较强； PG主表采用堆表存放，MySQL采用索引组织表，能够支持比MySQL更大的数据量。 PG的主备复制属于物理复制，相对于MySQL基于binl">
+<meta property="og:description" content="一:server配置  参考Nginx  1.root:匹配时:root定义的路径+port后面的路径 http:&#x2F;&#x2F;ww.xxx.com&#x2F;img&#x2F;xjj.png location ^~ &#x2F;img &#123;     root &#x2F;var&#x2F;www&#x2F;static&#x2F;; &#125; 最终:会找到&#x2F;var&#x2F;www&#x2F;static&#x2F;img&#x2F;xjj.png 2.alias:匹配是:alias定义的路径+loc">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2023-11-06T07:02:11.048Z">
-<meta property="article:modified_time" content="2023-11-07T08:33:16.964Z">
+<meta property="article:published_time" content="2023-11-07T08:35:34.037Z">
+<meta property="article:modified_time" content="2023-11-07T10:05:32.326Z">
 <meta property="article:author" content="hlyuan">
-<meta property="article:tag" content="PostgreSQL">
+<meta property="article:tag" content="nginx">
 <meta name="twitter:card" content="summary_large_image">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>PG VS Mysql - centyuan Blog</title>
+  <title>nginx配置说明 - centyuan Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -200,7 +200,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="PG VS Mysql"></span>
+            <span id="subtitle" data-typed-text="nginx配置说明"></span>
           
         </div>
 
@@ -211,8 +211,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-11-06 15:02" pubdate>
-          2023年11月6日 下午
+        <time datetime="2023-11-07 16:35" pubdate>
+          2023年11月7日 下午
         </time>
       </span>
     
@@ -223,7 +223,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1k 字
+          5.8k 字
         
       </span>
     
@@ -234,7 +234,7 @@
         
         
         
-          9 分钟
+          49 分钟
         
       </span>
     
@@ -271,43 +271,262 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">PG VS Mysql</h1>
+            <h1 id="seo-header">nginx配置说明</h1>
             
             
               <div class="markdown-body">
                 
-                <h4 id="一-PostgreSQL相对于MySQL的优势">一.PostgreSQL相对于MySQL的优势</h4>
+                <h4 id="一-server配置">一:server配置</h4>
 <blockquote>
-<p>在SQL的标准实现上要比MySQL完善，而且功能实现比较严谨；</p>
-<p>存储过程的功能支持要比MySQL好，具备本地缓存执行计划的能力；</p>
-<p>对表连接支持较完整，优化器的功能较完整，支持的索引类型很多，复杂查询能力较强；</p>
-<p>PG主表采用堆表存放，MySQL采用索引组织表，能够支持比MySQL更大的数据量。</p>
-<p>PG的主备复制属于物理复制，相对于MySQL基于binlog的逻辑复制，数据的一致性更加可靠，复制性能更高，对主机性能的影响也更小。</p>
-<p>MySQL的存储引擎插件化机制，存在锁机制复杂影响并发的问题，而PG不存在。</p>
+<p>参考<a target="_blank" rel="noopener" href="https://www.weixueyuan.net/a/676.html">Nginx</a></p>
 </blockquote>
-<h4 id="二、MySQL相对于PG的优势：">二、MySQL相对于PG的优势：</h4>
+<h5 id="1-root-匹配时-root定义的路径-port后面的路径">1.root:匹配时:root定义的路径+port后面的路径</h5>
+<div class="code-wrapper"><pre><code class="hljs text">http://ww.xxx.com/img/xjj.png
+location ^~ /img &#123;
+    root /var/www/static/;
+&#125;</code></pre></div>
+<p>最终:会找到/var/www/static/img/xjj.png</p>
+<h5 id="2-alias-匹配是-alias定义的路径-location匹配部分后面的路径">2.alias:匹配是:alias定义的路径+location匹配部分后面的路径</h5>
+<div class="code-wrapper"><pre><code class="hljs text">http://www.xxx.com/img/xjj.png
+location ^~ /img &#123;
+    alias /var/www/static/images/;
+&#125;</code></pre></div>
+<p>最终:会找到 /var/www/static/images/xjj.png</p>
+<h5 id="3-upstream">3.upstream</h5>
+<div class="code-wrapper"><pre><code class="hljs text">upstream back_server &#123;
+    server backend1.example.com weight=5;
+    server 127.0.0.1:8001 max_fials=3 fail_timeout=5;  
+    server unix:///data/sc_api/sc_api/my_sock.sock;
+
+&#125;</code></pre></div>
 <blockquote>
-<p>innodb的基于回滚段实现的MVCC机制，相对PG新老数据一起存放的基于XID的MVCC机制，是占优的。新老数据一起存放，需要定时触 发VACUUM，会带来多余的IO和数据库对象加锁开销，引起数据库整体的并发能力下降。而且VACUUM清理不及时，还可能会引发数据膨胀；</p>
-<p>MySQL采用索引组织表，这种存储方式非常适合基于主键匹配的查询、删改操作，但是对表结构设计存在约束；</p>
-<p>MySQL的优化器较简单，系统表、运算符、数据类型的实现都很精简，非常适合简单的查询操作；</p>
-<p>MySQL分区表的实现要优于PG的基于继承表的分区实现，主要体现在分区个数达到上千上万后的处理性能差异较大。</p>
-<p>MySQL的存储引擎插件化机制，使得它的应用场景更加广泛，比如除了innodb适合事务处理场景外，myisam适合静态数据的查询场景。</p>
+<p>参考<a target="_blank" rel="noopener" href="https://juejin.cn/post/7238401671045873721">nginx反向代理及参数配置</a></p>
+<p>server:指定一台上游服务器的名字,可以是(域名/ip地址端口/UNIC句柄)</p>
+<p>weight:设置权重</p>
+<p>max_fail:在fail_timeout时间段内,转发失败次数超过number就不可用</p>
+<p>fail_timeout:设置超时时间</p>
+<p>down：表示所有的上游服务器永久下线，只在使用ip_hash配置项时才有用。</p>
+<p>backup：在使用ip_hash配置项时它是无效的。表示所在的上游服务器只是备份服务器，只有在所有的非备份上游服务器都失效后，才会向所在的上游服务器转发请求。</p>
+<p>proxy_pass:http:/ip:port/uri  或者 back_server</p>
+<p>proxy_set_header   Host $host;  # 反向代理是不会转发请求中的Host头部的，如需转发需加上配置</p>
+<p>proxy_redirect  <a target="_blank" rel="noopener" href="http://localhost:8000/two/">http://localhost:8000/two/</a>  <a target="_blank" rel="noopener" href="http://frontendone">http://frontendone</a>;  # 重定向 location字段的URL是<a target="_blank" rel="noopener" href="http://localhost:8000/two/some/uri/">http://localhost:8000/two/some/uri/</a> 转发给客户端的location就是：<a target="_blank" rel="noopener" href="http://frontendonesome/uri/">http://frontendonesome/uri/</a></p>
 </blockquote>
+<h5 id="4-server配置demo">4.server配置demo</h5>
+<div class="code-wrapper"><pre><code class="hljs text">server &#123;
+    listern 8000;
+    server_name www.centyuan.top centyuan.top;
+    charset utf-8;  # 字符集
+    access_log  /data/sc_api/logs/my_access.log;
+    error_log /data/sc_api/logs/my_error.log;
+    client_max_body_size 75M  # 上传最大限制
+    loction / &#123;
+        root /data/dist;
+        index index.html
+        try_files $uri $uri/ /index.html;
+        # 1.用户请 http://localhost/example时,$uri就是/example
+        # 2.在/data/dist/下尝找这个名example的文件($uri表示这个文件) 或 找这个example的目录($uri表示这个目录)
+        # 3.前面两个都找不到,内部请求 /index.html
+    &#125;
+    # 精准匹配
+    location = /api/upload_id &#123;
+        include uwsgi_params;
+        uwsgi_pass 127.0.0.1:8001;
+    &#125;
+    location /media &#123;
+        alias /root/sc_api/media_common;
+    &#125;
+    location /static &#123;
+        alias /root/sc_api/static_common;
+        autoindex on;
+    &#125;
+    location / &#123;
+        auth_basic &quot;login&quot;;
+        auth_basic_user_file /data/passwd.txt
+
+        include uwsgi_params; #将所有参数都转到uwsgi下
+        uwsgi_pass 127.0.0.1:8001;
+        #uwsgi_pass unix:///data/sc_api/my_sock.sock;
+        #proxy_pass http://127.0.0.1:8001;
+        &quot;&quot;&quot;
+        fastcgi_pass：将请求传递给 fastCGI 服务器。
+        uwsgi_pass：将请求传递给 uwsgi 服务器。
+        scgi_pass：将请求传递给 SCGI 服务器。
+        memcached_pass：将请求传递给 memcached 服务器。
+        &quot;&quot;&quot;
+    &#125;
+    error_page 404 /404.html;
+    location /404.html &#123;
+    &#125;
+    error_page 500 502 503 /50x.html;
+    location =/50x.html &#123;
+    &#125;
+
+&#125;</code></pre></div>
+<h4 id="二-ssl-cerbot生成证书">二:ssl cerbot生成证书</h4>
+<div class="code-wrapper"><pre><code class="hljs text">server &#123;
+    if ($host ==www.example.com)&#123;
+        return 301 https://$host$request_uri;
+    &#125;
+    listen 80;
+    server_name example.com www.example.com
+
+&#125;
+server &#123;
+    server_name example.com www.example.com
+    client_max_body_size 1024m;
+
+​    location / &#123;
+​        proxy_set_header HOST $host;
+​        proxy_set_header X-Forwarded-Proto $scheme;
+​        proxy_set_header X-Real-IP $remote_addr;
+​        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+​        proxy_pass http://127.0.0.1:1000/;
+​    &#125;
+​    listen 443 ssl;
+​    ssl_certificate /etc/letsencrypt/live/www.example.com/fullchain.pem; # managed by Certbot
+​    ssl_certificate_key /etc/letsencrypt/live/www.example.com/privkey.pem; # managed by Certbot
+​    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+​    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+&#125;</code></pre></div>
+<h4 id="三-全局配置">三:全局配置</h4>
+<div class="code-wrapper"><pre><code class="hljs text">user root root; # 配置用和用户组
+woker_precesses auto; # 允许生成的进程数
+pid /run/nginx.pid;
+includ /usr/share/nginx/modules/*.conf;
+events &#123;
+    worker_connections 1024;
+&#125;
+http &#123;
+    # 设置日志格式
+    log_format main &#x27;$remote_addr - $remote_user [$time_local] &quot;$request&quot; &#x27;
+                      &#x27;$status $body_bytes_sent &quot;$http_referer&quot; &#x27;
+                      &#x27;&quot;$http_user_agent&quot; &quot;$http_x_forwarded_for&quot;&#x27;;
+
+    access_log /var/log/nginx/access.log main;
+    # sendfile开启高效文件传输模式,同时搭配二选一:tcp_nopush或tcp_nodelay开启
+    # 可防止网络及磁盘I/O阻塞，提升Nginx工作效率
+    sendfile            on; # 减少user mode切换到kernel mode,直接在kernel model上做复制
+    tcp_nopush          on; # 缓冲区数据装满在发送
+    tcp_nodelay         on; # 使缓冲区数据立即发送
+    keepalive_timeout   65;
+    types_hash_max_size 4096;
+&#125;</code></pre></div>
+<h4 id="四-location详解">四:location详解</h4>
+<div class="code-wrapper"><pre><code class="hljs text">1:三种类型location
+	精准匹配:location = / &#123;&#125;	
+	一般匹配:location / &#123;&#125;
+	正则匹配:location ~/ &#123;&#125;
+2:常用匹配规则
+	=:精准匹配
+	~:正则匹配,区分大小写
+	~*:正则匹配,忽略大小写
+	^~:开头匹配，匹配成功后，不在匹配其他的。 location ^~ /index/   http://abc.com/index/index.html
+3:location优先级
+	location = 精准匹配
+	location 完整路径 https://zhuanlan.zhihu.com/p/611501017
+	location ^~
+	location ~或~*正则匹配
+最后交给 / 通配符</code></pre></div>
+<h4 id="五-认证配置">五:认证配置</h4>
+<div class="code-wrapper"><pre><code class="hljs text">1:生成密码文件
+apt install apache2-utilf 或yum install http-tools 或 yum install httpd
+htpasswd -cb auth_htpasswd angel lovebeauty3
+2:nginx配置说明
+auth_basic &quot;提示信息&quot;;
+auth_basic_user_file auth_htpasswd;</code></pre></div>
+<h4 id="六-禁止php-shell-python目录执行权限">六:禁止php,shell,python目录执行权限</h4>
+<div class="code-wrapper"><pre><code class="hljs text">location ~^/images/.*\.(php|php5|sh|pl|py)$
+&#123;
+    deny all;
+&#125;
+location ~^/static/.*\.(phh|php5|sh|pl|py)$
+&#123;
+    deny all;
+&#125;
+location ~^/data/(attachment|avatar).*\.(php|php5)$
+&#123;
+    deny all;
+&#125;
+location ~^/(cadmin|ueditor)&#123;
+&#125;</code></pre></div>
+<h4 id="七-安全问题">七:安全问题</h4>
 <blockquote>
-<p><strong>mysql性能极限:</strong><br>
-mysql单表字段数:建议20-50<br>
-mysql默认单字段大小：存储最大空间为1M,可以修改max_allowed_packet=16<br>
-mysql单表：老版mysql3.22中,还是ISAM存储引擎,单表限制为4GB<br>
-之后为INNODB 单表限制64TB<br>
-数据库:<br>
-Cmshelp 团队做CMS 系统评测时的结果来看,<br>
-MySQL单表大约在2千万条记录（4G）下能够良好运行，经过数据库的优化后5千万条记录（10G）下运行良好。阿里巴巴《Java 开发手册》提出单表行数超过 500 万行或者单表容量超过 2GB，才推荐进行分库分表。</p>
-<p><strong>PostgreSQL性能极限:</strong><br>
-最大单个数据库大小:不限最大数据单表大小:32TB<br>
-单条记录大小:1.6TB<br>
-单字段最大允许:1GB<br>
-单表允许最大记录数:不限单表最大字段数:250-1600取决于字段类型单表最大索引数:不限</p>
+<p>参考</p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/611501017">nginx 安装升级安全配置</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq1773304209/article/details/105334920">fastdf</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_26545305/article/details/80186385">FastDFS防盗链</a>采用token</p>
 </blockquote>
+<div class="code-wrapper"><pre><code class="hljs text">1.严禁使用root
+user nobody nobody
+2.配置文件禁止放在web目录中
+3.静态文件目录严禁执行脚本
+	location ~* ^/(media|static)/.*.(php|php5|python)$ &#123;
+    deny all;
+	&#125;
+4.隐藏版本号
+	server_tokens off
+5.禁用不需要的http方法
+	limit_except GET HEAD POST &#123;deny all;&#125;
+6.配置更安全的SSL
+7.防止图片盗链
+  nginx+fastdfs
+ 
+  
+8.防ddos(设置缓冲区大小|设置超时时间)
+	client_body_buffer_size  1K;
+	client_header_buffer_size 1k;
+	client_max_body_size 1k;3
+	large_client_header_buffers 2 1k;
+	client_body_timeout   10;
+	client_header_timeout 10;
+	keepalive_timeout     5 5;
+	send_timeout          10;
+9.限流
+	ngx_http_limit_req_module来限制访问频率
+	limit_req_zone $binary_remote_addr zone=ip_limit:10m rate=1r/m; # 限制请求频率
+	limit_conn_zone $binary_remote_addr zone=ip_conn:10m;  # 限制并连接数</code></pre></div>
+<h4 id="八-nginx进程调度模式">八:nginx进程调度模式</h4>
+<div class="code-wrapper"><pre><code class="hljs text">1.无调度模式(各个worker进程争相处理客户端连接,容易惊群)
+2.互斥锁模式(各个worker进程争抢互斥锁)
+3.socket sharding(套接字分片):由内核提供的一套分配机制,允许每个worker都有一组相同的监听套字节,外部连接时,内核决定那个工作进程接收</code></pre></div>
+<h4 id="九-nginx中负载均衡策略">九:nginx中负载均衡策略</h4>
+<div class="code-wrapper"><pre><code class="hljs text">.轮询(默认)
+# 每个请求按时间顺序逐一分配到不同的后端服务器，如果后端服务器down掉，能自动剔除。
+upstream backserver &#123;
+    server 192.168.0.11;
+    server 192.168.0.12;
+&#125;
+
+2 weight 权重
+# 指定轮询几率，weight和访问比率成正比，用于后端服务器性能不均的情况。
+upstream backserver &#123;
+    server 192.168.0.11 weight=3;
+    server 192.168.0.12 weight=7;
+&#125;
+
+3 ip_hash(可用于会话保持)
+# 每个请求按访问ip的hash结果分配，这样每个访客固定访问一个后端服务器 (不能绝对的负载均衡)
+upstream backserver &#123;
+    ip_hash;
+    server 192.168.0.11:8001
+    server 192.168.0.12:8002
+&#125;
+4 fair（第三方）
+# 按后端服务器的响应时间来分配请求，响应时间短的优先分配。
+upstream backserver &#123;
+    server server1;
+    server server2;
+    fair;
+&#125;
+
+5 url_hash(第三方需装插件)
+# 按访问url的hash结果来分配请求，使每个url定向到同一个（对应的）后端服务器，后端服务器为缓存时比较有效。
+upstream backserver &#123;
+    server squid1:3128;
+    server squid2:3128;
+    hash $request_uri;
+    hash_method crc32;
+&#125;</code></pre></div>
 <script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
                 
               </div>
@@ -326,7 +545,7 @@ MySQL单表大约在2千万条记录（4G）下能够良好运行，经过数据
     
       <span class="category-chain">
         
-  <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/" class="category-chain-item">数据库</a>
+  <a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/" class="category-chain-item">中间件</a>
   
   
 
@@ -341,7 +560,7 @@ MySQL单表大约在2千万条记录（4G）下能够良好运行，经过数据
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/PostgreSQL/" class="print-no-link">#PostgreSQL</a>
+        <a href="/tags/nginx/" class="print-no-link">#nginx</a>
       
     </div>
   
@@ -353,8 +572,8 @@ MySQL单表大约在2千万条记录（4G）下能够良好运行，经过数据
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>PG VS Mysql</div>
-      <div>https://centyuan.github.io/2023/11/06/数据库/PostgreSQL VS MySQL/</div>
+      <div>nginx配置说明</div>
+      <div>https://centyuan.github.io/2023/11/07/中间件/nginx配置详解/</div>
     </div>
     <div class="license-meta">
       
@@ -366,7 +585,7 @@ MySQL单表大约在2千万条记录（4G）下能够良好运行，经过数据
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年11月6日</div>
+          <div>2023年11月7日</div>
         </div>
       
       
@@ -398,9 +617,9 @@ MySQL单表大约在2千万条记录（4G）下能够良好运行，经过数据
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/11/06/%E6%95%B0%E6%8D%AE%E5%BA%93/redis%E6%8C%81%E4%B9%85%E5%8C%96%E6%96%B9%E6%A1%88/" title="Redis持久化方案">
+                      <a href="/2023/11/07/%E4%B8%AD%E9%97%B4%E4%BB%B6/nginx%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98%E5%8F%8A%E9%AB%98%E5%B9%B6%E5%8F%91%E9%85%8D%E7%BD%AE/" title="nginx性能调优及高并发配置">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Redis持久化方案</span>
+                        <span class="hidden-mobile">nginx性能调优及高并发配置</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -408,8 +627,8 @@ MySQL单表大约在2千万条记录（4G）下能够良好运行，经过数据
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/11/06/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql%E7%9A%84deletetruncatedrop%E5%AF%B9%E6%AF%94%E5%92%8Cbinlog%E6%97%A5%E5%BF%97%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D/" title="">
-                        <span class="hidden-mobile"></span>
+                      <a href="/2023/11/07/%E6%95%B0%E6%8D%AE%E5%BA%93/Postgresql/" title="Postgresql">
+                        <span class="hidden-mobile">Postgresql</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

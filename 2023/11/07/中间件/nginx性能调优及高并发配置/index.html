@@ -16,24 +16,26 @@
   <meta name="author" content="hlyuan">
   <meta name="keywords" content="">
   
-    <meta name="description" content="一.PostgreSQL相对于MySQL的优势  在SQL的标准实现上要比MySQL完善，而且功能实现比较严谨； 存储过程的功能支持要比MySQL好，具备本地缓存执行计划的能力； 对表连接支持较完整，优化器的功能较完整，支持的索引类型很多，复杂查询能力较强； PG主表采用堆表存放，MySQL采用索引组织表，能够支持比MySQL更大的数据量。 PG的主备复制属于物理复制，相对于MySQL基于binl">
+    <meta name="description" content="Nginx: 采用:单线程,异步非阻塞处理请求,事件驱动,IO复用技术(epoll)，不会为每个请求分配cpu和内存资源，节省了大量资源，同时也减少了大量的CPU的上下文切换。所以才使得Nginx支持更高的并发。 所有worker进程的listenfd会在新连接到来时变得可读，为保证只有一个进程处理该连接，所有worker进程在注册listenfd读事件前抢accept_mutex，抢到互斥锁">
 <meta property="og:type" content="article">
-<meta property="og:title" content="PG VS Mysql">
-<meta property="og:url" content="https://centyuan.github.io/2023/11/06/%E6%95%B0%E6%8D%AE%E5%BA%93/PostgreSQL%20VS%20MySQL/index.html">
+<meta property="og:title" content="nginx性能调优及高并发配置">
+<meta property="og:url" content="https://centyuan.github.io/2023/11/07/%E4%B8%AD%E9%97%B4%E4%BB%B6/nginx%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98%E5%8F%8A%E9%AB%98%E5%B9%B6%E5%8F%91%E9%85%8D%E7%BD%AE/index.html">
 <meta property="og:site_name" content="centyuan Blog">
-<meta property="og:description" content="一.PostgreSQL相对于MySQL的优势  在SQL的标准实现上要比MySQL完善，而且功能实现比较严谨； 存储过程的功能支持要比MySQL好，具备本地缓存执行计划的能力； 对表连接支持较完整，优化器的功能较完整，支持的索引类型很多，复杂查询能力较强； PG主表采用堆表存放，MySQL采用索引组织表，能够支持比MySQL更大的数据量。 PG的主备复制属于物理复制，相对于MySQL基于binl">
+<meta property="og:description" content="Nginx: 采用:单线程,异步非阻塞处理请求,事件驱动,IO复用技术(epoll)，不会为每个请求分配cpu和内存资源，节省了大量资源，同时也减少了大量的CPU的上下文切换。所以才使得Nginx支持更高的并发。 所有worker进程的listenfd会在新连接到来时变得可读，为保证只有一个进程处理该连接，所有worker进程在注册listenfd读事件前抢accept_mutex，抢到互斥锁">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2023-11-06T07:02:11.048Z">
-<meta property="article:modified_time" content="2023-11-07T08:33:16.964Z">
+<meta property="og:image" content="https://centyuan.github.io/img/nginx_process_model">
+<meta property="article:published_time" content="2023-11-07T13:16:07.226Z">
+<meta property="article:modified_time" content="2023-11-07T13:27:54.582Z">
 <meta property="article:author" content="hlyuan">
-<meta property="article:tag" content="PostgreSQL">
+<meta property="article:tag" content="nginx">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://centyuan.github.io/img/nginx_process_model">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>PG VS Mysql - centyuan Blog</title>
+  <title>nginx性能调优及高并发配置 - centyuan Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -200,7 +202,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="PG VS Mysql"></span>
+            <span id="subtitle" data-typed-text="nginx性能调优及高并发配置"></span>
           
         </div>
 
@@ -211,8 +213,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-11-06 15:02" pubdate>
-          2023年11月6日 下午
+        <time datetime="2023-11-07 21:16" pubdate>
+          2023年11月7日 晚上
         </time>
       </span>
     
@@ -223,7 +225,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1k 字
+          3.9k 字
         
       </span>
     
@@ -234,7 +236,7 @@
         
         
         
-          9 分钟
+          33 分钟
         
       </span>
     
@@ -271,43 +273,143 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">PG VS Mysql</h1>
+            <h1 id="seo-header">nginx性能调优及高并发配置</h1>
             
             
               <div class="markdown-body">
                 
-                <h4 id="一-PostgreSQL相对于MySQL的优势">一.PostgreSQL相对于MySQL的优势</h4>
+                <p><img src="/img/nginx_process_model" srcset="/img/loading.gif" lazyload alt="nginx_model"></p>
 <blockquote>
-<p>在SQL的标准实现上要比MySQL完善，而且功能实现比较严谨；</p>
-<p>存储过程的功能支持要比MySQL好，具备本地缓存执行计划的能力；</p>
-<p>对表连接支持较完整，优化器的功能较完整，支持的索引类型很多，复杂查询能力较强；</p>
-<p>PG主表采用堆表存放，MySQL采用索引组织表，能够支持比MySQL更大的数据量。</p>
-<p>PG的主备复制属于物理复制，相对于MySQL基于binlog的逻辑复制，数据的一致性更加可靠，复制性能更高，对主机性能的影响也更小。</p>
-<p>MySQL的存储引擎插件化机制，存在锁机制复杂影响并发的问题，而PG不存在。</p>
+<p>Nginx: 采用:单线程,异步非阻塞处理请求,事件驱动,IO复用技术(epoll)，不会为每个请求分配cpu和内存资源，节省了大量资源，同时也减少了大量的CPU的上下文切换。所以才使得Nginx支持更高的并发。</p>
+<p>所有worker进程的listenfd会在新连接到来时变得可读，为保证只有一个进程处理该连接，所有worker进程在注册listenfd读事件前抢accept_mutex，抢到互斥锁的那个进程注册listenfd读事件，在读事件里调用accept接受该连接</p>
+<p>事件处理(select/poll/epoll/kqueue这样的系统调用,可以监控多个事件)相比多线程:没有上下文切换,事件处理非常轻量,只会占用更多内存</p>
 </blockquote>
-<h4 id="二、MySQL相对于PG的优势：">二、MySQL相对于PG的优势：</h4>
-<blockquote>
-<p>innodb的基于回滚段实现的MVCC机制，相对PG新老数据一起存放的基于XID的MVCC机制，是占优的。新老数据一起存放，需要定时触 发VACUUM，会带来多余的IO和数据库对象加锁开销，引起数据库整体的并发能力下降。而且VACUUM清理不及时，还可能会引发数据膨胀；</p>
-<p>MySQL采用索引组织表，这种存储方式非常适合基于主键匹配的查询、删改操作，但是对表结构设计存在约束；</p>
-<p>MySQL的优化器较简单，系统表、运算符、数据类型的实现都很精简，非常适合简单的查询操作；</p>
-<p>MySQL分区表的实现要优于PG的基于继承表的分区实现，主要体现在分区个数达到上千上万后的处理性能差异较大。</p>
-<p>MySQL的存储引擎插件化机制，使得它的应用场景更加广泛，比如除了innodb适合事务处理场景外，myisam适合静态数据的查询场景。</p>
-</blockquote>
-<blockquote>
-<p><strong>mysql性能极限:</strong><br>
-mysql单表字段数:建议20-50<br>
-mysql默认单字段大小：存储最大空间为1M,可以修改max_allowed_packet=16<br>
-mysql单表：老版mysql3.22中,还是ISAM存储引擎,单表限制为4GB<br>
-之后为INNODB 单表限制64TB<br>
-数据库:<br>
-Cmshelp 团队做CMS 系统评测时的结果来看,<br>
-MySQL单表大约在2千万条记录（4G）下能够良好运行，经过数据库的优化后5千万条记录（10G）下运行良好。阿里巴巴《Java 开发手册》提出单表行数超过 500 万行或者单表容量超过 2GB，才推荐进行分库分表。</p>
-<p><strong>PostgreSQL性能极限:</strong><br>
-最大单个数据库大小:不限最大数据单表大小:32TB<br>
-单条记录大小:1.6TB<br>
-单字段最大允许:1GB<br>
-单表允许最大记录数:不限单表最大字段数:250-1600取决于字段类型单表最大索引数:不限</p>
-</blockquote>
+<h4 id="一-nginx层面优化">一:nginx层面优化</h4>
+<div class="code-wrapper"><pre><code class="hljs text">worker_processes  1; # 1.nginx进程数，一般设置cpu的核心数或核心数X2，一般为它的倍数,
+worker_rlimit_nofile 65535; # 2.一个nginx进程打开的最多文件描述符数目，理论值应该是最多打开文件数（ulimit -n）与nginx 进程数相除，但是nginx 分配请求并不是那么均匀，所以最好与ulimit -n 的值保持一致
+events &#123;
+
+  use epoll;         # 3.使用epoll的I/O模型
+  worker_connections 65535;  # 4.每个worker进程允许的最多连接数,理论上每台nginx 服务器的最大连接数为worker_processes*worker_connections
+  
+  multi_accept on;      # 设置一个进程是否同时接受多个网络连接，默认为off
+  accept_mutex on;      # 5.设置网路连接序列化，防止惊群现象发生，默认为on
+
+&#125;
+
+http &#123;
+
+  access_log off;  #取消服务日志
+  keepalive_timeout 0;    # 6.禁用keepalive_timeout或设置较低值(60)
+  gzip on;    # 7.开启压缩功能
+  # 表示允许压缩的页面最小字节数，页面字节数从header头的Content-Length中获取
+  gzip_min_length  1k;默认值是0，表示不管页面多大都进行压缩，建议设置成大于1K。如果小于1K可能会越压越大
+  gzip_buffers   4 32k; #压缩缓存区大小
+  gzip_http_version 1.1; #压缩版本
+  gzip_comp_level 6; #压缩比率， 一般选择4-6，为了性能
+  gzip_types text/css text/xml application/javascript application/octet-stream;　　#指定压缩的类型
+  gzip_vary on;　#是否传输gzip压缩标志
+  gzip_disable &quot;MSIE [1-6]\.&quot;; #配置禁用gzip条件，支持正则。此处表示ie6及以下不启用gzip（因为ie低版本不支持）
+  gzip_proxied off;  # 设置请求者代理服务器,该如何缓存内容
+		Nginx做为反向代理的时候启用：
+		off – 关闭所有的代理结果数据压缩
+		expired – 如果header中包含”Expires”头信息，启用压缩
+		no-cache – 如果header中包含”Cache-Control:no-cache”头信息，启用压缩
+		no-store – 如果header中包含”Cache-Control:no-store”头信息，启用压缩
+		private – 如果header中包含”Cache-Control:private”头信息，启用压缩
+		no_last_modified – 启用压缩，如果header中包含”Last_Modified”头信息，启用压缩
+		no_etag – 启用压缩，如果header中包含“ETag”头信息，启用压缩
+		auth – 启用压缩，如果header中包含“Authorization”头信息，启用压缩
+		 any – 无条件压缩所有结果数据
+
+  #设定请求缓冲
+  client_header_buffer_size   128k;
+  large_client_header_buffers  4 128k;
+  proxy_connect_timeout 90; # 8.proxy超时设置
+  proxy_send_timeout  90;
+  proxy_read_timeout  4k;
+  proxy_buffers 4 32k;
+  proxy_busy_buffers_size 64k
+  #sendfile 开启高效文件传输模式,指定 nginx 是否调用 sendfile 函数（zero copy零拷贝方式）来输出文件，
+  #搭配二选一:tcp_nopush或tcp_nodelay开启
+  #可防止网络及磁盘I/O阻塞，提升Nginx工作效率
+  #对于普通应用，必须设为 on,
+  #如果用来进行下载等应用磁盘IO重负载应用，可设置为 off，
+  #平衡磁盘与网络I/O处理速度，可防止网络及磁盘I/O阻塞，提升Nginx工作效率,降低系统的uptime.
+  sendfile on; # 9.开启高效文件传输模式。
+  tcp_nopush on; # (优化大文件传输和网络阻塞)需要在sendfile开启模式才有效:每个数达到阈值时一次性发送,减少网络报文段的数量。
+  tcp_nodelay on; # (优化小块传输)使缓冲区数据立即发送
+  sendfile_max_chunk 100k; # 10.每个进程每次调用传输数量不能大于设定的值，默认为0，即不设上限。
+  upstream my_back &#123;
+	server 127.0.0.1:7878;
+	server 192.168.10.121:333 backup;# 热备
+
+  &#125;
+  server &#123;
+	keepalive_requests 120; # 单连接请求上限次数
+	#为静态文件启用缓存为静态文件启用缓存，以减少带宽并提高性能，可以添加下面的命令，限定计算机缓存网页的静态文件：
+	location ~* .(jpg|jpeg|png|gif|ico|css|js)$ &#123;
+	expires 365d;
+	&#125;
+	&#125;
+&#125;
+worker_cpu_affinity auto; # 10. cpu的亲和配置,cache不会因为进程切换而失效</code></pre></div>
+<h4 id="二-系统层面">二:系统层面</h4>
+<div class="code-wrapper"><pre><code class="hljs text"># 调整同时打开文件数量ulimit针对当前shell的当前用户
+ulimit -n 20480                    # 1.shell级限制
+vim /etc/security/limits.conf      # 2.用户级限制
+# 添加下面两行
+soft nofile 65535 #应用软件级别的最大可打开文件数的限制
+hard nofile 65535 #操作系统级别的最大可打开文件数的限制
+
+vim /proc/sys/fs/file-max          # 3.系统级别限制
+# TCP最大连接数
+echo 10000 &gt; /proc/sys/net/core/somaxconn
+# TCP连接立即回收、回用（recycle、reuse）
+echo 1 &gt; /proc/sys/net/ipv4/tcp_tw_reuse
+echo 1 &gt; /proc/sys/net/ipv4/tcp_tw_recycle
+# 不做TCP洪水抵御
+echo 0 &gt; /proc/sys/net/ipv4/tcp_syncookies
+
+可以直接使用优化后的配置，在/etc/sysctl.conf中加入：
+# TCP最大连接数，每一个端口最大的监听队列的长度,默认128，负载要求很高（并发要求很大）的服务程序的要求是远远不能满足的
+net.core.somaxconn = 2048
+net.core.rmem_default = 262144
+net.core.wmem_default = 262144
+net.core.rmem_max = 16777216
+net.core.wmem_max = 16777216
+net.ipv4.tcp_rmem = 4096 4096 16777216
+net.ipv4.tcp_wmem = 4096 4096 16777216
+net.ipv4.tcp_mem = 786432 2097152 3145728
+net.ipv4.tcp_max_syn_backlog = 16384
+net.core.netdev_max_backlog = 20000
+net.ipv4.tcp_fin_timeout = 15
+net.ipv4.tcp_max_syn_backlog = 16384、
+# tcp连接重用
+net.ipv4.tcp_tw_reuse = 1
+net.ipv4.tcp_tw_recycle = 1
+# 不抵御洪水攻击
+net.ipv4.tcp_syncookies = 0
+net.ipv4.tcp_max_orphans = 262144  #该参数用于设定系统中最多允许存在多少TCP套接字不被关联到任何一个用户文件句柄上，主要目的为防止Ddos攻击
+vm.swappiness = 10 #物理内存剩下10%时使用虚拟内存
+使用：sysctl -p 生效
+sysctl -p
+
+
+# 总限制文件句柄数
+cat /proc/sys/fs/file-max
+# 当前使用的文件句柄数
+cat /proc/sys/fs/file-nr
+# 修改
+vim /etc/security/limits.conf
+（*表示所有用户、soft表示可以超出，但只是警告；hard表示绝对不能超出，unlimited用于表示不限制）
+
+### 缓存+gzip+sendfile+http2
+# 三:nginx+keepalived实现高可用
+# 四:nginx -s reload 平滑升级(创建新的worker接受新的请求,旧的worker等处理完所有请求后关闭)</code></pre></div>
+<p>参考：</p>
+<p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6895660634466156558">nginx全能解析及性能优化</a></p>
+<p><a target="_blank" rel="noopener" href="https://tengine.taobao.org/book/chapter_02.html">nginx平台架构</a></p>
 <script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
                 
               </div>
@@ -326,7 +428,7 @@ MySQL单表大约在2千万条记录（4G）下能够良好运行，经过数据
     
       <span class="category-chain">
         
-  <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/" class="category-chain-item">数据库</a>
+  <a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/" class="category-chain-item">中间件</a>
   
   
 
@@ -341,7 +443,7 @@ MySQL单表大约在2千万条记录（4G）下能够良好运行，经过数据
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/PostgreSQL/" class="print-no-link">#PostgreSQL</a>
+        <a href="/tags/nginx/" class="print-no-link">#nginx</a>
       
     </div>
   
@@ -353,8 +455,8 @@ MySQL单表大约在2千万条记录（4G）下能够良好运行，经过数据
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>PG VS Mysql</div>
-      <div>https://centyuan.github.io/2023/11/06/数据库/PostgreSQL VS MySQL/</div>
+      <div>nginx性能调优及高并发配置</div>
+      <div>https://centyuan.github.io/2023/11/07/中间件/nginx性能调优及高并发配置/</div>
     </div>
     <div class="license-meta">
       
@@ -366,7 +468,7 @@ MySQL单表大约在2千万条记录（4G）下能够良好运行，经过数据
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年11月6日</div>
+          <div>2023年11月7日</div>
         </div>
       
       
@@ -398,18 +500,12 @@ MySQL单表大约在2千万条记录（4G）下能够良好运行，经过数据
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/11/06/%E6%95%B0%E6%8D%AE%E5%BA%93/redis%E6%8C%81%E4%B9%85%E5%8C%96%E6%96%B9%E6%A1%88/" title="Redis持久化方案">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Redis持久化方案</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/11/06/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql%E7%9A%84deletetruncatedrop%E5%AF%B9%E6%AF%94%E5%92%8Cbinlog%E6%97%A5%E5%BF%97%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D/" title="">
-                        <span class="hidden-mobile"></span>
+                      <a href="/2023/11/07/%E4%B8%AD%E9%97%B4%E4%BB%B6/nginx%E9%85%8D%E7%BD%AE%E8%AF%A6%E8%A7%A3/" title="nginx配置说明">
+                        <span class="hidden-mobile">nginx配置说明</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

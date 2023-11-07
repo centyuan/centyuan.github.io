@@ -16,24 +16,24 @@
   <meta name="author" content="hlyuan">
   <meta name="keywords" content="">
   
-    <meta name="description" content="一.PostgreSQL相对于MySQL的优势  在SQL的标准实现上要比MySQL完善，而且功能实现比较严谨； 存储过程的功能支持要比MySQL好，具备本地缓存执行计划的能力； 对表连接支持较完整，优化器的功能较完整，支持的索引类型很多，复杂查询能力较强； PG主表采用堆表存放，MySQL采用索引组织表，能够支持比MySQL更大的数据量。 PG的主备复制属于物理复制，相对于MySQL基于binl">
+    <meta name="description" content="常用命令  基本命令: -h：数据库服务器地址； -p：数据库端口号； -U：U 大写,表示用户名； -d：数据库名称； -f：把备份文件放在哪里； 初始化数据库: &#x2F;usr&#x2F;local&#x2F;pgsql&#x2F;bin&#x2F;initdb -D &#x2F;usr&#x2F;local&#x2F;pgsql&#x2F;data&#x2F; &#x2F;usr&#x2F;local&#x2F;pgsql&#x2F;bin&#x2F;pg_ctl -D &#x2F;usr&#x2F;local&#x2F;pgsql&#x2F;data -l logfile">
 <meta property="og:type" content="article">
-<meta property="og:title" content="PG VS Mysql">
-<meta property="og:url" content="https://centyuan.github.io/2023/11/06/%E6%95%B0%E6%8D%AE%E5%BA%93/PostgreSQL%20VS%20MySQL/index.html">
+<meta property="og:title" content="Postgresql">
+<meta property="og:url" content="https://centyuan.github.io/2023/11/07/%E6%95%B0%E6%8D%AE%E5%BA%93/Postgresql/index.html">
 <meta property="og:site_name" content="centyuan Blog">
-<meta property="og:description" content="一.PostgreSQL相对于MySQL的优势  在SQL的标准实现上要比MySQL完善，而且功能实现比较严谨； 存储过程的功能支持要比MySQL好，具备本地缓存执行计划的能力； 对表连接支持较完整，优化器的功能较完整，支持的索引类型很多，复杂查询能力较强； PG主表采用堆表存放，MySQL采用索引组织表，能够支持比MySQL更大的数据量。 PG的主备复制属于物理复制，相对于MySQL基于binl">
+<meta property="og:description" content="常用命令  基本命令: -h：数据库服务器地址； -p：数据库端口号； -U：U 大写,表示用户名； -d：数据库名称； -f：把备份文件放在哪里； 初始化数据库: &#x2F;usr&#x2F;local&#x2F;pgsql&#x2F;bin&#x2F;initdb -D &#x2F;usr&#x2F;local&#x2F;pgsql&#x2F;data&#x2F; &#x2F;usr&#x2F;local&#x2F;pgsql&#x2F;bin&#x2F;pg_ctl -D &#x2F;usr&#x2F;local&#x2F;pgsql&#x2F;data -l logfile">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2023-11-06T07:02:11.048Z">
-<meta property="article:modified_time" content="2023-11-07T08:33:16.964Z">
+<meta property="article:published_time" content="2023-11-07T08:26:16.609Z">
+<meta property="article:modified_time" content="2023-11-07T08:33:21.436Z">
 <meta property="article:author" content="hlyuan">
-<meta property="article:tag" content="PostgreSQL">
+<meta property="article:tag" content="postgresql">
 <meta name="twitter:card" content="summary_large_image">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>PG VS Mysql - centyuan Blog</title>
+  <title>Postgresql - centyuan Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -200,7 +200,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="PG VS Mysql"></span>
+            <span id="subtitle" data-typed-text="Postgresql"></span>
           
         </div>
 
@@ -211,8 +211,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-11-06 15:02" pubdate>
-          2023年11月6日 下午
+        <time datetime="2023-11-07 16:26" pubdate>
+          2023年11月7日 下午
         </time>
       </span>
     
@@ -223,7 +223,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1k 字
+          1.8k 字
         
       </span>
     
@@ -234,7 +234,7 @@
         
         
         
-          9 分钟
+          15 分钟
         
       </span>
     
@@ -271,29 +271,66 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">PG VS Mysql</h1>
+            <h1 id="seo-header">Postgresql</h1>
             
             
               <div class="markdown-body">
                 
-                <h4 id="一-PostgreSQL相对于MySQL的优势">一.PostgreSQL相对于MySQL的优势</h4>
+                <h4 id="常用命令">常用命令</h4>
 <blockquote>
-<p>在SQL的标准实现上要比MySQL完善，而且功能实现比较严谨；</p>
-<p>存储过程的功能支持要比MySQL好，具备本地缓存执行计划的能力；</p>
-<p>对表连接支持较完整，优化器的功能较完整，支持的索引类型很多，复杂查询能力较强；</p>
-<p>PG主表采用堆表存放，MySQL采用索引组织表，能够支持比MySQL更大的数据量。</p>
-<p>PG的主备复制属于物理复制，相对于MySQL基于binlog的逻辑复制，数据的一致性更加可靠，复制性能更高，对主机性能的影响也更小。</p>
-<p>MySQL的存储引擎插件化机制，存在锁机制复杂影响并发的问题，而PG不存在。</p>
+<p><strong>基本命令:</strong><br>
+-h：数据库服务器地址；<br>
+-p：数据库端口号；<br>
+-U：U 大写,表示用户名；<br>
+-d：数据库名称；<br>
+-f：把备份文件放在哪里；</p>
+<p>初始化数据库:<br>
+/usr/local/pgsql/bin/initdb -D /usr/local/pgsql/data/<br>
+/usr/local/pgsql/bin/pg_ctl -D /usr/local/pgsql/data -l logfile start<br>
+设置密码：\password<br>
+列出所有数据库：\l<br>
+列出数据库下所有表：\d 或 \dt<br>
+切换数据库：\c database_name<br>
+查看表结构: \d table_name<br>
+退出：\q<br>
+列出所有用户：\du<br>
+切换用户：\c - user_name<br>
+查看SQL命令解释：\h select<br>
+查看psql命令列表：?<br>
+查看时区和时间：select now(); 或show timezone; 或select * from pg_timezone_names;<br>
+修改时区：set time zone “RPC”; # session级<br>
+alter role all/rolename set timezone=“UTC”; # 用户级别<br>
+alter database dbname set timezone=“UTC”;  #数据库级别全局修改时区需修改配置文件-postgresql.conf</p>
+<p>修改管理员密码：alter user postgres with password “Isoon@qzmp”;<br>
+添加数据库新用户：create user centyuan with password ‘123456’;<br>
+创建数据库：create database exampledb owner centyuan;<br>
+将example数据库所有权限赋予centyuan,否则centyuan只能登录，没有任何数据库操作权限。<br>
+grant all privileges on database exampledb to centyuan;</p>
+<p><strong>登录:</strong><br>
+1.psql -U dbuser -d exampledb -h 127.0.0.1 -p 5432<br>
+2.sudo -u postgres psql<br>
+3.sudo su postgres</p>
+<p><strong>配置数据库允许远程连接访问:</strong></p>
+<p>1修改监听地址cd<br>
+sudo gedit /etc/postgresql/10/main/postgresql.conf<br>
+#将listen_addresses=‘localhost’改为listen_addresses=’*’<br>
+2修改可访问用户的IP段<br>
+sudo gedit /etc/postgresql/10/main/pg_hba.conf<br>
+#在文件末尾添加 host all all 0.0.0.0 0.0.0.0 md5 #表示允许任何IP连接</p>
+<p><strong>数据备份：</strong><br>
+pg_dump  –h 127.0.0.1  -p  5432  -U  postgres -c  –f  dbname.sql  dbname<br>
+pg_dump -h 164.82.233.54 -U postgres databasename &gt; C:\databasename.bak<br>
+使用如下命令可对全部pg数据库进行备份：<br>
+pg_dumpall –h 127.0.0.1 –p 5432 -U postgres –c –f db_bak.sql</p>
+<p><strong>数据恢复:</strong></p>
+<p>windows:</p>
+<blockquote>
+<p>psql -h localhost -U postgres -d new_db -f “C:/emoneysit.bak”</p>
 </blockquote>
-<h4 id="二、MySQL相对于PG的优势：">二、MySQL相对于PG的优势：</h4>
+<p>ubuntu:</p>
 <blockquote>
-<p>innodb的基于回滚段实现的MVCC机制，相对PG新老数据一起存放的基于XID的MVCC机制，是占优的。新老数据一起存放，需要定时触 发VACUUM，会带来多余的IO和数据库对象加锁开销，引起数据库整体的并发能力下降。而且VACUUM清理不及时，还可能会引发数据膨胀；</p>
-<p>MySQL采用索引组织表，这种存储方式非常适合基于主键匹配的查询、删改操作，但是对表结构设计存在约束；</p>
-<p>MySQL的优化器较简单，系统表、运算符、数据类型的实现都很精简，非常适合简单的查询操作；</p>
-<p>MySQL分区表的实现要优于PG的基于继承表的分区实现，主要体现在分区个数达到上千上万后的处理性能差异较大。</p>
-<p>MySQL的存储引擎插件化机制，使得它的应用场景更加广泛，比如除了innodb适合事务处理场景外，myisam适合静态数据的查询场景。</p>
+<p>psql -h localhost -U emmweb -d emmweb &lt; /home/jianghai/Desktop/emmweb.bak</p>
 </blockquote>
-<blockquote>
 <p><strong>mysql性能极限:</strong><br>
 mysql单表字段数:建议20-50<br>
 mysql默认单字段大小：存储最大空间为1M,可以修改max_allowed_packet=16<br>
@@ -341,7 +378,7 @@ MySQL单表大约在2千万条记录（4G）下能够良好运行，经过数据
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/PostgreSQL/" class="print-no-link">#PostgreSQL</a>
+        <a href="/tags/postgresql/" class="print-no-link">#postgresql</a>
       
     </div>
   
@@ -353,8 +390,8 @@ MySQL单表大约在2千万条记录（4G）下能够良好运行，经过数据
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>PG VS Mysql</div>
-      <div>https://centyuan.github.io/2023/11/06/数据库/PostgreSQL VS MySQL/</div>
+      <div>Postgresql</div>
+      <div>https://centyuan.github.io/2023/11/07/数据库/Postgresql/</div>
     </div>
     <div class="license-meta">
       
@@ -366,7 +403,7 @@ MySQL单表大约在2千万条记录（4G）下能够良好运行，经过数据
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年11月6日</div>
+          <div>2023年11月7日</div>
         </div>
       
       
@@ -398,9 +435,9 @@ MySQL单表大约在2千万条记录（4G）下能够良好运行，经过数据
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/11/06/%E6%95%B0%E6%8D%AE%E5%BA%93/redis%E6%8C%81%E4%B9%85%E5%8C%96%E6%96%B9%E6%A1%88/" title="Redis持久化方案">
+                      <a href="/2023/11/07/%E4%B8%AD%E9%97%B4%E4%BB%B6/nginx%E9%85%8D%E7%BD%AE%E8%AF%A6%E8%A7%A3/" title="nginx配置说明">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Redis持久化方案</span>
+                        <span class="hidden-mobile">nginx配置说明</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -408,8 +445,8 @@ MySQL单表大约在2千万条记录（4G）下能够良好运行，经过数据
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/11/06/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql%E7%9A%84deletetruncatedrop%E5%AF%B9%E6%AF%94%E5%92%8Cbinlog%E6%97%A5%E5%BF%97%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D/" title="">
-                        <span class="hidden-mobile"></span>
+                      <a href="/2023/11/07/Python%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E6%94%BE%E5%BC%83/Gil%E5%92%8C%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6/" title="GIL和垃圾回收机制">
+                        <span class="hidden-mobile">GIL和垃圾回收机制</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

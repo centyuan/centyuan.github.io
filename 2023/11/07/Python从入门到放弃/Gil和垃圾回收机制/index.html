@@ -16,24 +16,24 @@
   <meta name="author" content="hlyuan">
   <meta name="keywords" content="">
   
-    <meta name="description" content="一.PostgreSQL相对于MySQL的优势  在SQL的标准实现上要比MySQL完善，而且功能实现比较严谨； 存储过程的功能支持要比MySQL好，具备本地缓存执行计划的能力； 对表连接支持较完整，优化器的功能较完整，支持的索引类型很多，复杂查询能力较强； PG主表采用堆表存放，MySQL采用索引组织表，能够支持比MySQL更大的数据量。 PG的主备复制属于物理复制，相对于MySQL基于binl">
+    <meta name="description" content="一:GIL 1. GIL是什么?  Global interperter Lock是全局解释器锁(并不是python的特性,CPython时所引入的概念,python完全可以不依赖GIL) 每个线程在执行过程都要先获取GIL,保证同一时刻只有一个线程运行,目的是解决多线程之间数据完整性和状态同步,在单核CPU时代对Python有积极作用,在多核CPU时代,阻碍了python在多核cpu的并发。 p">
 <meta property="og:type" content="article">
-<meta property="og:title" content="PG VS Mysql">
-<meta property="og:url" content="https://centyuan.github.io/2023/11/06/%E6%95%B0%E6%8D%AE%E5%BA%93/PostgreSQL%20VS%20MySQL/index.html">
+<meta property="og:title" content="GIL和垃圾回收机制">
+<meta property="og:url" content="https://centyuan.github.io/2023/11/07/Python%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E6%94%BE%E5%BC%83/Gil%E5%92%8C%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6/index.html">
 <meta property="og:site_name" content="centyuan Blog">
-<meta property="og:description" content="一.PostgreSQL相对于MySQL的优势  在SQL的标准实现上要比MySQL完善，而且功能实现比较严谨； 存储过程的功能支持要比MySQL好，具备本地缓存执行计划的能力； 对表连接支持较完整，优化器的功能较完整，支持的索引类型很多，复杂查询能力较强； PG主表采用堆表存放，MySQL采用索引组织表，能够支持比MySQL更大的数据量。 PG的主备复制属于物理复制，相对于MySQL基于binl">
+<meta property="og:description" content="一:GIL 1. GIL是什么?  Global interperter Lock是全局解释器锁(并不是python的特性,CPython时所引入的概念,python完全可以不依赖GIL) 每个线程在执行过程都要先获取GIL,保证同一时刻只有一个线程运行,目的是解决多线程之间数据完整性和状态同步,在单核CPU时代对Python有积极作用,在多核CPU时代,阻碍了python在多核cpu的并发。 p">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2023-11-06T07:02:11.048Z">
-<meta property="article:modified_time" content="2023-11-07T08:33:16.964Z">
+<meta property="article:published_time" content="2023-11-07T02:26:14.275Z">
+<meta property="article:modified_time" content="2023-11-07T08:23:45.894Z">
 <meta property="article:author" content="hlyuan">
-<meta property="article:tag" content="PostgreSQL">
+<meta property="article:tag" content="python">
 <meta name="twitter:card" content="summary_large_image">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>PG VS Mysql - centyuan Blog</title>
+  <title>GIL和垃圾回收机制 - centyuan Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -200,7 +200,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="PG VS Mysql"></span>
+            <span id="subtitle" data-typed-text="GIL和垃圾回收机制"></span>
           
         </div>
 
@@ -211,8 +211,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-11-06 15:02" pubdate>
-          2023年11月6日 下午
+        <time datetime="2023-11-07 10:26" pubdate>
+          2023年11月7日 上午
         </time>
       </span>
     
@@ -223,7 +223,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1k 字
+          3.3k 字
         
       </span>
     
@@ -234,7 +234,7 @@
         
         
         
-          9 分钟
+          28 分钟
         
       </span>
     
@@ -271,43 +271,163 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">PG VS Mysql</h1>
+            <h1 id="seo-header">GIL和垃圾回收机制</h1>
             
             
               <div class="markdown-body">
                 
-                <h4 id="一-PostgreSQL相对于MySQL的优势">一.PostgreSQL相对于MySQL的优势</h4>
+                <h3 id="一-GIL">一:GIL</h3>
+<h4 id="1-GIL是什么">1. GIL是什么?</h4>
 <blockquote>
-<p>在SQL的标准实现上要比MySQL完善，而且功能实现比较严谨；</p>
-<p>存储过程的功能支持要比MySQL好，具备本地缓存执行计划的能力；</p>
-<p>对表连接支持较完整，优化器的功能较完整，支持的索引类型很多，复杂查询能力较强；</p>
-<p>PG主表采用堆表存放，MySQL采用索引组织表，能够支持比MySQL更大的数据量。</p>
-<p>PG的主备复制属于物理复制，相对于MySQL基于binlog的逻辑复制，数据的一致性更加可靠，复制性能更高，对主机性能的影响也更小。</p>
-<p>MySQL的存储引擎插件化机制，存在锁机制复杂影响并发的问题，而PG不存在。</p>
+<p>Global interperter Lock是全局解释器锁(并不是python的特性,CPython时所引入的概念,python完全可以不依赖GIL)</p>
+<p>每个线程在执行过程都要先获取GIL,保证同一时刻只有一个线程运行,目的是解决多线程之间数据完整性和状态同步,在单核CPU时代对Python有积极作用,在多核CPU时代,阻碍了python在多核cpu的并发。</p>
+<p><a target="_blank" rel="noopener" href="https://peps.python.org/pep-0703/">pep-703</a>提案使Cpython有望告别GIL</p>
 </blockquote>
-<h4 id="二、MySQL相对于PG的优势：">二、MySQL相对于PG的优势：</h4>
+<h4 id="2-为什么选择GIL？">2.为什么选择GIL？</h4>
+<p>相比使用更细粒度的锁，GIL具有一下优点:</p>
 <blockquote>
-<p>innodb的基于回滚段实现的MVCC机制，相对PG新老数据一起存放的基于XID的MVCC机制，是占优的。新老数据一起存放，需要定时触 发VACUUM，会带来多余的IO和数据库对象加锁开销，引起数据库整体的并发能力下降。而且VACUUM清理不及时，还可能会引发数据膨胀；</p>
-<p>MySQL采用索引组织表，这种存储方式非常适合基于主键匹配的查询、删改操作，但是对表结构设计存在约束；</p>
-<p>MySQL的优化器较简单，系统表、运算符、数据类型的实现都很精简，非常适合简单的查询操作；</p>
-<p>MySQL分区表的实现要优于PG的基于继承表的分区实现，主要体现在分区个数达到上千上万后的处理性能差异较大。</p>
-<p>MySQL的存储引擎插件化机制，使得它的应用场景更加广泛，比如除了innodb适合事务处理场景外，myisam适合静态数据的查询场景。</p>
+<p>1: 单线程本质是顺序执行，有更好的性能表现</p>
+<p>2: 大大简化了python线程中的共享资源的管理，包装C库更容易，不必担心线程安全</p>
+<p>3: 对于 I/O 密集型来说，在多线程情况下速度更快</p>
+<p>4: 对内存管理的引用计数，有效解决了线程安全问题(因为引用计数管理内存,所以某个对象的引用计数不能被两个线程同时增加和减少,或内存泄露:GIL对线程间共享的所有数据结构加锁可以保证引用计数变量的安全性)</p>
 </blockquote>
+<h4 id="3-GIL什么时候释放">3.GIL什么时候释放</h4>
 <blockquote>
-<p><strong>mysql性能极限:</strong><br>
-mysql单表字段数:建议20-50<br>
-mysql默认单字段大小：存储最大空间为1M,可以修改max_allowed_packet=16<br>
-mysql单表：老版mysql3.22中,还是ISAM存储引擎,单表限制为4GB<br>
-之后为INNODB 单表限制64TB<br>
-数据库:<br>
-Cmshelp 团队做CMS 系统评测时的结果来看,<br>
-MySQL单表大约在2千万条记录（4G）下能够良好运行，经过数据库的优化后5千万条记录（10G）下运行良好。阿里巴巴《Java 开发手册》提出单表行数超过 500 万行或者单表容量超过 2GB，才推荐进行分库分表。</p>
-<p><strong>PostgreSQL性能极限:</strong><br>
-最大单个数据库大小:不限最大数据单表大小:32TB<br>
-单条记录大小:1.6TB<br>
-单字段最大允许:1GB<br>
-单表允许最大记录数:不限单表最大字段数:250-1600取决于字段类型单表最大索引数:不限</p>
+<p>1.协同式多任务处理：IO密集型的操作，在较长的或者不确定的时间(IO阻塞，python标准库中所有阻塞性I/O和time.sleep()都会释放GIL)，没有运行Python代码的需要，线程便会让出GIL</p>
+<p>2.抢占式多任务处理：CPU密集型的操作，解释器运行一段时间就主动释放GIL，这种机制叫间隔式检查（check_interval）,每隔一段时间Python解释器就会强制当前线程去释放 GIL而不需要经过正在执行代码的线程允许，这样其他线程便能运行。</p>
+<p>(在python3中，这个时间间隔是15毫秒)</p>
 </blockquote>
+<h4 id="4-GIL缺陷">4.GIL缺陷</h4>
+<blockquote>
+<p>1:抢占式多任务处理(CPU密集型):</p>
+<p>每个线程在多个cpu交替执行:cpu调度线程唤醒-&gt;去拿GIL-&gt;没拿到-&gt;在等待:1.线程上下文切换,2.争抢不到GIL会让cpu等待,都浪费cpu时间</p>
+<p>2:Python的每个版本中也在逐渐改进GIL和线程调度之间的互动关系。例如先尝试持有GIL在做线程上下文切换，在IO等待时释放GIL等尝试,但是无法改变的是GIL的存在使得操作系统线程调度的这个本来就昂贵的操作变得更奢侈了</p>
+</blockquote>
+<h4 id="5-避免GIL">5.避免GIL</h4>
+<p><strong>1.使用多进程编程，每个进程都有自己的解释器和内存空间</strong></p>
+<blockquote>
+<p>multiprocess替代Thread,每个进程都有独立的GIL,但是它的引入会增加程序实现时线程间数据通讯和同步的困难</p>
+</blockquote>
+<p><strong>2.使用cython避开全局锁</strong></p>
+<blockquote>
+<p>cython通常用于处理计算密集型的任务，以加快python程序总体运行速度</p>
+</blockquote>
+<p><strong>3.使用其他python解释器</strong></p>
+<blockquote>
+<p>PyPy:是用RPython(CPython的子集)实现的Python，根据官网的基准测试数据，它比CPython实现 的Python要快6倍以上。</p>
+<p>虽然也有GIL，但是使用了Just‑in‑Time(JIT)编译器，即动态编译器，与静态编译 器(如gcc,javac等)不同，它是利用程序运行的过程的数据进行优化。</p>
+<p>Pyston:从CPyhton解释器衍生出的分支，实现了性能优化，有可能加速高达30%，由于缺乏兼容的二进制包，需要重新编译</p>
+<p>RustPython:由Rust编写的Python解释器，RustPython和CPython类似，但可以选择启用JIT编译器</p>
+</blockquote>
+<h4 id="6-GIL是否意味线程绝对安全">6.GIL是否意味线程绝对安全</h4>
+<blockquote>
+<p>GIL不是意味线程绝对安全</p>
+<p>在协同式多任务处理情况时，线程是安全的，不需要额外在更细粒度的锁</p>
+<p>在抢占式多任务处理情况时, GIL被强制释放时候，可能会出现线程不安全</p>
+</blockquote>
+<p>如下，两个线程对全局变量进行了1000000次加和减，如果线程安全的，则n为0</p>
+<div class="code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">import</span> threading
+n = <span class="hljs-number">0</span>
+
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">add</span>():
+    <span class="hljs-keyword">global</span> n
+    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">1000000</span>):
+        n = n+<span class="hljs-number">1</span>
+
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">sub</span>():
+    <span class="hljs-keyword">global</span> n 
+    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">1000000</span>):
+        n = n-<span class="hljs-number">1</span>
+<span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&quot;__main__&quot;</span>:
+    t1 = threading.Thread(target=add)
+    t2 = threading.Thread(target=sub)
+    t1.start()
+    t2.start()
+    t1.join()
+    t2.join()
+    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;n的值:&quot;</span>,n)</code></pre></div>
+<p>下面对比下add和sub字节码执行过程</p>
+<div class="code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">from</span> dis <span class="hljs-keyword">import</span> dis
+n = <span class="hljs-number">0</span>
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">add</span>():
+    <span class="hljs-keyword">global</span> n
+    n = n + <span class="hljs-number">1</span>
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">sub</span>():
+    <span class="hljs-keyword">global</span> n
+    n = n - <span class="hljs-number">1</span>
+
+<span class="hljs-built_in">print</span>(dis(add))
+<span class="hljs-built_in">print</span>(dis(sub))</code></pre></div>
+<div class="code-wrapper"><pre><code class="hljs text"> 44           0 LOAD_GLOBAL              0 (n)
+              2 LOAD_CONST               1 (1)
+              4 BINARY_ADD
+              6 STORE_GLOBAL             0 (n)
+              8 LOAD_CONST               0 (None)
+             10 RETURN_VALUE
+None
+ 47           0 LOAD_GLOBAL              0 (n)
+              2 LOAD_CONST               1 (1)
+              4 BINARY_SUBTRACT
+              6 STORE_GLOBAL             0 (n)
+              8 LOAD_CONST               0 (None)
+             10 RETURN_VALUE
+None</code></pre></div>
+<blockquote>
+<p>LOAD_GLOBAL:加载全局变量</p>
+<p>LOAD_CONST: 加载常量</p>
+<p>BINARY_ADD/BINARY_SUBTRACT:进行二进制加减法</p>
+<p>STORE_GLOBAL:将计算结果保存到全局变量n</p>
+<p>加法减法操作不是原子级的，所以当GIL被强制释放的时候，上面执行某一步被中断,引起线程安全问题</p>
+</blockquote>
+<h3 id="二-垃圾回收机制">二:垃圾回收机制</h3>
+<p><strong>python垃圾回收机制:</strong></p>
+<blockquote>
+<p>1.引用计数机制</p>
+<p>2.标记-清除 mark and sweep:首先标记对象（垃圾检测），然后清除垃圾（垃圾回收）</p>
+<p>3.分代收集 generation collection:这种思想简单点说就是：对象存在时间越长，越可能不是垃圾，应该越少去收集</p>
+<p>引用计数为主，分代收集和标记-清除为辅</p>
+<p>三种情况触发垃圾回收<br>
+1、调用gc.collect()<br>
+2、GC达到阀值时<br>
+3、程序退出时</p>
+</blockquote>
+<h4 id="1-引用计数机制-Reference-Counting">1.引用计数机制(Reference Counting)</h4>
+<blockquote>
+<p>(1:PyObject是每个对象必有的内容，其中ob_refcnt就是做为引用计数。</p>
+<p>(2:对象有新的引用时，它的ob_refcnt就会增加，当引用它的对象被删除，它的ob_refcnt就会减少</p>
+<p>(3:当引用计数为0时，该对象生命就结束了。</p>
+<p>优点:简单,内存直接释放,实时性高,处理内存回收的时间分摊了</p>
+<p>缺点:维护引用计数需要消耗额外的资源,不能解决对象的循环引用问题</p>
+</blockquote>
+<h4 id="2-标记清除-Mark-and-Sweep">2.标记清除(Mark and Sweep)</h4>
+<blockquote>
+<p>1.基本思路是先按需分配，等到没有空闲内存的时候从寄存器和程序栈上的引用出发</p>
+<p>2.遍历以对象为节点、以引用为边构成的图</p>
+<p>(可达的（reachable）对象标记为活动对象，不可达的对象就是要被清除的非活动对象。根对象就是全局变量、调用栈、寄存器。)</p>
+<p>再次遍历:把所有可以访问到的对象打上标记，然后清扫一遍内存空间，把所有没标记的对象释放。</p>
+<p>优点: 基于追踪回收,分为标记阶段和回收阶段,解决了容器对象可能产生的循环引用问题</p>
+<p>只有容器对象才会产生循环引用情况</p>
+<p>缺点:必须扫描整个内存</p>
+</blockquote>
+<h4 id="3-分代回收-Generational-Collection">3.分代回收(Generational Collection)</h4>
+<blockquote>
+<p>将内存根据对象存活的时间分为不同的集合(年轻代:0,中年代:1,老年代:2),对应三个链表</p>
+<p>1.新创建的对象分配在年轻代,年轻代链表总数达到上限会触发回收机制,可以回收的对象回收,不能回收的被移到中年代</p>
+<p>2.老年代存活时间最长,甚至整个系统的生命周期</p>
+<p>触发机制:当某世代中被分配的对象与被释放的对象之差达某一阈值,且比该代年轻的代也会被扫描</p>
+<p>查看各世代阈值:</p>
+<div class="code-wrapper"><pre><code class="hljs python">&gt;<span class="hljs-keyword">import</span> gc
+&gt;<span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;各世代的阈值:&quot;</span>,gc.get_threshold())
+&gt;<span class="hljs-comment"># 设置各世代阈值</span>
+&gt;gc.set_threshold(<span class="hljs-number">800</span>, <span class="hljs-number">20</span>, <span class="hljs-number">20</span>)</code></pre></div>
+<p>优点:</p>
+<p>执行垃圾回收过程中，程序会被暂停，即stop-the-world为了减少程序的暂停时间，采用分代回收(Generational Collection)降低垃圾收集耗时,是一种空间换时间的方式</p>
+</blockquote>
+<p>参考资料:</p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/39259061">Python字节码介绍</a></p>
+<p><a href="https://link.zhihu.com/?target=https%3A//softwareengineering.stackexchange.com/questions/186889/why-was-python-written-with-the-gil">Why Was Python Written with the GIL?</a></p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/62282961">Python中的垃圾回收机制</a></p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/83251959">垃圾回收机制</a></p>
 <script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
                 
               </div>
@@ -326,7 +446,7 @@ MySQL单表大约在2千万条记录（4G）下能够良好运行，经过数据
     
       <span class="category-chain">
         
-  <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/" class="category-chain-item">数据库</a>
+  <a href="/categories/Pyhton%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E6%94%BE%E5%BC%83/" class="category-chain-item">Pyhton从入门到放弃</a>
   
   
 
@@ -341,7 +461,7 @@ MySQL单表大约在2千万条记录（4G）下能够良好运行，经过数据
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/PostgreSQL/" class="print-no-link">#PostgreSQL</a>
+        <a href="/tags/python/" class="print-no-link">#python</a>
       
     </div>
   
@@ -353,8 +473,8 @@ MySQL单表大约在2千万条记录（4G）下能够良好运行，经过数据
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>PG VS Mysql</div>
-      <div>https://centyuan.github.io/2023/11/06/数据库/PostgreSQL VS MySQL/</div>
+      <div>GIL和垃圾回收机制</div>
+      <div>https://centyuan.github.io/2023/11/07/Python从入门到放弃/Gil和垃圾回收机制/</div>
     </div>
     <div class="license-meta">
       
@@ -366,7 +486,7 @@ MySQL单表大约在2千万条记录（4G）下能够良好运行，经过数据
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年11月6日</div>
+          <div>2023年11月7日</div>
         </div>
       
       
@@ -398,9 +518,9 @@ MySQL单表大约在2千万条记录（4G）下能够良好运行，经过数据
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/11/06/%E6%95%B0%E6%8D%AE%E5%BA%93/redis%E6%8C%81%E4%B9%85%E5%8C%96%E6%96%B9%E6%A1%88/" title="Redis持久化方案">
+                      <a href="/2023/11/07/%E6%95%B0%E6%8D%AE%E5%BA%93/Postgresql/" title="Postgresql">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Redis持久化方案</span>
+                        <span class="hidden-mobile">Postgresql</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -408,8 +528,8 @@ MySQL单表大约在2千万条记录（4G）下能够良好运行，经过数据
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/11/06/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql%E7%9A%84deletetruncatedrop%E5%AF%B9%E6%AF%94%E5%92%8Cbinlog%E6%97%A5%E5%BF%97%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D/" title="">
-                        <span class="hidden-mobile"></span>
+                      <a href="/2023/11/06/%E4%B8%AD%E9%97%B4%E4%BB%B6/Rabbitmq_raise%20exceptions.ChannelWrongStateError(&#39;Channel%20is%20closed.&#39;)/" title="RabbitMQ raise exceptions.ChannelWrongStateError">
+                        <span class="hidden-mobile">RabbitMQ raise exceptions.ChannelWrongStateError</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
