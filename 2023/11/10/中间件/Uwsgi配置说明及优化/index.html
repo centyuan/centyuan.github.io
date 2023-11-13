@@ -16,26 +16,24 @@
   <meta name="author" content="hlyuan">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Nginx: 采用:单线程,异步非阻塞处理请求,事件驱动,IO复用技术(epoll)，不会为每个请求分配cpu和内存资源，节省了大量资源，同时也减少了大量的CPU的上下文切换。所以才使得Nginx支持更高的并发。 所有worker进程的listenfd会在新连接到来时变得可读，为保证只有一个进程处理该连接，所有worker进程在注册listenfd读事件前抢accept_mutex，抢到互斥锁">
+    <meta name="description" content="1.配置说明 # socket &#x3D; 127.0.0.1:8000 # 项目目录 chdir &#x3D; &#x2F;root&#x2F;centyuanblog&#x2F; # 项目中wsgi.py文件的目录 wsgi-file &#x3D; &#x2F;root&#x2F;centyuanblog&#x2F;centyaunblog&#x2F;wsgi.py #指定PID文件的位置，记录主进程的PID号 pidfile &#x3D; uwsgi.pid # 后台运行且配置日志文件 daemo">
 <meta property="og:type" content="article">
-<meta property="og:title" content="nginx性能调优及高并发配置">
-<meta property="og:url" content="https://centyuan.github.io/2023/11/07/%E4%B8%AD%E9%97%B4%E4%BB%B6/nginx%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98%E5%8F%8A%E9%AB%98%E5%B9%B6%E5%8F%91%E9%85%8D%E7%BD%AE/index.html">
+<meta property="og:title" content="Uwsgi配置说明及优化">
+<meta property="og:url" content="https://centyuan.github.io/2023/11/10/%E4%B8%AD%E9%97%B4%E4%BB%B6/Uwsgi%E9%85%8D%E7%BD%AE%E8%AF%B4%E6%98%8E%E5%8F%8A%E4%BC%98%E5%8C%96/index.html">
 <meta property="og:site_name" content="centyuan Blog">
-<meta property="og:description" content="Nginx: 采用:单线程,异步非阻塞处理请求,事件驱动,IO复用技术(epoll)，不会为每个请求分配cpu和内存资源，节省了大量资源，同时也减少了大量的CPU的上下文切换。所以才使得Nginx支持更高的并发。 所有worker进程的listenfd会在新连接到来时变得可读，为保证只有一个进程处理该连接，所有worker进程在注册listenfd读事件前抢accept_mutex，抢到互斥锁">
+<meta property="og:description" content="1.配置说明 # socket &#x3D; 127.0.0.1:8000 # 项目目录 chdir &#x3D; &#x2F;root&#x2F;centyuanblog&#x2F; # 项目中wsgi.py文件的目录 wsgi-file &#x3D; &#x2F;root&#x2F;centyuanblog&#x2F;centyaunblog&#x2F;wsgi.py #指定PID文件的位置，记录主进程的PID号 pidfile &#x3D; uwsgi.pid # 后台运行且配置日志文件 daemo">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://centyuan.github.io/img/nginx_process_model.png">
-<meta property="article:published_time" content="2023-11-07T13:16:07.226Z">
-<meta property="article:modified_time" content="2023-11-07T13:29:24.105Z">
+<meta property="article:published_time" content="2023-11-10T07:42:05.890Z">
+<meta property="article:modified_time" content="2023-11-10T07:42:15.893Z">
 <meta property="article:author" content="hlyuan">
-<meta property="article:tag" content="nginx">
+<meta property="article:tag" content="uwsgi">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://centyuan.github.io/img/nginx_process_model.png">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>nginx性能调优及高并发配置 - centyuan Blog</title>
+  <title>Uwsgi配置说明及优化 - centyuan Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -202,7 +200,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="nginx性能调优及高并发配置"></span>
+            <span id="subtitle" data-typed-text="Uwsgi配置说明及优化"></span>
           
         </div>
 
@@ -213,8 +211,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-11-07 21:16" pubdate>
-          2023年11月7日 晚上
+        <time datetime="2023-11-10 15:42" pubdate>
+          2023年11月10日 下午
         </time>
       </span>
     
@@ -225,7 +223,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          3.9k 字
+          4.3k 字
         
       </span>
     
@@ -236,7 +234,7 @@
         
         
         
-          33 分钟
+          36 分钟
         
       </span>
     
@@ -273,143 +271,147 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">nginx性能调优及高并发配置</h1>
+            <h1 id="seo-header">Uwsgi配置说明及优化</h1>
             
             
               <div class="markdown-body">
                 
-                <p><img src="/img/nginx_process_model.png" srcset="/img/loading.gif" lazyload alt="nginx_process_model"></p>
+                <h4 id="1-配置说明">1.配置说明</h4>
+<div class="code-wrapper"><pre><code class="hljs ini"><span class="hljs-comment"># socket = 127.0.0.1:8000</span>
+<span class="hljs-comment"># 项目目录</span>
+<span class="hljs-attr">chdir</span> = /root/centyuanblog/
+<span class="hljs-comment"># 项目中wsgi.py文件的目录</span>
+<span class="hljs-attr">wsgi-file</span> = /root/centyuanblog/centyaunblog/wsgi.py
+<span class="hljs-comment">#指定PID文件的位置，记录主进程的PID号</span>
+<span class="hljs-attr">pidfile</span> = uwsgi.pid
+<span class="hljs-comment"># 后台运行且配置日志文件</span>
+<span class="hljs-attr">daemonize</span> = uwsgi.log
+<span class="hljs-comment"># 多进程&amp;多线程 enable-threads = true(不知道有没有用),去掉多线程，使用功能gevent</span>
+<span class="hljs-attr">processes</span> = <span class="hljs-number">10</span>
+<span class="hljs-attr">threads</span> = <span class="hljs-number">4</span>
+<span class="hljs-comment"># logto=/root/sc_git/sc_api/logs/uwsgi.log</span>
+      <span class="hljs-comment"># 1.定时器以天切割日志</span>
+      <span class="hljs-comment"># touch-logreopen:是一个trigger，监听项目目录下的touchforlogrotat文件，如果文件发生变化，就重新打开日志</span>
+      <span class="hljs-comment"># touch-logreopen 需要启动的时候加上 --log-reopen （reload会导致touch-reopen会失败，不会产生新的日志文件）</span>
+      <span class="hljs-attr">touch-logreopen</span> = /root/centyuanblog/logs/.touchforlogrotat
+      <span class="hljs-comment"># 2.以固定大小切割日志</span>
+      <span class="hljs-attr">log-reopen</span>=<span class="hljs-literal">true</span>
+      <span class="hljs-attr">log-maxsize</span> = <span class="hljs-number">50000000</span> <span class="hljs-comment">#log-maxsize以固定的文件大小（单位KB），切割日志文件。 就是50M一个日志文件。</span>
+<span class="hljs-comment">#使进程在后台运行，并将日志输出到指定的日志文件或者UDP服务器</span>
+<span class="hljs-attr">daemonize</span> = /root/centyuanblog/logs/uwsgi.log
+<span class="hljs-comment"># 服务停止时，自动移除unix socket和pid文件</span>
+<span class="hljs-attr">vacuum</span> = <span class="hljs-literal">true</span>
+<span class="hljs-comment"># 每个进程排队的请求数量，默认为 100 太小了。并发数 = procsses * threads * listen,最行之有效的方法</span>
+<span class="hljs-attr">listen</span> = <span class="hljs-number">65535</span>
+<span class="hljs-comment"># 进程回收:为每个工作进程设置请求数的上限。当处理的请求总数超过这个量，进程回收重启,防止内存泄露</span>
+<span class="hljs-attr">max-requests</span> = <span class="hljs-number">5000</span>          <span class="hljs-comment"># 最大时间重启worker max-worker-lifetime = 30</span>
+<span class="hljs-comment"># 允许主进程存在（enable master process）  使用 max-requests 必须采用这个选项</span>
+<span class="hljs-attr">master</span> = <span class="hljs-literal">true</span>
+<span class="hljs-comment"># 所有进程在 30s 没有响应后杀死</span>
+<span class="hljs-attr">harakiri</span> = <span class="hljs-number">30</span>
+<span class="hljs-comment">#当一个请求被harakiri杀掉会输出一条日志</span>
+<span class="hljs-attr">harakiri-verbose</span> = <span class="hljs-literal">true</span>
+<span class="hljs-comment"># uWsgi默认的buffersize为4096，如果请求数据超过这个量会报错。这里设置为64k</span>
+<span class="hljs-attr">buffer-size</span> = <span class="hljs-number">65536</span>
+<span class="hljs-comment"># 如果http请求体的大小超过指定的限制，打开http body缓冲，这里为64k</span>
+<span class="hljs-attr">post-buffering</span> = <span class="hljs-number">65536</span>
+<span class="hljs-comment">#开启内存使用情况报告</span>
+<span class="hljs-attr">memory-report</span> = <span class="hljs-literal">true</span>
+<span class="hljs-comment">#设置平滑的重启（直到处理完接收到的请求）的长等待时间(秒)</span>
+<span class="hljs-attr">reload-mercy</span> = <span class="hljs-number">10</span>
+<span class="hljs-comment">#设置工作进程使用虚拟内存超过多少MB就回收重启</span>
+<span class="hljs-attr">reload-on-as</span> = <span class="hljs-number">1024</span>
+<span class="hljs-comment"># 不记录请求信息的日志。只记录错误以及uWSGI内部消息到日志中。如果不开启这项，那么你的日志中会大量出现这种记录：</span>
+<span class="hljs-attr">disable-logging</span> = <span class="hljs-literal">true</span>
+<span class="hljs-comment"># 惊群问题SerializingAccept,在多进程下开启效果好 https://dev.admirable.pro/uwsgi-performance-tuning/</span>
+<span class="hljs-attr">thunder-lock</span> = <span class="hljs-literal">true</span>
+<span class="hljs-comment"># 指定虚拟环境</span>
+<span class="hljs-attr">virtualenv</span> = /data/venv/FZ
+<span class="hljs-comment"># home = %(base)/Env/%(project) # 设置项目虚拟环境,Docker部署时不需要</span>
+<span class="hljs-comment"># 监控设置</span>
+<span class="hljs-attr">stats</span> = <span class="hljs-number">127.0</span>.<span class="hljs-number">0.1</span>:<span class="hljs-number">9191</span>  <span class="hljs-comment"># 在指定的地址上，开启状态服务，uwsgi top 可以监控</span>
+<span class="hljs-comment"># 自动重载，开发时非常方便</span>
+<span class="hljs-attr">python-autoreload</span> = <span class="hljs-number">1</span>
+
+<span class="hljs-comment"># .sock文件目录需与Nginx文件内的配置相同,和nginx关联,仅限于在同一主机上</span>
+<span class="hljs-attr">socket</span> = /root/centyuanblog/myblog_sock.sock
+<span class="hljs-attr">chmod-socket</span> = <span class="hljs-number">666</span>
+<span class="hljs-comment"># uwsgi --ini uwsgi.ini # 启动</span>
+<span class="hljs-comment"># uwsgi --reload uwsgi.pid # 重启</span>
+<span class="hljs-comment"># uwsgi --stop uwsgi.pid # 关闭</span>
+<span class="hljs-comment"># 支持gevent  在uwsgi中如果使用了gevent参数，就不能用threads参数了，不过，貌似仍可以在进程中创建线程(建议高并发使用gevent不用threads)</span>
+<span class="hljs-comment"># uwsgi --gevent 100 --gevent-early-monkey-patch uwsgi.ini</span></code></pre></div>
 <blockquote>
-<p>Nginx: 采用:单线程,异步非阻塞处理请求,事件驱动,IO复用技术(epoll)，不会为每个请求分配cpu和内存资源，节省了大量资源，同时也减少了大量的CPU的上下文切换。所以才使得Nginx支持更高的并发。</p>
-<p>所有worker进程的listenfd会在新连接到来时变得可读，为保证只有一个进程处理该连接，所有worker进程在注册listenfd读事件前抢accept_mutex，抢到互斥锁的那个进程注册listenfd读事件，在读事件里调用accept接受该连接</p>
-<p>事件处理(select/poll/epoll/kqueue这样的系统调用,可以监控多个事件)相比多线程:没有上下文切换,事件处理非常轻量,只会占用更多内存</p>
+<p><a href="#%E9%A2%9D%E5%A4%96%E7%9A%84%E5%8F%82%E6%95%B0%E9%85%8D%E7%BD%AE%E5%8F%82%E8%80%83:https://landybird.github.io/uwsgi/2021/10/18/%E7%AC%A6%E5%90%88%E7%94%9F%E4%BA%A7%E7%8E%AF%E5%A2%83%E7%9A%84uWSGI%E9%85%8D%E7%BD%AE">uwsgi生成额外参数配置</a></p>
+<p><a target="_blank" rel="noopener" href="https://uwsgi-docs-zh.readthedocs.io/zh-cn/latest/">uwsgi官方文档</a></p>
 </blockquote>
-<h4 id="一-nginx层面优化">一:nginx层面优化</h4>
-<div class="code-wrapper"><pre><code class="hljs text">worker_processes  1; # 1.nginx进程数，一般设置cpu的核心数或核心数X2，一般为它的倍数,
-worker_rlimit_nofile 65535; # 2.一个nginx进程打开的最多文件描述符数目，理论值应该是最多打开文件数（ulimit -n）与nginx 进程数相除，但是nginx 分配请求并不是那么均匀，所以最好与ulimit -n 的值保持一致
-events &#123;
+<h4 id="2-实例配置">2.实例配置</h4>
+<div class="code-wrapper"><pre><code class="hljs ini"><span class="hljs-section">[uwsgi]</span>
+<span class="hljs-attr">chdir</span> = /data/ANS/
+<span class="hljs-comment"># http</span>
+<span class="hljs-attr">http</span> = :<span class="hljs-number">8000</span>
+<span class="hljs-comment"># socket</span>
+<span class="hljs-comment"># socket = /root/ANS/ans_sock.socko  #.sock文件目录需与Nginx文件内的配置相同,和nginx关联</span>
+<span class="hljs-comment"># socket = 127.0.0.1:8000</span>
+<span class="hljs-attr">chmod-socket</span> = <span class="hljs-number">666</span>
+<span class="hljs-attr">vacuum</span> = <span class="hljs-literal">true</span>
+<span class="hljs-attr">pidfile</span> = /data/ANS/uwsgi.pid
+<span class="hljs-attr">daemonize</span> = /data/ANS/logs/uwsgi.log
+<span class="hljs-attr">log-maxsize</span> = <span class="hljs-number">50000000</span>
+<span class="hljs-comment"># worker进程回收</span>
+<span class="hljs-attr">max-requests</span> = <span class="hljs-number">1000</span>                  <span class="hljs-comment">; Restart workers after this many requests （1000 requests have been handled）</span>
+<span class="hljs-attr">max-worker-lifetime</span> = <span class="hljs-number">3600</span>           <span class="hljs-comment">; Restart workers after this many seconds （The worker has allocated 2 GB of memory）</span>
+<span class="hljs-attr">reload-on-rss</span> = <span class="hljs-number">2048</span>                 <span class="hljs-comment">; Restart workers after this much resident memory （1 hour has passed）</span>
+<span class="hljs-attr">worker-reload-mercy</span> = <span class="hljs-number">60</span>             <span class="hljs-comment">; How long to wait before forcefully killing workers</span>
 
-  use epoll;         # 3.使用epoll的I/O模型
-  worker_connections 65535;  # 4.每个worker进程允许的最多连接数,理论上每台nginx 服务器的最大连接数为worker_processes*worker_connections
-  
-  multi_accept on;      # 设置一个进程是否同时接受多个网络连接，默认为off
-  accept_mutex on;      # 5.设置网路连接序列化，防止惊群现象发生，默认为on
+<span class="hljs-comment"># 进程动态扩展(Dynamic Worker Scaling(cheaper))</span>
+这里有各种算法可用于确定在任何给定时刻应该有多少进程可用
+busyness 算法:尝试始终有空闲的工作人员可用，这在预测意外的流量激增时很有用
+<span class="hljs-attr">cheaper-algo</span> = busyness
+<span class="hljs-attr">processes</span> = <span class="hljs-number">500</span>                      <span class="hljs-comment">; Maximum number of workers allowed</span>
+<span class="hljs-attr">cheaper</span> = <span class="hljs-number">8</span>                          <span class="hljs-comment">; Minimum number of workers allowed</span>
+<span class="hljs-attr">cheaper-initial</span> = <span class="hljs-number">16</span>                 <span class="hljs-comment">; Workers created at startup</span>
+<span class="hljs-attr">cheaper-overload</span> = <span class="hljs-number">1</span>                 <span class="hljs-comment">; Length of a cycle in seconds</span>
+<span class="hljs-attr">cheaper-step</span> = <span class="hljs-number">16</span>                    <span class="hljs-comment">; How many workers to spawn at a time</span>
 
+<span class="hljs-attr">cheaper-busyness-multiplier</span> = <span class="hljs-number">30</span>     <span class="hljs-comment">; How many cycles to wait before killing workers</span>
+<span class="hljs-attr">cheaper-busyness-min</span> = <span class="hljs-number">20</span>            <span class="hljs-comment">; Below this threshold, kill workers (if stable for multiplier cycles)</span>
+<span class="hljs-attr">cheaper-busyness-max</span> = <span class="hljs-number">70</span>            <span class="hljs-comment">; Above this threshold, spawn new workers</span>
+<span class="hljs-attr">cheaper-busyness-backlog-alert</span> = <span class="hljs-number">16</span>  <span class="hljs-comment">; Spawn emergency workers if more than this many requests are waiting in the queue</span>
+<span class="hljs-attr">cheaper-busyness-backlog-step</span> = <span class="hljs-number">2</span>    <span class="hljs-comment">; How many emergegency workers to create if there are too many requests in the queue</span>
+
+--enable-threads：UWSGI默认情况下，没有开启多线程的支持，由于探针基于多线程模式，所以必须开启此模式，否则探针无法正常启动。如果UWSGI使用了选项--threads，将自动开启选项--enable-threads。
+
+--single-interpreter：默认情况下 UWSGI为了隔离应用环境，以便运行多个应用，在启动的时候会启动子进程来运行某个应用，而不是在主进程中执行。为了更好的适应探针环境请开启这个选项，开启后不会有其他任何的副作用，它也是安全而有效的方式。
+
+--lazy：该选项开启后，UWSGI将会在 worker进程中加载 app，而不是在master中加载 app。这样做完全不受影响，因为UWSGI在工作时，master是不工作的，它只负责调度。</code></pre></div>
+<h4 id="3-uWSGI和Nginx之间有3种通信方式">3.uWSGI和Nginx之间有3种通信方式</h4>
+<div class="code-wrapper"><pre><code class="hljs text"># 1. unix socket 仅限于同一主机:优先使用本地机器的unix socket进行通信，这样速度更快
+socket = /root/project/my_sock.sock
+location / &#123;
+include /etc/nginx/uwsgi_params;
+uwsgi_pass unix : /run/uwsgi/project.sock;
 &#125;
-
-http &#123;
-
-  access_log off;  #取消服务日志
-  keepalive_timeout 0;    # 6.禁用keepalive_timeout或设置较低值(60)
-  gzip on;    # 7.开启压缩功能
-  # 表示允许压缩的页面最小字节数，页面字节数从header头的Content-Length中获取
-  gzip_min_length  1k;默认值是0，表示不管页面多大都进行压缩，建议设置成大于1K。如果小于1K可能会越压越大
-  gzip_buffers   4 32k; #压缩缓存区大小
-  gzip_http_version 1.1; #压缩版本
-  gzip_comp_level 6; #压缩比率， 一般选择4-6，为了性能
-  gzip_types text/css text/xml application/javascript application/octet-stream;　　#指定压缩的类型
-  gzip_vary on;　#是否传输gzip压缩标志
-  gzip_disable &quot;MSIE [1-6]\.&quot;; #配置禁用gzip条件，支持正则。此处表示ie6及以下不启用gzip（因为ie低版本不支持）
-  gzip_proxied off;  # 设置请求者代理服务器,该如何缓存内容
-		Nginx做为反向代理的时候启用：
-		off – 关闭所有的代理结果数据压缩
-		expired – 如果header中包含”Expires”头信息，启用压缩
-		no-cache – 如果header中包含”Cache-Control:no-cache”头信息，启用压缩
-		no-store – 如果header中包含”Cache-Control:no-store”头信息，启用压缩
-		private – 如果header中包含”Cache-Control:private”头信息，启用压缩
-		no_last_modified – 启用压缩，如果header中包含”Last_Modified”头信息，启用压缩
-		no_etag – 启用压缩，如果header中包含“ETag”头信息，启用压缩
-		auth – 启用压缩，如果header中包含“Authorization”头信息，启用压缩
-		 any – 无条件压缩所有结果数据
-
-  #设定请求缓冲
-  client_header_buffer_size   128k;
-  large_client_header_buffers  4 128k;
-  proxy_connect_timeout 90; # 8.proxy超时设置
-  proxy_send_timeout  90;
-  proxy_read_timeout  4k;
-  proxy_buffers 4 32k;
-  proxy_busy_buffers_size 64k
-  #sendfile 开启高效文件传输模式,指定 nginx 是否调用 sendfile 函数（zero copy零拷贝方式）来输出文件，
-  #搭配二选一:tcp_nopush或tcp_nodelay开启
-  #可防止网络及磁盘I/O阻塞，提升Nginx工作效率
-  #对于普通应用，必须设为 on,
-  #如果用来进行下载等应用磁盘IO重负载应用，可设置为 off，
-  #平衡磁盘与网络I/O处理速度，可防止网络及磁盘I/O阻塞，提升Nginx工作效率,降低系统的uptime.
-  sendfile on; # 9.开启高效文件传输模式。
-  tcp_nopush on; # (优化大文件传输和网络阻塞)需要在sendfile开启模式才有效:每个数达到阈值时一次性发送,减少网络报文段的数量。
-  tcp_nodelay on; # (优化小块传输)使缓冲区数据立即发送
-  sendfile_max_chunk 100k; # 10.每个进程每次调用传输数量不能大于设定的值，默认为0，即不设上限。
-  upstream my_back &#123;
-	server 127.0.0.1:7878;
-	server 192.168.10.121:333 backup;# 热备
-
-  &#125;
-  server &#123;
-	keepalive_requests 120; # 单连接请求上限次数
-	#为静态文件启用缓存为静态文件启用缓存，以减少带宽并提高性能，可以添加下面的命令，限定计算机缓存网页的静态文件：
-	location ~* .(jpg|jpeg|png|gif|ico|css|js)$ &#123;
-	expires 365d;
-	&#125;
-	&#125;
+# 2. Tcp socket
+socket = 0.0.0.0:8000 或socket=:8000
+location / &#123;
+include /etc/nginx/uwsgi_params;
+uwsgi_pass uWSGI_SERVER_IP : 8000;
 &#125;
-worker_cpu_affinity auto; # 10. cpu的亲和配置,cache不会因为进程切换而失效</code></pre></div>
-<h4 id="二-系统层面">二:系统层面</h4>
-<div class="code-wrapper"><pre><code class="hljs text"># 调整同时打开文件数量ulimit针对当前shell的当前用户
-ulimit -n 20480                    # 1.shell级限制
-vim /etc/security/limits.conf      # 2.用户级限制
-# 添加下面两行
-soft nofile 65535 #应用软件级别的最大可打开文件数的限制
-hard nofile 65535 #操作系统级别的最大可打开文件数的限制
-
-vim /proc/sys/fs/file-max          # 3.系统级别限制
-# TCP最大连接数
-echo 10000 &gt; /proc/sys/net/core/somaxconn
-# TCP连接立即回收、回用（recycle、reuse）
-echo 1 &gt; /proc/sys/net/ipv4/tcp_tw_reuse
-echo 1 &gt; /proc/sys/net/ipv4/tcp_tw_recycle
-# 不做TCP洪水抵御
-echo 0 &gt; /proc/sys/net/ipv4/tcp_syncookies
-
-可以直接使用优化后的配置，在/etc/sysctl.conf中加入：
-# TCP最大连接数，每一个端口最大的监听队列的长度,默认128，负载要求很高（并发要求很大）的服务程序的要求是远远不能满足的
-net.core.somaxconn = 2048
-net.core.rmem_default = 262144
-net.core.wmem_default = 262144
-net.core.rmem_max = 16777216
-net.core.wmem_max = 16777216
-net.ipv4.tcp_rmem = 4096 4096 16777216
-net.ipv4.tcp_wmem = 4096 4096 16777216
-net.ipv4.tcp_mem = 786432 2097152 3145728
-net.ipv4.tcp_max_syn_backlog = 16384
-net.core.netdev_max_backlog = 20000
-net.ipv4.tcp_fin_timeout = 15
-net.ipv4.tcp_max_syn_backlog = 16384、
-# tcp连接重用
-net.ipv4.tcp_tw_reuse = 1
-net.ipv4.tcp_tw_recycle = 1
-# 不抵御洪水攻击
-net.ipv4.tcp_syncookies = 0
-net.ipv4.tcp_max_orphans = 262144  #该参数用于设定系统中最多允许存在多少TCP套接字不被关联到任何一个用户文件句柄上，主要目的为防止Ddos攻击
-vm.swappiness = 10 #物理内存剩下10%时使用虚拟内存
-使用：sysctl -p 生效
-sysctl -p
-
-
-# 总限制文件句柄数
-cat /proc/sys/fs/file-max
-# 当前使用的文件句柄数
-cat /proc/sys/fs/file-nr
-# 修改
-vim /etc/security/limits.conf
-（*表示所有用户、soft表示可以超出，但只是警告；hard表示绝对不能超出，unlimited用于表示不限制）
-
-### 缓存+gzip+sendfile+http2
-# 三:nginx+keepalived实现高可用
-# 四:nginx -s reload 平滑升级(创建新的worker接受新的请求,旧的worker等处理完所有请求后关闭)</code></pre></div>
-<p>参考：</p>
-<p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6895660634466156558">nginx全能解析及性能优化</a></p>
-<p><a target="_blank" rel="noopener" href="https://tengine.taobao.org/book/chapter_02.html">nginx平台架构</a></p>
+# 3. http
+http = 0.0.0.0:8000
+location / &#123;
+# 注意：proxy_pass后面http必不可少哦！
+proxy_pass http://uWSGI_SERVER_IP:8000;
+&#125;</code></pre></div>
+<h4 id="4-部署方案对比">4. 部署方案对比</h4>
+<blockquote>
+<p>WSGI  UWSGI 多进程，多线程，同步  所有 WSGI协议框架</p>
+<p>WSGI  Gunicorn   多进程，io异步   所有 WSGI协议框架</p>
+<p>WSGI  Gevent    单进程，io异步   所有 WSGI协议框架</p>
+<p>非WSGI Tornado   单进程，网络异步   WSGI App不建议/Tornado</p>
+<p>参考[部署方案建议][<a target="_blank" rel="noopener" href="https://wukongdoc.tingyun.com/apm/deploy/Python/proposal.html">https://wukongdoc.tingyun.com/apm/deploy/Python/proposal.html</a>]</p>
+</blockquote>
 <script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
                 
               </div>
@@ -443,7 +445,7 @@ vim /etc/security/limits.conf
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/nginx/" class="print-no-link">#nginx</a>
+        <a href="/tags/uwsgi/" class="print-no-link">#uwsgi</a>
       
     </div>
   
@@ -455,8 +457,8 @@ vim /etc/security/limits.conf
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>nginx性能调优及高并发配置</div>
-      <div>https://centyuan.github.io/2023/11/07/中间件/nginx性能调优及高并发配置/</div>
+      <div>Uwsgi配置说明及优化</div>
+      <div>https://centyuan.github.io/2023/11/10/中间件/Uwsgi配置说明及优化/</div>
     </div>
     <div class="license-meta">
       
@@ -468,7 +470,7 @@ vim /etc/security/limits.conf
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年11月7日</div>
+          <div>2023年11月10日</div>
         </div>
       
       
@@ -500,18 +502,12 @@ vim /etc/security/limits.conf
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/11/10/%E4%B8%AD%E9%97%B4%E4%BB%B6/Uwsgi%E9%85%8D%E7%BD%AE%E8%AF%B4%E6%98%8E%E5%8F%8A%E4%BC%98%E5%8C%96/" title="Uwsgi配置说明及优化">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Uwsgi配置说明及优化</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/11/07/%E4%B8%AD%E9%97%B4%E4%BB%B6/nginx%E9%85%8D%E7%BD%AE%E8%AF%A6%E8%A7%A3/" title="nginx配置说明">
-                        <span class="hidden-mobile">nginx配置说明</span>
+                      <a href="/2023/11/07/%E4%B8%AD%E9%97%B4%E4%BB%B6/nginx%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98%E5%8F%8A%E9%AB%98%E5%B9%B6%E5%8F%91%E9%85%8D%E7%BD%AE/" title="nginx性能调优及高并发配置">
+                        <span class="hidden-mobile">nginx性能调优及高并发配置</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
