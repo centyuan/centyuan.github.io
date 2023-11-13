@@ -34,11 +34,11 @@ https://centyuan.github.io/tags/python/
 https://centyuan.github.io/tags/uwsgi/
 https://centyuan.github.io/tags/nginx/
 https://centyuan.github.io/tags/git-key/
-https://centyuan.github.io/tags/PaddleOCR/
 https://centyuan.github.io/tags/PostgreSQL/
 https://centyuan.github.io/tags/postgresql/
 https://centyuan.github.io/tags/Redis/
 https://centyuan.github.io/tags/mysql/
+https://centyuan.github.io/tags/PaddleOCR/
 https://centyuan.github.io/tags/RabbitMQ/
 https://centyuan.github.io/tags/compile/
 https://centyuan.github.io/categories/Linux/
