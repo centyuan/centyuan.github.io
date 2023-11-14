@@ -16,24 +16,24 @@
   <meta name="author" content="hlyuan">
   <meta name="keywords" content="">
   
-    <meta name="description" content="一:server配置  参考Nginx  1.root:匹配时:root定义的路径+port后面的路径 http:&#x2F;&#x2F;ww.xxx.com&#x2F;img&#x2F;xjj.png location ^~ &#x2F;img &#123;     root &#x2F;var&#x2F;www&#x2F;static&#x2F;; &#125; 最终:会找到&#x2F;var&#x2F;www&#x2F;static&#x2F;img&#x2F;xjj.png 2.alias:匹配是:alias定义的路径+loc">
+    <meta name="description" content="设计模式  在 1994 年，由 Erich Gamma、Richard Helm、Ralph Johnson 和 John Vlissides 四人合著出版了一本名为 Design Patterns - Elements of Reusable Object-Oriented Software（中文译名：设计模式 - 可复用的面向对象软件元素） 的书，该书首次提到了软件开发中设计模式的概念 设计">
 <meta property="og:type" content="article">
-<meta property="og:title" content="nginx配置说明">
-<meta property="og:url" content="https://centyuan.github.io/2023/11/07/%E4%B8%AD%E9%97%B4%E4%BB%B6/nginx%E9%85%8D%E7%BD%AE%E8%AF%A6%E8%A7%A3/index.html">
+<meta property="og:title" content="设计模式">
+<meta property="og:url" content="https://centyuan.github.io/2023/11/14/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/index.html">
 <meta property="og:site_name" content="centyuan Blog">
-<meta property="og:description" content="一:server配置  参考Nginx  1.root:匹配时:root定义的路径+port后面的路径 http:&#x2F;&#x2F;ww.xxx.com&#x2F;img&#x2F;xjj.png location ^~ &#x2F;img &#123;     root &#x2F;var&#x2F;www&#x2F;static&#x2F;; &#125; 最终:会找到&#x2F;var&#x2F;www&#x2F;static&#x2F;img&#x2F;xjj.png 2.alias:匹配是:alias定义的路径+loc">
+<meta property="og:description" content="设计模式  在 1994 年，由 Erich Gamma、Richard Helm、Ralph Johnson 和 John Vlissides 四人合著出版了一本名为 Design Patterns - Elements of Reusable Object-Oriented Software（中文译名：设计模式 - 可复用的面向对象软件元素） 的书，该书首次提到了软件开发中设计模式的概念 设计">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2023-11-07T08:35:34.037Z">
-<meta property="article:modified_time" content="2023-11-14T09:45:41.657Z">
+<meta property="article:published_time" content="2023-11-14T09:52:18.089Z">
+<meta property="article:modified_time" content="2023-11-14T10:59:26.477Z">
 <meta property="article:author" content="hlyuan">
-<meta property="article:tag" content="nginx">
+<meta property="article:tag" content="设计模式">
 <meta name="twitter:card" content="summary_large_image">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>nginx配置说明 - centyuan Blog</title>
+  <title>设计模式 - centyuan Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -200,7 +200,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="nginx配置说明"></span>
+            <span id="subtitle" data-typed-text="设计模式"></span>
           
         </div>
 
@@ -211,8 +211,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-11-07 16:35" pubdate>
-          2023年11月7日 下午
+        <time datetime="2023-11-14 17:52" pubdate>
+          2023年11月14日 下午
         </time>
       </span>
     
@@ -223,7 +223,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          5.8k 字
+          2.9k 字
         
       </span>
     
@@ -234,7 +234,7 @@
         
         
         
-          49 分钟
+          25 分钟
         
       </span>
     
@@ -271,262 +271,112 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">nginx配置说明</h1>
+            <h1 id="seo-header">设计模式</h1>
             
             
               <div class="markdown-body">
                 
-                <h4 id="一-server配置">一:server配置</h4>
+                <h4 id="设计模式">设计模式</h4>
 <blockquote>
-<p>参考<a target="_blank" rel="noopener" href="https://www.weixueyuan.net/a/676.html">Nginx</a></p>
+<p>在 1994 年，由 Erich Gamma、Richard Helm、Ralph Johnson 和 John Vlissides 四人合著出版了一本名为 Design Patterns - Elements of Reusable Object-Oriented Software（中文译名：设计模式 - 可复用的面向对象软件元素） 的书，该书首次提到了软件开发中设计模式的概念</p>
+<p>设计模式：是软件开发人员在软件开发过程中面临的一般问题的解决方案,是开发人员经过长时间实践,总结出来的一套程序设计标准。</p>
+<p>虽然设计模式与语言无关，但这并不意味着每一个模式都能在每一门语言中使用，<em>Learning Python Design Patterns</em>（Gennadiy Zlobin 著，Packt 出版社）是唯一一本专门针对 Python 设计模式的书。不过 Zlobin 这本书只涵盖了 23 种设计模式中的 8 种</p>
 </blockquote>
-<h5 id="1-root-匹配时-root定义的路径-port后面的路径">1.root:匹配时:root定义的路径+port后面的路径</h5>
-<div class="code-wrapper"><pre><code class="hljs text">http://ww.xxx.com/img/xjj.png
-location ^~ /img &#123;
-    root /var/www/static/;
-&#125;</code></pre></div>
-<p>最终:会找到/var/www/static/img/xjj.png</p>
-<h5 id="2-alias-匹配是-alias定义的路径-location匹配部分后面的路径">2.alias:匹配是:alias定义的路径+location匹配部分后面的路径</h5>
-<div class="code-wrapper"><pre><code class="hljs text">http://www.xxx.com/img/xjj.png
-location ^~ /img &#123;
-    alias /var/www/static/images/;
-&#125;</code></pre></div>
-<p>最终:会找到 /var/www/static/images/xjj.png</p>
-<h5 id="3-upstream">3.upstream</h5>
-<div class="code-wrapper"><pre><code class="hljs text">upstream back_server &#123;
-    server backend1.example.com weight=5;
-    server 127.0.0.1:8001 max_fials=3 fail_timeout=5;  
-    server unix:///data/sc_api/sc_api/my_sock.sock;
-
-&#125;</code></pre></div>
+<h5 id="七大设计原则">七大设计原则</h5>
+<div class="code-wrapper"><pre><code class="hljs gcode">开放性封闭原则<span class="hljs-comment">(Open Closed Principle)</span>:
+  一个软件实体如类,模块,函数应该对扩展开放,对修改关闭,保证在不修改原有代码下进行扩展
+里氏替换原则<span class="hljs-comment">(Liskov Substitution Principle)</span>: 
+  只要父类能出现的地方,子类就可以出现,所有引用基类的地方必须能透明地使用其子类的对象
+单一职责原则<span class="hljs-comment">(Single Responsibility Principle)</span>:
+  只有一个原因引起变更,一个类只负责一项职责
+接口隔离原则<span class="hljs-comment">(Interface Segregation Principle)</span>:
+  建立单一接口，不依赖不需要的接口,类之间的依赖关系应该建立在最小的接口上
+迪米特法则<span class="hljs-comment">(Law of Demeter)</span>:
+  又叫最少知道法则,一个软件实体应当尽可能少的与其他实体发生相互作用,高内聚，低耦合
+依赖倒转原则<span class="hljs-comment">(Dependence Inversion Principle)</span>:
+  模块间的依赖通过抽象发生,其依赖关系通过接口或抽象类产生,不能依赖于具体实现
+组合/聚合复用原则 <span class="hljs-comment">(Composite/Aggregate Reuse Principle)</span>:
+  在新的对象里面使用已有的对象，使之成为新对象的一部分，新的对象通过向这些对象的委派达到复用已有功能的目的</code></pre></div>
+<h5 id="设计模式分类">设计模式分类:</h5>
 <blockquote>
-<p>参考<a target="_blank" rel="noopener" href="https://juejin.cn/post/7238401671045873721">nginx反向代理及参数配置</a></p>
-<p>server:指定一台上游服务器的名字,可以是(域名/ip地址端口/UNIC句柄)</p>
-<p>weight:设置权重</p>
-<p>max_fail:在fail_timeout时间段内,转发失败次数超过number就不可用</p>
-<p>fail_timeout:设置超时时间</p>
-<p>down：表示所有的上游服务器永久下线，只在使用ip_hash配置项时才有用。</p>
-<p>backup：在使用ip_hash配置项时它是无效的。表示所在的上游服务器只是备份服务器，只有在所有的非备份上游服务器都失效后，才会向所在的上游服务器转发请求。</p>
-<p>proxy_pass:http:/ip:port/uri  或者 back_server</p>
-<p>proxy_set_header   Host $host;  # 反向代理是不会转发请求中的Host头部的，如需转发需加上配置</p>
-<p>proxy_redirect  <a target="_blank" rel="noopener" href="http://localhost:8000/two/">http://localhost:8000/two/</a>  <a target="_blank" rel="noopener" href="http://frontendone">http://frontendone</a>;  # 重定向 location字段的URL是<a target="_blank" rel="noopener" href="http://localhost:8000/two/some/uri/">http://localhost:8000/two/some/uri/</a> 转发给客户端的location就是：<a target="_blank" rel="noopener" href="http://frontendonesome/uri/">http://frontendonesome/uri/</a></p>
+<ul class="lvl-1">
+<li class="lvl-2">
+<p>创建型模式（5种）：<strong>工厂方法模式</strong>、<strong>抽象工厂模式</strong>、<strong>创建者模式</strong>、（原型模式）、<strong>单例模式</strong></p>
+</li>
+<li class="lvl-2">
+<p>结构型模式（7种）：<strong>适配器模式</strong>、<strong>桥模式</strong>、组合模式、装饰模式、外观模式、享元模式、<strong>代理模式</strong></p>
+</li>
+<li class="lvl-2">
+<p>行为型模式（11种）：解释器模式、<strong>责任链模式</strong>、命令模式、迭代器模式、中介者模式、备忘录模式、<strong>观察者模式</strong>、状态模式、<strong>策略模式</strong>、访问者模式、<strong>模版方法模式</strong></p>
+</li>
+</ul>
 </blockquote>
-<h5 id="4-server配置demo">4.server配置demo</h5>
-<div class="code-wrapper"><pre><code class="hljs text">server &#123;
-    listern 8000;
-    server_name www.centyuan.top centyuan.top;
-    charset utf-8;  # 字符集
-    access_log  /data/sc_api/logs/my_access.log;
-    error_log /data/sc_api/logs/my_error.log;
-    client_max_body_size 75M  # 上传最大限制
-    loction / &#123;
-        root /data/dist;
-        index index.html
-        try_files $uri $uri/ /index.html;
-        # 1.用户请 http://localhost/example时,$uri就是/example
-        # 2.在/data/dist/下尝找这个名example的文件($uri表示这个文件) 或 找这个example的目录($uri表示这个目录)
-        # 3.前面两个都找不到,内部请求 /index.html
-    &#125;
-    # 精准匹配
-    location = /api/upload_id &#123;
-        include uwsgi_params;
-        uwsgi_pass 127.0.0.1:8001;
-    &#125;
-    location /media &#123;
-        alias /root/sc_api/media_common;
-    &#125;
-    location /static &#123;
-        alias /root/sc_api/static_common;
-        autoindex on;
-    &#125;
-    location / &#123;
-        auth_basic &quot;login&quot;;
-        auth_basic_user_file /data/passwd.txt
-
-        include uwsgi_params; #将所有参数都转到uwsgi下
-        uwsgi_pass 127.0.0.1:8001;
-        #uwsgi_pass unix:///data/sc_api/my_sock.sock;
-        #proxy_pass http://127.0.0.1:8001;
-        &quot;&quot;&quot;
-        fastcgi_pass：将请求传递给 fastCGI 服务器。
-        uwsgi_pass：将请求传递给 uwsgi 服务器。
-        scgi_pass：将请求传递给 SCGI 服务器。
-        memcached_pass：将请求传递给 memcached 服务器。
-        &quot;&quot;&quot;
-    &#125;
-    error_page 404 /404.html;
-    location /404.html &#123;
-    &#125;
-    error_page 500 502 503 /50x.html;
-    location =/50x.html &#123;
-    &#125;
-
-&#125;</code></pre></div>
-<h4 id="二-ssl-cerbot生成证书">二:ssl cerbot生成证书</h4>
-<div class="code-wrapper"><pre><code class="hljs text">server &#123;
-    if ($host ==www.example.com)&#123;
-        return 301 https://$host$request_uri;
-    &#125;
-    listen 80;
-    server_name example.com www.example.com
-
-&#125;
-server &#123;
-    server_name example.com www.example.com
-    client_max_body_size 1024m;
-
-​    location / &#123;
-​        proxy_set_header HOST $host;
-​        proxy_set_header X-Forwarded-Proto $scheme;
-​        proxy_set_header X-Real-IP $remote_addr;
-​        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-​        proxy_pass http://127.0.0.1:1000/;
-​    &#125;
-​    listen 443 ssl;
-​    ssl_certificate /etc/letsencrypt/live/www.example.com/fullchain.pem; # managed by Certbot
-​    ssl_certificate_key /etc/letsencrypt/live/www.example.com/privkey.pem; # managed by Certbot
-​    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
-​    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
-&#125;</code></pre></div>
-<h4 id="三-全局配置">三:全局配置</h4>
-<div class="code-wrapper"><pre><code class="hljs text">user root root; # 配置用和用户组
-woker_precesses auto; # 允许生成的进程数
-pid /run/nginx.pid;
-includ /usr/share/nginx/modules/*.conf;
-events &#123;
-    worker_connections 1024;
-&#125;
-http &#123;
-    # 设置日志格式
-    log_format main &#x27;$remote_addr - $remote_user [$time_local] &quot;$request&quot; &#x27;
-                      &#x27;$status $body_bytes_sent &quot;$http_referer&quot; &#x27;
-                      &#x27;&quot;$http_user_agent&quot; &quot;$http_x_forwarded_for&quot;&#x27;;
-
-    access_log /var/log/nginx/access.log main;
-    # sendfile开启高效文件传输模式,同时搭配二选一:tcp_nopush或tcp_nodelay开启
-    # 可防止网络及磁盘I/O阻塞，提升Nginx工作效率
-    sendfile            on; # 减少user mode切换到kernel mode,直接在kernel model上做复制
-    tcp_nopush          on; # 缓冲区数据装满在发送
-    tcp_nodelay         on; # 使缓冲区数据立即发送
-    keepalive_timeout   65;
-    types_hash_max_size 4096;
-&#125;</code></pre></div>
-<h4 id="四-location详解">四:location详解</h4>
-<div class="code-wrapper"><pre><code class="hljs text">1:三种类型location
-	精准匹配:location = / &#123;&#125;	
-	一般匹配:location / &#123;&#125;
-	正则匹配:location ~/ &#123;&#125;
-2:常用匹配规则
-	=:精准匹配
-	~:正则匹配,区分大小写
-	~*:正则匹配,忽略大小写
-	^~:开头匹配，匹配成功后，不在匹配其他的。 location ^~ /index/   http://abc.com/index/index.html
-3:location优先级
-	location = 精准匹配
-	location 完整路径 https://zhuanlan.zhihu.com/p/611501017
-	location ^~
-	location ~或~*正则匹配
-最后交给 / 通配符</code></pre></div>
-<h4 id="五-认证配置">五:认证配置</h4>
-<div class="code-wrapper"><pre><code class="hljs text">1:生成密码文件
-apt install apache2-utilf 或yum install http-tools 或 yum install httpd
-htpasswd -cb auth_htpasswd angel lovebeauty3
-2:nginx配置说明
-auth_basic &quot;提示信息&quot;;
-auth_basic_user_file auth_htpasswd;</code></pre></div>
-<h4 id="六-禁止php-shell-python目录执行权限">六:禁止php,shell,python目录执行权限</h4>
-<div class="code-wrapper"><pre><code class="hljs text">location ~^/images/.*\.(php|php5|sh|pl|py)$
-&#123;
-    deny all;
-&#125;
-location ~^/static/.*\.(phh|php5|sh|pl|py)$
-&#123;
-    deny all;
-&#125;
-location ~^/data/(attachment|avatar).*\.(php|php5)$
-&#123;
-    deny all;
-&#125;
-location ~^/(cadmin|ueditor)&#123;
-&#125;</code></pre></div>
-<h4 id="七-安全问题">七:安全问题</h4>
+<h5 id="创建型模式-Creational-Patterns">创建型模式(Creational Patterns)</h5>
 <blockquote>
-<p>参考</p>
-<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/611501017">nginx 安装升级安全配置</a></p>
-<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq1773304209/article/details/105334920">fastdf</a></p>
-<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_26545305/article/details/80186385">FastDFS防盗链</a>采用token</p>
+<p>这些设计模式关注对象的创建,提供了一种在创建对象的同时隐藏创建逻辑的方式,使得程序在判断针对某个给定实例需要创建哪些对象时更加灵活</p>
 </blockquote>
-<div class="code-wrapper"><pre><code class="hljs text">1.严禁使用root
-user nobody nobody
-2.配置文件禁止放在web目录中
-3.静态文件目录严禁执行脚本
-	location ~* ^/(media|static)/.*.(php|php5|python)$ &#123;
-    deny all;
-	&#125;
-4.隐藏版本号
-	server_tokens off
-5.禁用不需要的http方法
-	limit_except GET HEAD POST &#123;deny all;&#125;
-6.配置更安全的SSL
-7.防止图片盗链
-  nginx+fastdfs
- 
-  
-8.防ddos(设置缓冲区大小|设置超时时间)
-	client_body_buffer_size  1K;
-	client_header_buffer_size 1k;
-	client_max_body_size 1k;3
-	large_client_header_buffers 2 1k;
-	client_body_timeout   10;
-	client_header_timeout 10;
-	keepalive_timeout     5 5;
-	send_timeout          10;
-9.限流
-	ngx_http_limit_req_module来限制访问频率
-	limit_req_zone $binary_remote_addr zone=ip_limit:10m rate=1r/m; # 限制请求频率
-	limit_conn_zone $binary_remote_addr zone=ip_conn:10m;  # 限制并连接数</code></pre></div>
-<h4 id="八-nginx进程调度模式">八:nginx进程调度模式</h4>
-<div class="code-wrapper"><pre><code class="hljs text">1.无调度模式(各个worker进程争相处理客户端连接,容易惊群)
-2.互斥锁模式(各个worker进程争抢互斥锁)
-3.socket sharding(套接字分片):由内核提供的一套分配机制,允许每个worker都有一组相同的监听套字节,外部连接时,内核决定那个工作进程接收</code></pre></div>
-<h4 id="九-nginx中负载均衡策略">九:nginx中负载均衡策略</h4>
-<div class="code-wrapper"><pre><code class="hljs text">.轮询(默认)
-# 每个请求按时间顺序逐一分配到不同的后端服务器，如果后端服务器down掉，能自动剔除。
-upstream backserver &#123;
-    server 192.168.0.11;
-    server 192.168.0.12;
-&#125;
-
-2 weight 权重
-# 指定轮询几率，weight和访问比率成正比，用于后端服务器性能不均的情况。
-upstream backserver &#123;
-    server 192.168.0.11 weight=3;
-    server 192.168.0.12 weight=7;
-&#125;
-
-3 ip_hash(可用于会话保持)
-# 每个请求按访问ip的hash结果分配，这样每个访客固定访问一个后端服务器 (不能绝对的负载均衡)
-upstream backserver &#123;
-    ip_hash;
-    server 192.168.0.11:8001
-    server 192.168.0.12:8002
-&#125;
-4 fair（第三方）
-# 按后端服务器的响应时间来分配请求，响应时间短的优先分配。
-upstream backserver &#123;
-    server server1;
-    server server2;
-    fair;
-&#125;
-
-5 url_hash(第三方需装插件)
-# 按访问url的hash结果来分配请求，使每个url定向到同一个（对应的）后端服务器，后端服务器为缓存时比较有效。
-upstream backserver &#123;
-    server squid1:3128;
-    server squid2:3128;
-    hash $request_uri;
-    hash_method crc32;
-&#125;</code></pre></div>
+<h6 id="工厂模式（Factory-Pattern）：">工厂模式（Factory Pattern）：</h6>
+<div class="code-wrapper"><pre><code class="hljs">定义一个用于创建对象的接口，让子类决定将哪一个类实例化，FactoryMethod使一个类的实例化延迟到其子类</code></pre></div>
+<h6 id="抽象工厂模式（Abstract-Factory-Pattern）">抽象工厂模式（Abstract Factory Pattern）</h6>
+<div class="code-wrapper"><pre><code class="hljs">提供一个创建一系列相关或相互依赖对象的接口，而无需指定它们的具体类。</code></pre></div>
+<h6 id="建造者模式（Builder-Pattern）：">建造者模式（Builder Pattern）：</h6>
+<div class="code-wrapper"><pre><code class="hljs">将一个复杂对象的构建与它的表示分离，使得同样的构建过程可以创建不同的表示。</code></pre></div>
+<h6 id="原型模式（Prototype-Pattern）：">原型模式（Prototype Pattern）：</h6>
+<div class="code-wrapper"><pre><code class="hljs">用原型实例指定创建对象的种类，并且通过拷贝这个原型来创建新的对象。</code></pre></div>
+<h6 id="单例模式（Singleton-Pattern）：">单例模式（Singleton Pattern）：</h6>
+<div class="code-wrapper"><pre><code class="hljs">保证一个类仅有一个对象，并提供一个访问它的全局访问点。</code></pre></div>
+<h5 id="结构型模式（Structural-Patterns）">结构型模式（Structural Patterns）</h5>
+<blockquote>
+<p>这些设计模式关注类和对象的组合。继承的概念被用来组合接口和定义组合对象获得新功能的方式</p>
+</blockquote>
+<h6 id="适配器模式（Adapter-Pattern）">适配器模式（Adapter Pattern）:</h6>
+<div class="code-wrapper"><pre><code class="hljs">将一个类的接口转换成客户希望的另一个接口。Adapter模式使得原本由于接口不兼容而不能一起工作的那些类可以一起工作</code></pre></div>
+<h6 id="桥接模式（Bridge-Pattern）：">桥接模式（Bridge Pattern）：</h6>
+<div class="code-wrapper"><pre><code class="hljs">将抽象部分与它的实现部分分离，使他们都可以独立地变化</code></pre></div>
+<h6 id="装饰模式（Decorator-Pattern）：">装饰模式（Decorator Pattern）：</h6>
+<div class="code-wrapper"><pre><code class="hljs">动态地给一个对象添加一些额外的职责。就扩展功能而言，Decorator模式比生成子类的方式更为灵活</code></pre></div>
+<h6 id="组合模式（Composite-Pattern）：">组合模式（Composite Pattern）：</h6>
+<div class="code-wrapper"><pre><code class="hljs">将对象组合成树形结构以表示“部分-整体”的层次结构。Composite 使得客户对单个对象和复合对象的使用具有一致性</code></pre></div>
+<h6 id="外观模式（Facade-Pattern）">外观模式（Facade Pattern）</h6>
+<div class="code-wrapper"><pre><code class="hljs">为子系统中的一组接口提供一个一致的接口。Façade模式定义了一个高层接口，这个接口使得这一子系统更加容易使用</code></pre></div>
+<h6 id="享元模式（Flyweight-Pattern）：">享元模式（Flyweight Pattern）：</h6>
+<div class="code-wrapper"><pre><code class="hljs">运用共享技术有效地支持大量细粒度的对象</code></pre></div>
+<h6 id="代理模式（Proxy-Pattern）">代理模式（Proxy Pattern）:</h6>
+<div class="code-wrapper"><pre><code class="hljs">为其他对象提供一个代理以控制对这个对象的访问</code></pre></div>
+<h5 id="行为型模式（Behavioral-Patterns）">行为型模式（Behavioral Patterns）</h5>
+<blockquote>
+<p>这些设计模式特别关注对象之间的通信</p>
+</blockquote>
+<h6 id="模版方法模式（Template-Pattern）">模版方法模式（Template Pattern）</h6>
+<div class="code-wrapper"><pre><code class="hljs">定义一个操作中的算法的骨架，而将一些步骤延迟到子类。TemplateMethod 使得子类可以不改变一个算法的结构即可重定义该算法的某些特定步骤</code></pre></div>
+<h6 id="命令模式（Command-Pattern）：">命令模式（Command Pattern）：</h6>
+<div class="code-wrapper"><pre><code class="hljs">将一个请求封装为一个对象，从而使你可用不同的请求对客户进行参数化，对请求排队或记录请求日志，以及支持可取消的操作</code></pre></div>
+<h6 id="迭代器模式（Iterator-Pattern）">迭代器模式（Iterator Pattern）</h6>
+<div class="code-wrapper"><pre><code class="hljs">提供一种方法顺序访问一个聚合对象中各个元素，而又不需暴露该对象的内部表示</code></pre></div>
+<h6 id="观察者模式（Observer-Pattern）：">观察者模式（Observer Pattern）：</h6>
+<div class="code-wrapper"><pre><code class="hljs">定义对象间的一种一对多的依赖关系，以便当一个对象的状态发生改变时，所有依赖于它的对象都得到通知并自动刷新</code></pre></div>
+<h6 id="中介者模式（Mediator-Pattern）">中介者模式（Mediator Pattern）</h6>
+<div class="code-wrapper"><pre><code class="hljs">用一个中介对象来封装一系列的对象交互。中介者使各对象不需要显示地相互引用，从而使其耦合松散，而且可以独立地改变它们之间的交互</code></pre></div>
+<h6 id="备忘录模式（Memento-Pattern）：">备忘录模式（Memento Pattern）：</h6>
+<div class="code-wrapper"><pre><code class="hljs">在不破坏封装性的前提下，捕获一个对象的内部状态，并在该对象之外保持该状态，这样以后就可以将该对象恢复到保存的状态</code></pre></div>
+<h6 id="解释器模式（Interpreter-Pattern）：">解释器模式（Interpreter Pattern）：</h6>
+<div class="code-wrapper"><pre><code class="hljs">定义一个语言，定义它的文法的一种表示，并定义一个解释器，该解释器使用该表示来解释语言中的句子</code></pre></div>
+<h6 id="状态模式（State-Pattern）">状态模式（State Pattern）:</h6>
+<div class="code-wrapper"><pre><code class="hljs">允许一个对象在其内部状态改变时改变它的行为。对象看起来似乎修改了它所属的类。</code></pre></div>
+<h6 id="策略模式（Strategy-Pattern）">策略模式（Strategy Pattern）:</h6>
+<div class="code-wrapper"><pre><code class="hljs">定义一系列的算法，把它们一个个封装起来，并且使他们可相互替换。本模式使得算法的变化可以独立于使用它的客户</code></pre></div>
+<h6 id="责任链模式（Chain-of-Responsibility-Pattern）：">责任链模式（Chain of Responsibility Pattern）：</h6>
+<div class="code-wrapper"><pre><code class="hljs">为解除请求的发送者和接收者之间的耦合，而使多个对象都有机会处理这个请求。将这些对象连成一条链，并沿着这条链传递该请求，直到有对象处理它</code></pre></div>
+<h6 id="访问者模式（Visitor-Pattern）">访问者模式（Visitor Pattern）:</h6>
+<div class="code-wrapper"><pre><code class="hljs">表示一个作用于某对象结构中的各元素的操作。它使你可以在不改变各元素类别的前提下定义作用于这些元素的新操作</code></pre></div>
+<p>参考:</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://github.com/faif/python-patterns">Python-Patterns 示例代码</a></p>
+<p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6977390540438536228">Python中常用设计模式</a></p>
+<p><a target="_blank" rel="noopener" href="https://juejin.cn/post/7110103853957120036">Python设计模式</a></p>
+<p><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1650116">七大设计原则</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/fanzhidongyzby/archive/2012/12/14/2818723.html">设计模式学习心得</a></p>
+</blockquote>
 <script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
                 
               </div>
@@ -545,7 +395,7 @@ upstream backserver &#123;
     
       <span class="category-chain">
         
-  <a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/" class="category-chain-item">中间件</a>
+  <a href="/categories/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B/" class="category-chain-item">软件工程</a>
   
   
 
@@ -560,7 +410,7 @@ upstream backserver &#123;
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/nginx/" class="print-no-link">#nginx</a>
+        <a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" class="print-no-link">#设计模式</a>
       
     </div>
   
@@ -572,8 +422,8 @@ upstream backserver &#123;
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>nginx配置说明</div>
-      <div>https://centyuan.github.io/2023/11/07/中间件/nginx配置详解/</div>
+      <div>设计模式</div>
+      <div>https://centyuan.github.io/2023/11/14/软件工程/设计模式/</div>
     </div>
     <div class="license-meta">
       
@@ -585,7 +435,7 @@ upstream backserver &#123;
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年11月7日</div>
+          <div>2023年11月14日</div>
         </div>
       
       
@@ -617,18 +467,12 @@ upstream backserver &#123;
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/11/07/%E4%B8%AD%E9%97%B4%E4%BB%B6/nginx%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98%E5%8F%8A%E9%AB%98%E5%B9%B6%E5%8F%91%E9%85%8D%E7%BD%AE/" title="nginx性能调优及高并发配置">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">nginx性能调优及高并发配置</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/11/07/%E6%95%B0%E6%8D%AE%E5%BA%93/Postgresql/" title="Postgresql">
-                        <span class="hidden-mobile">Postgresql</span>
+                      <a href="/2023/11/14/Python%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E6%94%BE%E5%BC%83/Python%E5%AD%A6%E4%B9%A0%E6%8C%87%E5%8D%97/" title="Python学习指南">
+                        <span class="hidden-mobile">Python学习指南</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
