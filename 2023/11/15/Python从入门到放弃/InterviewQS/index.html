@@ -16,15 +16,15 @@
   <meta name="author" content="hlyuan">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Python基础 list和tuple的区别?  可变对象和不可变对象的区别  可变和不可变对象?  int、float、bool、string、tuple list、dict、set  检查一个字符串是否仅仅包含数字？  isnumeric() 方法检测字符串是否只由数字组成。这种方法是只针对unicode对象 str &#x3D; u&quot;this2009&quot;; print(str.isn">
+    <meta name="description" content="Python基础 list和tuple的区别?  列表是动态的，属于可变序列，可以使用append()、extend()、insert()、remove()和pop()等方法实现添加和修改列表元素， 元组是静态的，属于不可变序列，无法增加、删除、修改元素，除非整体替换 元组比列表更轻量: 1.元组占用空间更小(空的小16字节，列表是动态数组，会额外预留一部分空间，元组空间大小固定) 2.元组初始化">
 <meta property="og:type" content="article">
 <meta property="og:title" content="InterviewQS">
 <meta property="og:url" content="https://centyuan.github.io/2023/11/15/Python%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E6%94%BE%E5%BC%83/InterviewQS/index.html">
 <meta property="og:site_name" content="centyuan Blog">
-<meta property="og:description" content="Python基础 list和tuple的区别?  可变对象和不可变对象的区别  可变和不可变对象?  int、float、bool、string、tuple list、dict、set  检查一个字符串是否仅仅包含数字？  isnumeric() 方法检测字符串是否只由数字组成。这种方法是只针对unicode对象 str &#x3D; u&quot;this2009&quot;; print(str.isn">
+<meta property="og:description" content="Python基础 list和tuple的区别?  列表是动态的，属于可变序列，可以使用append()、extend()、insert()、remove()和pop()等方法实现添加和修改列表元素， 元组是静态的，属于不可变序列，无法增加、删除、修改元素，除非整体替换 元组比列表更轻量: 1.元组占用空间更小(空的小16字节，列表是动态数组，会额外预留一部分空间，元组空间大小固定) 2.元组初始化">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-11-15T13:50:24.486Z">
-<meta property="article:modified_time" content="2023-11-15T14:19:38.228Z">
+<meta property="article:modified_time" content="2023-11-16T14:55:14.876Z">
 <meta property="article:author" content="hlyuan">
 <meta property="article:tag" content="Python">
 <meta name="twitter:card" content="summary_large_image">
@@ -223,7 +223,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          5.3k 字
+          7.7k 字
         
       </span>
     
@@ -234,7 +234,7 @@
         
         
         
-          45 分钟
+          65 分钟
         
       </span>
     
@@ -279,7 +279,14 @@
                 <h4 id="Python基础">Python基础</h4>
 <h5 id="list和tuple的区别">list和tuple的区别?</h5>
 <blockquote>
-<p>可变对象和不可变对象的区别</p>
+<p>列表是动态的，属于可变序列，可以使用<a href="https://link.zhihu.com/?target=https%3A//www.olzz.com/tag/append/">append</a>()、<a href="https://link.zhihu.com/?target=https%3A//www.olzz.com/tag/extend/">extend</a>()、<a href="https://link.zhihu.com/?target=https%3A//www.olzz.com/tag/insert/">insert</a>()、remove()和pop()等方法实现添加和<a href="https://link.zhihu.com/?target=https%3A//www.olzz.com/tag/xiugailiebiao/">修改列表</a>元素，</p>
+<p>元组是静态的，属于不可变序列，无法增加、删除、修改元素，除非整体替换</p>
+<p>元组比列表更轻量:<br>
+1.元组占用空间更小(空的小16字节，列表是动态数组，会额外预留一部分空间，元组空间大小固定)</p>
+<p>2.元组初始化速度快5倍(python -m timeit “x=(1,2,3)” 和 python -m timeit “x=[1,2,3]”)</p>
+<p>3.元组的访问速度快2倍</p>
+<p>4.元组可以在字典中作为键</p>
+<p>5.元组底层也是数组，但是做了优化(为了避免效率,避免频繁调用系统函数free,malloc向系统释放申请空间,tuple源文件中定义了一个free_list,所有申请过的，小于一定大小的元组，在释放的时候会被放进这个 <code>free_list</code> 中以供下次使用。也就是说，如果以后需要再去创建同样的 <code>tuple</code>，Python 就可以直接从缓存中载入)</p>
 </blockquote>
 <h5 id="可变和不可变对象">可变和不可变对象?</h5>
 <blockquote>
@@ -401,54 +408,57 @@
     <span class="hljs-keyword">return</span> inner</code></pre></div>
 </blockquote>
 <h5 id="魔术方法">魔术方法?</h5>
-<div class="code-wrapper"><pre><code class="hljs asciidoc">
-<span class="hljs-emphasis">__str__</span>     print(object)时候触发
-<span class="hljs-emphasis">__repr__</span>       
-
-<span class="hljs-emphasis">__del__</span>
-<span class="hljs-emphasis">__call__</span>
-<span class="hljs-emphasis">__len__</span>    len(object)时候触发
-
-<span class="hljs-emphasis">__bool__</span>   bool(object)时候触发
-<span class="hljs-emphasis">__format__</span> 
-<span class="hljs-emphasis">__dir__</span>  dir(object)时候触发
-类相关
-<span class="hljs-emphasis">__init__</span>
-<span class="hljs-emphasis">__new__</span>
-<span class="hljs-emphasis">__class__</span>:和type类似查看对象所属类
-<span class="hljs-emphasis">__dict__</span>:和dir类似，<span class="hljs-emphasis">__dict__</span>返回字典,有些对象没有<span class="hljs-emphasis">__dict__</span>
-<span class="hljs-emphasis">__slots__</span>：限制实例有哪些属性
-迭代器相关
-<span class="hljs-emphasis">__iter__</span>(self)  定义当迭代容器中的元素的行为
-<span class="hljs-emphasis">__next__</span>
-
-上下文管理器
-<span class="hljs-emphasis">__enter__</span>(self）
-<span class="hljs-emphasis">__exit__</span>(self, exctype, excvalue, traceback)
-比较相关
-<span class="hljs-emphasis">__lt__</span>(self,other) x&lt;y调用x.lt(y)
-<span class="hljs-emphasis">__le__</span>(self,other) x&lt;=y调用x.le(y)
-<span class="hljs-emphasis">__eq__</span>(self,other) x==y调用x.eq(y)
-<span class="hljs-emphasis">__ne__</span>(self,other) x !=y 调用x.ne(y)
-<span class="hljs-emphasis">__gt__</span>(self, other)x &gt; y 调用 x.<span class="hljs-strong">**gt(y)</span>
-<span class="hljs-strong">__ge__(self, other)x &gt;= y 调用 x.ge(y)</span>
-<span class="hljs-strong">算术运算相关</span>
-<span class="hljs-strong">__add__(self, other)           定义加法的行为：+</span>
-<span class="hljs-strong">__sub__(self, other)           定义减法的行为：-</span>
-<span class="hljs-strong">__mul__(self, other)           定义乘法的行为：*</span>
-
-<span class="hljs-emphasis">__int__</span>(self)          定义当被 int() 调用时的行为（需要返回恰当的值）
-<span class="hljs-emphasis">__float__</span>(self)        定义当被 float() 调用时的行为（需要返回恰当的值）
-
-排序
-<span class="hljs-emphasis">__cmp__</span>(self,)    sorted调用时候
-hash类型(不可变对象)需要实现，对象的生命周期中，散列值是不变的
-<span class="hljs-emphasis">__hash__</span>
-<span class="hljs-emphasis">__eq__</span> 或者<span class="hljs-emphasis">__cmp__</span></code></pre></div>
-<h5 id="单例模式">单例模式?</h5>
-<blockquote>
-<p>使用python模块</p>
-</blockquote>
+<div class="code-wrapper"><pre><code class="hljs markdown">
+<span class="hljs-section">#打印输出  </span>
+<span class="hljs-strong">__str__</span>     
+<span class="hljs-strong">__repr__</span>  
+<span class="hljs-strong">__format__</span> 
+<span class="hljs-section"># 删除</span>
+<span class="hljs-strong">__del__</span>
+<span class="hljs-section"># 是否可callable</span>
+<span class="hljs-strong">__call__</span>   
+<span class="hljs-section"># len(object)时候触发</span>
+<span class="hljs-strong">__len__</span>    
+<span class="hljs-section"># bool(object)时候触发</span>
+<span class="hljs-strong">__bool__</span>   
+<span class="hljs-section">#  dir(object)时候触发</span>
+<span class="hljs-strong">__dir__</span> 
+<span class="hljs-section"># 类相关</span>
+<span class="hljs-strong">__init__</span>
+<span class="hljs-strong">__new__</span>
+<span class="hljs-strong">__class__</span>:和type类似查看对象所属类
+<span class="hljs-strong">__dict__</span>:和dir类似，<span class="hljs-strong">__dict__</span>返回字典,有些对象没有<span class="hljs-strong">__dict__</span>
+<span class="hljs-strong">__slots__</span>：限制实例有哪些属性
+<span class="hljs-section"># 迭代器相关</span>
+<span class="hljs-strong">__iter__</span>(self)  定义当迭代容器中的元素的行为
+<span class="hljs-strong">__next__</span>
+<span class="hljs-section"># 上下文管理器</span>
+<span class="hljs-strong">__enter__</span>(self）
+<span class="hljs-strong">__exit__</span>(self, exctype, excvalue, traceback)
+<span class="hljs-section"># hash类型(不可变对象)需要实现，对象的生命周期中，散列值是不变的</span>
+<span class="hljs-strong">__hash__</span>
+<span class="hljs-strong">__eq__</span> 或者<span class="hljs-strong">__cmp__</span>
+<span class="hljs-section"># 比较相关</span>
+<span class="hljs-strong">__lt__</span>(self,other) x<span class="language-xml">&lt;y调用x.lt(y)</span>
+<span class="language-xml">__le__(self,other) x&lt;=y调用x.le(y)</span>
+<span class="language-xml">__eq__(self,other) x==y调用x.eq(y)</span>
+<span class="language-xml">__ne__(self,other) x !=y 调用x.ne(y)</span>
+<span class="language-xml">__gt__(self, other)x &gt;</span> y 调用 x.<span class="hljs-strong">**gt(y)</span>
+<span class="hljs-strong">_<span class="hljs-emphasis">_ge_</span><span class="hljs-emphasis">_(self, other)x &gt;= y 调用 x.ge(y)</span></span>
+<span class="hljs-emphasis"><span class="hljs-strong"># 算术运算相关</span></span>
+<span class="hljs-emphasis"><span class="hljs-strong">_</span><span class="hljs-emphasis">_add_</span><span class="hljs-emphasis">_(self, other)           定义加法的行为：+</span></span>
+<span class="hljs-emphasis"><span class="hljs-strong">_</span><span class="hljs-emphasis">_sub_</span><span class="hljs-emphasis">_(self, other)           定义减法的行为：-</span></span>
+<span class="hljs-emphasis"><span class="hljs-strong">_</span><span class="hljs-emphasis">_mul_</span><span class="hljs-emphasis">_(self, other)           定义乘法的行为：*</span></span>
+<span class="hljs-emphasis"><span class="hljs-strong"># 定义当被 int() 调用时的行为（需要返回恰当的值）</span></span>
+<span class="hljs-emphasis"><span class="hljs-strong">_</span><span class="hljs-emphasis">_int_</span><span class="hljs-emphasis">_(self)          </span></span>
+<span class="hljs-emphasis"><span class="hljs-strong"># 定义当被 float() 调用时的行为（需要返回恰当的值）</span></span>
+<span class="hljs-emphasis"><span class="hljs-strong">_</span><span class="hljs-emphasis">_float_</span><span class="hljs-emphasis">_(self)        </span></span>
+<span class="hljs-emphasis"><span class="hljs-strong"># 排序</span></span>
+<span class="hljs-emphasis"><span class="hljs-strong">_</span><span class="hljs-emphasis">_cmp_</span><span class="hljs-emphasis">_(self,)    sorted调用时候</span></span>
+<span class="hljs-emphasis"><span class="hljs-strong"></span></span>
+<span class="hljs-emphasis"><span class="hljs-strong"># 找不到键</span></span>
+<span class="hljs-emphasis"><span class="hljs-strong">_</span><span class="hljs-emphasis">_missing_</span>_</span>
+<span class="hljs-strong"></span></code></pre></div>
 <h5 id="垃圾回收机制和内存管理">垃圾回收机制和内存管理?</h5>
 <blockquote>
 <p>gc.collect()手动出发回收机制</p>
@@ -526,14 +536,55 @@ hash类型(不可变对象)需要实现，对象的生命周期中，散列值�
 </blockquote>
 <h5 id="进程和线程的区别">进程和线程的区别?</h5>
 <blockquote>
-<p>1根本区别:资源分配的基本单位,cpu跳读执行的基本单位</p>
-<p>2地址空间:空间资源独立,共享本进程的空间和资源</p>
-<p>3键壮性:崩溃不影响其他进程,一个线程崩溃整个进程崩掉</p>
-<p>4执行过程:进程有(执行入口/顺序执行/执行开销大),线程不能独立运行(依附于进程,执行开销小)</p>
-<p>5切换:进程切换资源消耗大,线程切换消耗小</p>
+<p>1.进程是操作系统资源分配的最小单位，而线程是程序执行的最小单位</p>
+<p>2.进程之间相互独立，每个进程都有自己的地址空间、数据栈、文件描述符等，而线程共享进程的地址空间和资源</p>
+<p>3.进程之间通信需要使用IPC（Inter-Process Communication）机制，如管道、消息队列、共享内存等，而线程之间可以通过共享内存、信号量、互斥量等方式进行通信。</p>
+<p>4.进程有(执行入口/顺序执行/执行开销大),线程不能独立运行(依附于进程,执行开销小)</p>
+<p>5.键壮性:崩溃不影响其他进程,一个线程崩溃整个进程崩掉</p>
+<p>6.进程的创建和销毁需要较大的系统开销，而线程的创建和销毁则比较轻量级</p>
+<p>7.切换:进程切换资源消耗大,线程切换消耗小</p>
 <p>(进程切换需要切换页表,页表切换后,TLB失效,地址转化时需要重新查找页表。线程切换不需要切换页表)</p>
 </blockquote>
-<h5 id="列表和字典底层原理实现">列表和字典底层原理实现?</h5>
+<h5 id="列表底层原理实现">列表底层原理实现?</h5>
+<blockquote>
+<p>Python的列表是一种动态数组,数组中每个元素都一个指向存储真实数据的指针,扩容时会重新分配一块更大的内存空间,并将原来的值复制到新内存空间,这种实现方式使列表的随机访问非常高效，但在插入和删除元素时需要移动大量的数据，效率较低</p>
+<div class="code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta prompt_">&gt;</span><span class="language-bash">typedef struct &#123;</span>
+   PyObejct_VAR_HEAD
+   PyObject **ob_item;
+   Py_ssize_t allocated;
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">&#125;PyListObject</span>
+<span class="hljs-meta prompt_"></span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">ob_item:指向列表对象的指针数组</span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">allocated:申请内存的槽的个数(通常分配的槽的大小大于列表的大小,为了避免每次列表添加元素的时候调用分配内存的函数扩容)</span>
+<span class="hljs-meta prompt_"></span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">append:追加元素的操作平均复杂度为  O(1)</span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">insert:插入操作平均复杂度为 O(n)</span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">pop：取出最后一个的平均复杂度为 O(1)</span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">remove: 删除指定元素的复杂度为 O(n)</span></code></pre></div>
+</blockquote>
+<h5 id="字典底层实现原理">字典底层实现原理?</h5>
+<blockquote>
+<p>Python中字典是通过hash表来实现的</p>
+<div class="code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta prompt_">&gt;</span><span class="language-bash">typedef struct &#123;</span>
+   Py_ssize_t me_hash;
+   PyObject *me_key;
+   PyObject *me_value;
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">&#125;PyDictEntry;</span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">存储内容有 <span class="hljs-built_in">hash</span>，key，value</span>
+<span class="hljs-meta prompt_"></span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">字典是否有序?</span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">Python3.5以前:字典是不能保证插入顺序的，底层使用一个二维数组</span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">创建字典: 初始化一个二维数组,8行3列,字典的键值对数量超过当前数组的2/3时，数组会进行扩容</span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">往字典添加一个值: <span class="hljs-built_in">hash</span>(key)&amp;掩码 或 <span class="hljs-built_in">hash</span>(key)后的值对8取余数，余数为二维数组的索引，二维数组记录该索引(<span class="hljs-built_in">hash</span>值，key的内存地址,vlaue的内存地址)</span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">取值: <span class="hljs-built_in">hash</span>(key)后的值对8取余数，余数为二维数组的索引</span>
+<span class="hljs-meta prompt_"></span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">Python3.6后:字典插入有序了，且占用内存空间变小了,底层使用两个一维数组</span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">创建字典:</span> 
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">indices = [None,None,None,None,None，None，None，None]</span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">entries = 二维数组(<span class="hljs-built_in">hash</span>值，key的内存地址,value的内存地址)</span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">往字典添加一个值: <span class="hljs-built_in">hash</span>后取余后的值为indices上的索引,在该索引上记录entries存值的索引</span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">插入新的数据只在entries后面添加数据,确保了插入的顺序</span></code></pre></div>
+</blockquote>
 <h5 id="设计模式">设计模式?</h5>
 <blockquote>
 <blockquote>
@@ -551,8 +602,49 @@ hash类型(不可变对象)需要实现，对象的生命周期中，散列值�
 </blockquote>
 <p>参考:<a href="https://centyuan.github.io/2023/11/14/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a></p>
 </blockquote>
+<h5 id="单例模式">单例模式?</h5>
+<blockquote>
+<ol>
+<li class="lvl-3">
+<p>import 使用模块</p>
+</li>
+<li class="lvl-3">
+<p>使用装饰器</p>
+</li>
+<li class="lvl-4">
+<p>使用new，加锁解决多线程问题</p>
+</li>
+<li class="lvl-3">
+<p>使用元类，metaclass</p>
+</li>
+</ol>
+</blockquote>
+<h5 id="分布式系统中的单例任务是怎么实现的">分布式系统中的单例任务是怎么实现的?</h5>
+<blockquote>
+<p>把这个单路模式序列化并存储到外部共享存储区(如Redis),进程在使用这个单例模式时候,读取出来并反序列化成对象</p>
+</blockquote>
 <h4 id="框架">框架</h4>
 <h5 id="django生命周期">django生命周期?</h5>
+<blockquote>
+<ul class="lvl-1">
+<li class="lvl-2">
+<p><strong>请求阶段</strong>：当用户发送请求时，Django会根据URL路由规则找到对应的视图函数，并将请求传递给该函数处理。</p>
+</li>
+<li class="lvl-2">
+<p><strong>视图函数阶段</strong>：视图函数会处理请求，并返回一个HttpResponse对象，该对象包含了要返回给用户的内容。</p>
+</li>
+<li class="lvl-2">
+<p><strong>中间件阶段</strong>：在视图函数处理请求之前或之后，Django会执行中间件的相应方法，例如处理请求头、身份验证、缓存等。</p>
+</li>
+<li class="lvl-2">
+<p><strong>模板渲染阶段</strong>：如果视图函数返回的是一个模板，Django会将模板渲染成HTML页面，并将其包含在HttpResponse对象中返回给用户。</p>
+</li>
+<li class="lvl-2">
+<p><strong>响应阶段</strong>：最后，Django会将HttpResponse对象发送给用户的浏览器，完成请求响应过程。</p>
+</li>
+</ul>
+<p>在整个生命周期中，Django还会执行一些其他的操作，例如数据库查询、缓存读写、日志记录等。</p>
+</blockquote>
 <h5 id="ORM有哪些">ORM有哪些?</h5>
 <blockquote>
 <p>Django orm</p>
@@ -561,6 +653,30 @@ hash类型(不可变对象)需要实现，对象的生命周期中，散列值�
 </blockquote>
 <h4 id="数据库">数据库</h4>
 <h5 id="如何优化慢查询">如何优化慢查询?</h5>
+<h5 id="pg与mysql的区别有哪些？">pg与mysql的区别有哪些？</h5>
+<blockquote>
+<ul class="lvl-1">
+<li class="lvl-2">
+<p>数据类型：PG支持更多的数据类型，如数组、JSON、XML等，而MySQL则不支持。</p>
+</li>
+<li class="lvl-2">
+<p>ACID支持：PG支持完全的ACID（原子性、一致性、隔离性、持久性）事务，而MySQL只支持部分ACID事务。</p>
+</li>
+<li class="lvl-2">
+<p>复杂查询：PG支持更复杂的查询，如递归查询、窗口函数等，而MySQL则不支持。</p>
+</li>
+<li class="lvl-2">
+<p>存储引擎：MySQL支持多种存储引擎，如InnoDB、MyISAM等，而PG只支持一种存储引擎。</p>
+</li>
+<li class="lvl-2">
+<p>性能：在高并发、大数据量的情况下，PG的性能比MySQL更好。</p>
+</li>
+<li class="lvl-2">
+<p>开源许可证：PG采用的是BSD许可证，而MySQL采用的是GPL许可证</p>
+</li>
+</ul>
+<p>总的来说，PG更适合处理复杂的数据结构和高并发的场景，而MySQL则更适合处理简单的数据结构和小型应用</p>
+</blockquote>
 <script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
                 
               </div>

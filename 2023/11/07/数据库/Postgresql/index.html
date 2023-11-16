@@ -24,7 +24,7 @@
 <meta property="og:description" content="常用命令  基本命令: -h：数据库服务器地址； -p：数据库端口号； -U：U 大写,表示用户名； -d：数据库名称； -f：把备份文件放在哪里； 初始化数据库: &#x2F;usr&#x2F;local&#x2F;pgsql&#x2F;bin&#x2F;initdb -D &#x2F;usr&#x2F;local&#x2F;pgsql&#x2F;data&#x2F; &#x2F;usr&#x2F;local&#x2F;pgsql&#x2F;bin&#x2F;pg_ctl -D &#x2F;usr&#x2F;local&#x2F;pgsql&#x2F;data -l logfile">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-11-07T08:26:16.609Z">
-<meta property="article:modified_time" content="2023-11-07T13:30:49.521Z">
+<meta property="article:modified_time" content="2023-11-16T13:20:42.410Z">
 <meta property="article:author" content="hlyuan">
 <meta property="article:tag" content="postgresql">
 <meta name="twitter:card" content="summary_large_image">
@@ -223,7 +223,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.8k 字
+          2.1k 字
         
       </span>
     
@@ -234,7 +234,7 @@
         
         
         
-          15 分钟
+          18 分钟
         
       </span>
     
@@ -331,6 +331,11 @@ pg_dumpall –h 127.0.0.1 –p 5432 -U postgres –c –f db_bak.sql</p>
 <blockquote>
 <p>psql -h localhost -U emmweb -d emmweb &lt; /home/jianghai/Desktop/emmweb.bak</p>
 </blockquote>
+<p><strong>Postgresql的事务级别</strong></p>
+<div class="code-wrapper"><pre><code class="hljs pgsql">&gt;读未提交（<span class="hljs-keyword">Read</span> <span class="hljs-keyword">Uncommitted</span>）：一个事务可以读取另一个事务未提交的数据，可能会导致脏读、不可重复读和幻读问题。
+&gt;读已提交（<span class="hljs-keyword">Read</span> <span class="hljs-keyword">Committed</span>）：一个事务只能读取另一个事务已经提交的数据，可以避免脏读问题，但是可能会出现不可重复读和幻读问题。
+&gt;可重复读（<span class="hljs-keyword">Repeatable</span> <span class="hljs-keyword">Read</span>）：一个事务在执行期间多次读取同一数据，保证每次读取的数据都是一致的，可以避免脏读和不可重复读问题，但是可能会出现幻读问题。
+&gt;序列化（<span class="hljs-keyword">Serializable</span>）：最高的隔离级别，保证所有事务的执行顺序和结果与串行执行的结果相同，可以避免脏读、不可重复读和幻读问题，但是会影响并发性能</code></pre></div>
 <p><strong>mysql性能极限:</strong><br>
 mysql单表字段数:建议20-50<br>
 mysql默认单字段大小：存储最大空间为1M,可以修改max_allowed_packet=16<br>
