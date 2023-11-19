@@ -16,15 +16,15 @@
   <meta name="author" content="hlyuan">
   <meta name="keywords" content="">
   
-    <meta name="description" content="mysql:单进程多线程模型,一个SQL语句无法利用多个cpu core 一:基本命令 0.查看当前连接数 show global status like &#x27;Thread$&#x27;; show variables like &quot;%timeout%&quot;; show variables like &quot;log_%&quot;; 1.查看当前连接状态 show pro">
+    <meta name="description" content="mysql常用操作命令 mysql:单进程多线程模型,一个SQL语句无法利用多个cpu core 一:基本命令 0.查看当前连接数 show global status like &#x27;Thread$&#x27;; show variables like &quot;%timeout%&quot;; show variables like &quot;log_%&quot;; 1.查看当前连">
 <meta property="og:type" content="article">
 <meta property="og:title" content="mysql常用操作命令和性能优化">
-<meta property="og:url" content="https://centyuan.github.io/2023/11/06/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C%E5%91%BD%E4%BB%A4%E5%92%8C%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/index.html">
+<meta property="og:url" content="https://centyuan.github.io/2023/11/19/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C%E5%91%BD%E4%BB%A4%E5%92%8C%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/index.html">
 <meta property="og:site_name" content="centyuan Blog">
-<meta property="og:description" content="mysql:单进程多线程模型,一个SQL语句无法利用多个cpu core 一:基本命令 0.查看当前连接数 show global status like &#x27;Thread$&#x27;; show variables like &quot;%timeout%&quot;; show variables like &quot;log_%&quot;; 1.查看当前连接状态 show pro">
+<meta property="og:description" content="mysql常用操作命令 mysql:单进程多线程模型,一个SQL语句无法利用多个cpu core 一:基本命令 0.查看当前连接数 show global status like &#x27;Thread$&#x27;; show variables like &quot;%timeout%&quot;; show variables like &quot;log_%&quot;; 1.查看当前连">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2023-11-06T07:02:11.046Z">
-<meta property="article:modified_time" content="2023-11-18T08:54:34.602Z">
+<meta property="article:published_time" content="2023-11-19T06:51:36.796Z">
+<meta property="article:modified_time" content="2023-11-19T09:33:26.321Z">
 <meta property="article:author" content="hlyuan">
 <meta property="article:tag" content="mysql">
 <meta name="twitter:card" content="summary_large_image">
@@ -211,8 +211,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-11-06 15:02" pubdate>
-          2023年11月6日 下午
+        <time datetime="2023-11-19 14:51" pubdate>
+          2023年11月19日 下午
         </time>
       </span>
     
@@ -223,7 +223,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          17k 字
+          19k 字
         
       </span>
     
@@ -234,7 +234,7 @@
         
         
         
-          143 分钟
+          157 分钟
         
       </span>
     
@@ -276,7 +276,8 @@
             
               <div class="markdown-body">
                 
-                <p>mysql:单进程多线程模型,一个SQL语句无法利用多个cpu core</p>
+                <p>mysql常用操作命令</p>
+<p>mysql:单进程多线程模型,一个SQL语句无法利用多个cpu core</p>
 <h3 id="一-基本命令">一:基本命令</h3>
 <p><strong>0.查看当前连接数</strong></p>
 <div class="code-wrapper"><pre><code class="hljs sql"><span class="hljs-keyword">show</span> <span class="hljs-keyword">global</span> status <span class="hljs-keyword">like</span> <span class="hljs-string">&#x27;Thread$&#x27;</span>;
@@ -413,12 +414,19 @@ flush privileges;
 )
 <span class="hljs-keyword">alter</span> <span class="hljs-keyword">table</span> table_name <span class="hljs-keyword">unique</span> index(filed_name,filed_name)
 <span class="hljs-keyword">create</span> <span class="hljs-keyword">UNIQUE</span> INDEX indexName <span class="hljs-keyword">on</span> table_name(filed_name,filed_name)</code></pre></div>
-<h3 id="三-复制-导入导出数据">三: 复制,导入导出数据</h3>
+<h3 id="三-数据复制-导入-导出">三: 数据复制/导入/导出</h3>
 <p><strong>1.复制n条记录并创建</strong></p>
 <div class="code-wrapper"><pre><code class="hljs sql"><span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">into</span> reyo (num,overtime) <span class="hljs-keyword">SELECT</span> num,overtime <span class="hljs-keyword">from</span> reyo <span class="hljs-keyword">where</span> id <span class="hljs-keyword">IN</span>(<span class="hljs-number">1</span>,<span class="hljs-number">3</span>,<span class="hljs-number">5</span>,<span class="hljs-number">6</span>,<span class="hljs-number">7</span>,<span class="hljs-number">9</span>);
 <span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">into</span> reyo (`num`,`overtime`) <span class="hljs-keyword">SELECT</span> `num`,`overtime` <span class="hljs-keyword">from</span> reyo <span class="hljs-keyword">where</span> id <span class="hljs-keyword">IN</span>(<span class="hljs-number">1</span>,<span class="hljs-number">3</span>,<span class="hljs-number">5</span>,<span class="hljs-number">6</span>,<span class="hljs-number">7</span>,<span class="hljs-number">9</span>);</code></pre></div>
 <p>2.导出整个数据库</p>
-<div class="code-wrapper"><pre><code class="hljs sql">mysqldump <span class="hljs-operator">-</span>u root <span class="hljs-operator">-</span>p dbname<span class="hljs-operator">&gt;</span>dbname.sql</code></pre></div>
+<div class="code-wrapper"><pre><code class="hljs sql">mysqldump <span class="hljs-operator">-</span>u root <span class="hljs-operator">-</span>ppassword dbname<span class="hljs-operator">&gt;</span>dbname.sql
+
+mysqldump <span class="hljs-operator">-</span>u root <span class="hljs-operator">-</span>p <span class="hljs-comment">--all-databases &gt;all-data-$(date+%F).sql  # 备份所有数据库</span>
+mysqldump <span class="hljs-operator">-</span>u root <span class="hljs-operator">-</span>p <span class="hljs-comment">--databases auth mysql &gt;auth-mysql.sql    # 备份auth和mysql数据库</span>
+mysqldump <span class="hljs-operator">-</span>u root <span class="hljs-operator">-</span>p dbname table_name <span class="hljs-operator">&gt;</span>table_name.sql        # 备份数据库
+mysqldump <span class="hljs-operator">-</span>u root <span class="hljs-operator">-</span>p <span class="hljs-operator">-</span>d dbname table_name <span class="hljs-operator">&gt;</span> table_name.sql    # 仅备份表结构
+mysqldump <span class="hljs-operator">-</span>u root <span class="hljs-operator">-</span>p <span class="hljs-operator">-</span>t dbname table_name <span class="hljs-operator">&gt;</span> table_name.sql    # 仅备份数据
+https:<span class="hljs-operator">/</span><span class="hljs-operator">/</span>zhuanlan.zhihu.com<span class="hljs-operator">/</span>p<span class="hljs-operator">/</span><span class="hljs-number">396005871</span></code></pre></div>
 <p><strong>3.导出表 show variables like '%secure%'查看安全目录</strong></p>
 <div class="code-wrapper"><pre><code class="hljs sql">mysqldump <span class="hljs-operator">-</span>u root <span class="hljs-operator">-</span>p dbname users<span class="hljs-operator">&gt;</span>dbname_users.sql
 <span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> runoob_tbl  <span class="hljs-keyword">INTO</span> OUTFILE <span class="hljs-string">&#x27;/var/lib/mysql-files/Dbug_manangement.txt&#x27;</span>;
@@ -431,10 +439,17 @@ mysql<span class="hljs-operator">&gt;</span>source <span class="hljs-operator">/
 load data <span class="hljs-keyword">local</span> infile &quot;/var/lib/mysql-files/CaseUrl.sql&quot; <span class="hljs-keyword">into</span> <span class="hljs-keyword">table</span> CaseUrl
 (id,name, url, status_code, <span class="hljs-keyword">result</span>, processresult, proposal,<span class="hljs-variable">@create_time</span>,test_time,case_id) FIELDS TERMINATED <span class="hljs-keyword">BY</span> <span class="hljs-string">&#x27;, &#x27;</span>
 <span class="hljs-keyword">set</span> create_time<span class="hljs-operator">=</span>DATE_FORMAT(<span class="hljs-variable">@create_time</span>,&quot;%Y-%m-%d %H:%i:%s&quot;)</code></pre></div>
-<h3 id="四-mysql性能优化-四个维度-1-架构-2-硬件-3-DB优化-4-sql优化">四:mysql性能优化(四个维度:1.架构,2.硬件,3.DB优化,4.sql优化)</h3>
+<h3 id="四-mysql性能优化">四:mysql性能优化</h3>
+<blockquote>
+<p>四个维度:</p>
+<p>1.架构</p>
+<p>2.硬件</p>
+<p>3.DB优化</p>
+<p>4.sql优化</p>
+</blockquote>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>架构:集群读写分离,数据库分库，分表,redis缓存</p>
+<p>架构:集群读写分离,数据库切分</p>
 </li>
 <li class="lvl-2">
 <p>硬件:高效的磁盘读写性能</p>
@@ -442,24 +457,24 @@ load data <span class="hljs-keyword">local</span> infile &quot;/var/lib/mysql-fi
 <li class="lvl-2">
 <p>DB:参数优化(日志不能笑,缓存足够大,连接够用)</p>
 <ul class="lvl-2">
-<li class="lvl-5">
+<li class="lvl-4">
 <p>my.ini或my.cnf配置文件:</p>
 <ol>
-<li class="lvl-8">sort/join/read/rnd buffer:4M或8M或16M</li>
-<li class="lvl-8">tmp/heap table:96M或128M</li>
-<li class="lvl-8">innodb_flush_log_at_trx_commit:对redo日志刷盘频率的设定<br>
+<li class="lvl-7">sort/join/read/rnd buffer:4M或8M或16M</li>
+<li class="lvl-7">tmp/heap table:96M或128M</li>
+<li class="lvl-7">innodb_flush_log_at_trx_commit:对redo日志刷盘频率的设定<br>
 0:缓冲区的redo log会每秒写入到磁盘的日志文件。但每次事务提交不会有任何影响，也就是 log buffer 的刷写操作和事务提交操作没有关系。在这种情况下，MySQL性能最好，但如果 mysqld 进程崩溃，通常会导致最后 1s 的日志丢失。<br>
 1:每次事务提交时,缓冲区redo log保证一定会被写入到磁盘的日志文件。这也是默认值。这是最安全的配置，但由于每次事务都需要进行磁盘I/O，所以也最慢。<br>
 2:每次事务提交时,缓冲区redo log异步写入(不保证)到磁盘的日志文件。这时如果 mysqld 进程崩溃，由于日志已经写入到系统缓存，所以并不会丢失数据；在操作系统崩溃的情况下，通常会导致最后 1s 的日志丢失。<br>
 sync_binlog:binlog刷盘的频率</li>
-<li class="lvl-8">(保证主库和主从库的一致性:innodb_flush_log_at_trx_commit和sync_binlog都设置为1)</li>
-<li class="lvl-8">interactive_timeout:交互模式下超时时间,五分钟或十分钟</li>
-<li class="lvl-8">lock_wait_timeout:表锁锁定时间</li>
-<li class="lvl-8">time_zone:使用datetime减少性能消耗</li>
-<li class="lvl-8">wait_timeout:程序连接mysql超时时间,五分钟或十分钟</li>
-<li class="lvl-8">innodb_buffer_pool_size:缓冲池大小(越大,磁盘I/O减少)2个G左右</li>
-<li class="lvl-9">innodb_buffer_pool_instances:配置多个缓冲池实例</li>
-<li class="lvl-9">tmp_table_size:临时表的最大大小</li>
+<li class="lvl-7">(保证主库和主从库的一致性:innodb_flush_log_at_trx_commit和sync_binlog都设置为1)</li>
+<li class="lvl-7">interactive_timeout:交互模式下超时时间,五分钟或十分钟</li>
+<li class="lvl-7">lock_wait_timeout:表锁锁定时间</li>
+<li class="lvl-7">time_zone:使用datetime减少性能消耗</li>
+<li class="lvl-7">wait_timeout:程序连接mysql超时时间,五分钟或十分钟</li>
+<li class="lvl-7">innodb_buffer_pool_size:缓冲池大小(越大,磁盘I/O减少)2个G左右</li>
+<li class="lvl-8">innodb_buffer_pool_instances:配置多个缓冲池实例</li>
+<li class="lvl-8">tmp_table_size:临时表的最大大小</li>
 </ol>
 </li>
 </ul>
@@ -467,28 +482,91 @@ sync_binlog:binlog刷盘的频率</li>
 <li class="lvl-2">
 <p>sql优化</p>
 <p><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/486105337/answer/2538190061">https://www.zhihu.com/question/486105337/answer/2538190061</a></p>
-<p>explain检查sql语句定位优化点或开启慢查询定位优化点优化方向:(避免不要的列|分页优化|索引优化|JOIN优化|排序优化|union优化)</p>
-<div class="code-wrapper"><pre><code class="hljs">  	1.  避免不要的列
- 	- 避免使用select *
- 	- 多用limit
- 	- 选择合理的字段类型
-  	2.  分页优化(数据量较大)
- - 延迟关联
- - 书签方式
-  	3.  索引优化
- - 合理使用索引(一个表索引不超过5个),避免索引失效
- - 利用覆盖索引
- - 正确使用联合索引
- - 避免索引失效情况
-  	4.  JOIN优化
- 	- join表不宜过多(不超过5个)
- 	- 小表驱动大表
- 	- 用连接查询代替子查询
-  	5.  排序优化
- 	- 利用索引排序
-  	6.  union优化
- - 使用UNION ALL(不去重,所有数据)替代UNION(去重)
-</code></pre></div>
+<p>explain:查看sql的执行计划,检查sql语句定位优化点或开启慢查询定位优化点优化方向:(避免不要的列|分页优化|索引优化|JOIN优化|排序优化|union优化)</p>
+<ol>
+<li class="lvl-6">
+<p>避免不要的列</p>
+</li>
+</ol>
+<ul class="lvl-2">
+<li class="lvl-4">
+<p>避免使用select *</p>
+</li>
+<li class="lvl-4">
+<p>多用limit</p>
+</li>
+<li class="lvl-4">
+<p>选择合理的字段类型</p>
+</li>
+</ul>
+<ol>
+<li class="lvl-6">
+<p>分页优化(数据量较大)</p>
+</li>
+</ol>
+<ul class="lvl-2">
+<li class="lvl-4">
+<p>延迟关联</p>
+</li>
+<li class="lvl-4">
+<p>书签方式</p>
+</li>
+</ul>
+<ol>
+<li class="lvl-6">
+<p>索引优化</p>
+</li>
+</ol>
+<ul class="lvl-2">
+<li class="lvl-4">
+<p>合理使用索引(一个表索引不超过5个),避免索引失效</p>
+</li>
+<li class="lvl-4">
+<p>利用覆盖索引</p>
+</li>
+<li class="lvl-4">
+<p>正确使用联合索引</p>
+</li>
+<li class="lvl-4">
+<p>避免索引失效情况</p>
+</li>
+</ul>
+<ol>
+<li class="lvl-6">
+<p>JOIN优化</p>
+</li>
+</ol>
+<ul class="lvl-2">
+<li class="lvl-4">
+<p>join表不宜过多(不超过5个)</p>
+</li>
+<li class="lvl-4">
+<p>小表驱动大表</p>
+</li>
+<li class="lvl-4">
+<p>用连接查询代替子查询</p>
+</li>
+</ul>
+<ol>
+<li class="lvl-6">
+<p>排序优化</p>
+</li>
+</ol>
+<ul class="lvl-2">
+<li class="lvl-4">
+<p>利用索引排序</p>
+</li>
+</ul>
+<ol>
+<li class="lvl-6">
+<p>union优化</p>
+</li>
+</ol>
+<ul class="lvl-2">
+<li class="lvl-4">
+<p>使用UNION ALL(不去重,所有数据)替代UNION(去重)</p>
+</li>
+</ul>
 </li>
 </ul>
 <blockquote>
@@ -506,46 +584,64 @@ sync_binlog:binlog刷盘的频率</li>
 </blockquote>
 <h3 id="五-索引详解">五:索引详解</h3>
 <blockquote>
-<p>操作系统和内存:最小单位是页page<br>
-操作系统和磁盘:最小单位是块block<br>
-磁盘I/O:文件系统每次读取一块(默认4K)单位大小到内存<br>
-mysql:存储数据以页(page默认16k)为单位,mysql读取一页页读取</p>
+<p>操作系统和磁盘:最小单位是块block<br>
+操作系统和内存:最小单位是页page</p>
+<p>磁盘I/O:文件系统每次读取一块(默认4K)单位大小到内存<br>
+InnoDB :存储数据以页(page默认16k)为单位,InnoDB 读取一页页读取</p>
 </blockquote>
-<p><strong>1.索引演化史?</strong></p>
+<h4 id="索引演化史">索引演化史</h4>
+<blockquote>
+<p>B树和B+树最大区别:</p>
+<p>B的非叶子节点可以存储数据，而B+树只有叶子结点才可以存储数据,一个节点可以存储很多数据，所以B树的高度大大减小，</p>
+<p>但是B树相对于B+树来说，在查找数据的时候，由于每一个节点都有可能包含目标数据，所以查找总是从根节点进行向下搜索，这个特点会带来大量的随机io。</p>
+<p>而在B+树种，因为叶子结点才会存储数据（InnoDB），这样子相比B树一个页大小存储的索引数据就更多了（16K），并且叶子结点通过双向指针指向相邻的节点，依次连接。</p>
+<p>并且相邻结点是有序的，所以对于范围查找是非常方便的，获取到第一个符合条件的，然后通过指针，往后获取数据，直到最后一个不满足条件为止。</p>
+</blockquote>
 <blockquote>
 <p><strong>二叉查找树-&gt;AVL平衡二叉树-&gt;B-Tree(多路平衡查找树)-&gt;B+Tree:</strong><br>
-B-Tree:多路平衡查找树,每个节点包含多对(父节点指针,子节点指针,键key,值data),相比于AVL缩减了节点数,减少了树的高度<br>
-B+Tree:1.非叶子节点(双向链表)只存储键值+叶子节点指针,2.值data顺序存在同一层的叶子节点上，相比于B-Tree每个节点能存储更多的key减少了树的高度和磁盘I/O次数，3.叶子节点之间有指针,链表支持范围查找通过非叶子节点的二分查找以及指针确定数据在哪个页中,进而去数据页查找数据一般高度为1-3:叶子节点16k(一条数据一般1k)存16条数据,非叶子节点存1170个指针=1170<em>1170</em>16=21902400**</p>
+<strong>B-Tree:</strong></p>
+  <div class="code-wrapper"><pre><code class="hljs haskell">多路平衡查找树,每个节点包含多对(父节点指针,子节点指针,键key,值<span class="hljs-class"><span class="hljs-keyword">data</span>),相比于<span class="hljs-type">AVL</span>缩减了节点数,</span></code></pre></div>
+<p><strong>B+Tree:</strong></p>
+<div class="code-wrapper"><pre><code class="hljs css"><span class="hljs-number">1</span>.非叶子节点(双向链表)只存储键值+叶子节点指针,
+<span class="hljs-number">2</span>.值data顺序存在同一层的叶子节点上，相比于<span class="hljs-selector-tag">B</span>-Tree每个节点能存储更多的key减少了树的高度和磁盘<span class="hljs-selector-tag">I</span>/O次数，
+<span class="hljs-number">3</span>.叶子节点之间有指针,链表支持范围查找
+通过非叶子节点的二分查找以及指针确定数据在哪个页中,进而去数据页查找数据
+树的高度为<span class="hljs-number">1</span>-<span class="hljs-number">3</span>:
+  <span class="hljs-number">1</span>.叶子节点<span class="hljs-number">16</span><span class="hljs-built_in">k</span>(一条数据一般<span class="hljs-number">1</span>k)存<span class="hljs-number">16</span>条数据
+  <span class="hljs-number">2</span>.非叶子节点存<span class="hljs-number">1170</span>个指针=<span class="hljs-number">1170</span>*<span class="hljs-number">1170</span>*<span class="hljs-number">16</span>=<span class="hljs-number">21902400</span>**</code></pre></div>
 </blockquote>
-<p><strong>2.什么是索引?</strong></p>
+<h4 id="什么是索引">什么是索引</h4>
 <blockquote>
 <p>对一列或多列值进行排序的数据结构(类似目录排序好了的,在小文件查找)</p>
 </blockquote>
-<p><strong>3.mysql有哪些索引?那些字段可以建立对应索引?</strong></p>
+<h4 id="mysql有哪些索引-那些字段可以建立对应索引">mysql有哪些索引?那些字段可以建立对应索引</h4>
 <blockquote>
-<p>普通索引主键索引(聚簇索引,唯一索引unique唯一且不为NULL),<br>
-复合索引(最多包含16列:where多条件最左原则):可用于包含所有列或第一列,前两列,前三列…等,blob和text也能创建索引, 但是必须指定前面多少位全文索引(char、varchar，text 列上可以创建全文索引,一般不使用,不是mysql专长)<br>
-唯一索引(innodb不是聚簇索引),<br>
-空间索引(对空间数据类型字段建立索引,mysql有四种:GEOMETRY,POINT,LINESTRING,POLYGON)</p>
+<p>普通索引：加快查询主键索引：聚簇索引,唯一索引unique唯一且不为NULL<br>
+复合索引: <strong>多个字段的索引</strong>最多包含16列:where多条件最左原则),可用于包含所有列或第一列,前两列,前三列…等,blob和text也能创建索引, 但是必须指定前面多少位,组合索引查询遵循<strong>最左前缀原则</strong>,能够避免<strong>回表查询</strong><br>
+全文索引: char、varchar，text 列上可以创建全文索引,一般不使用,不是mysql专长唯一索引: 唯一性空间索引: 对空间数据类型字段建立索引,mysql有四种:GEOMETRY,POINT,LINESTRING,POLYGON<br>
+<strong>聚簇索引</strong>和<strong>非聚簇索引</strong>：聚簇索引和非聚簇索引的概念比上面的概念要大，属于包含和被包含的关系。例如：InnoDB中主键索引使用的就是聚簇索引</p>
+<p>InnoDB存储引擎中，索引分为 <strong>聚簇索引</strong>和<strong>二级索引</strong>，主键索引就是聚簇索引，其它的索引为二级索引</p>
 </blockquote>
-<p><strong>4.聚集索引和非聚集索引区别?</strong></p>
+<h4 id="聚集索引和非聚集索引区别">聚集索引和非聚集索引区别</h4>
 <blockquote>
 <p><strong>都是B+Tree数据结构</strong><br>
-聚簇索引:叶子节点存储索引和数据,找到索引就找到数据(其他为辅助索引,存储索引id,没有去覆盖索引的话要回表查找主键索引找到数据)。非聚簇索引:叶子节点存储索引和数据行的地址,根据索引找到数据行的位置在去磁盘取出数据。</p>
+聚簇索引：就是叶子节点中存储的就是完整的行数据，索引和数据存储在一起</p>
+<p>非聚簇索引：索引文件和数据文件是分开的，所以查询数据会多一次查询</p>
+<p>因此聚簇索引的查询速度会快于非聚簇索引的查询速度，在Mysql的存储引擎中，「InnoDB支持聚簇索引，MyISAM不支持聚簇索引，MyISAM支持非聚簇索引</p>
 </blockquote>
-<p><strong>5.什么是回表?</strong></p>
+<h4 id="什么是回表">什么是回表</h4>
 <blockquote>
-<p>通过非主键索引查询,select所获取的字段不能通过非主键索引获取到,需要回表查询主键索引。</p>
+<p>where不在主键上，则通过非主键索引查询,select所获取的字段不能通过非主键索引获取到,只能查到主键,需要回表通过主键索引查到完整的数据。</p>
 </blockquote>
-<p><strong>6.覆盖索引,非覆盖索引?</strong></p>
+<h4 id="覆盖索引-非覆盖索引">覆盖索引,非覆盖索引</h4>
 <blockquote>
 <p>覆盖索引:所查的字段在当前索引叶子节点上存在,不用回表,直接作为结果返回</p>
 </blockquote>
-<p><strong>7.什么是索引下推?</strong></p>
+<h4 id="什么是索引下推">什么是索引下推</h4>
 <blockquote>
 <p>where多条件判断,对索引中包含的字段先做判断,再去回表没有索引的字段(减少回表次数)</p>
 </blockquote>
-<p><strong>8.什么情况下不推荐使用索引?</strong></p>
+<h4 id="什么情况下不推荐使用索引">什么情况下不推荐使用索引</h4>
 <blockquote>
 <p><strong>目的是:索引是为了查询更快,占用空间更小</strong><br>
 1.数据唯一性差(比如性别只有两种数据)<br>
@@ -553,7 +649,8 @@ B+Tree:1.非叶子节点(双向链表)只存储键值+叶子节点指针,2.值da
 3.不用无序的的值如身份证,uuid无序不能作为索引<br>
 4.字段不在where语句后出现(where含IS NULL/IS NULL/IS NOT NULL/like &quot;%&quot;等,不用索引)<br>
 5.过长的字段使用前缀索引<br>
-6.参与计算的字段不适合建立索引</p>
+6.参与计算的字段不适合建立索引<br>
+7.可能产生乱码的字段作为主键或唯一索引</p>
 <p><strong>那些情况适合建立索引?</strong></p>
 <ol>
 <li class="lvl-3">
@@ -567,116 +664,148 @@ B+Tree:1.非叶子节点(双向链表)只存储键值+叶子节点指针,2.值da
 </li>
 </ol>
 </blockquote>
-<h3 id="六-InnoDB和MyISAM区别">六:InnoDB和MyISAM区别</h3>
+<h4 id="InnoDB-MyISAM区别">InnoDB/MyISAM区别</h4>
 <blockquote>
 <p>MyISAM:不支持事务,支持表级别锁(限制了读/写的性能),拥有较高的插入和查询速度,B+的非聚簇索引,通常用于只读或以读为主的场景.<br>
 怎么快速向数据库插入100万条数据?先用MyISAM插入数据,然后修改存储引擎为InnoDB<br>
 InnoDB:支持事务,支持行/表级别锁,/外键(数据的完整性和一致性更高),采用B+的聚簇索引,通常用于经常更新的场景.</p>
 </blockquote>
-<p><strong>1.InnoDB和MyISAM索引区别</strong></p>
+<h4 id="InnoDB和MyISAM索引区别">InnoDB和MyISAM索引区别</h4>
 <blockquote>
 <p>InnoBD主键索引采用B+的聚簇索引:</p>
-<p>​	每个InnoDB表都有且只有一个特殊的索引，称为聚簇索引 ，用于存储行数据。通常，聚簇索引与主键同义 。</p>
-<div class="code-wrapper"><pre><code class="hljs">  1. 表定义了主键,则pk就是聚集索引
-  2. 没有定义主键,第一个非空唯一索引列就是聚集索引
-  3. 否则,InnoDB会创建一个隐藏的row-id作为聚集索引
+<div class="code-wrapper"><pre><code class="hljs">每个InnoDB表都有且只有一个特殊的索引，称为聚簇索引 ，用于存储行数据。通常，聚簇索引与主键同义 。
 </code></pre></div>
-<p>MyISAM索引采用B+的非聚簇索引:</p>
-<p>​	不存储全部数据,只存储数据行的地址</p>
-</blockquote>
-<h3 id="七-mysql预编译-sql执行前会进行解析和校验-参数带入">七:mysql预编译(sql执行前会进行解析和校验),参数带入</h3>
-<blockquote>
-<p><strong>益处</strong>:加快执行速度,防止sql注入<br>
-<strong>场景</strong>:SQL语句一样,参数不一样,可以对SQL语句预编译<br>
-<strong>sql语句执行流程:</strong><br>
-连接层(处理连接/鉴权/安全管理)-&gt;服务层(系统管理/sql接口/缓存/解析/预处理/优化)-&gt;引擎层(具体与文件系统打交道)-&gt;存储层<br>
-sql语句-&gt;查询缓存(默认关闭不推荐使用,sql语句必须相同,且表数据表动大)-&gt;语法解析预处理器(检查是否有语法错误)-&gt;优化器-&gt;执行器<br>
-<strong>语法</strong>:prepare name from statement;</p>
 <ol>
-<li class="lvl-6">定义:prepare statement_1 from ‘select * from user where id=?’; # 通过?进行占位</li>
-<li class="lvl-6">参数:set @id=2;</li>
-<li class="lvl-6">执行.execute statement_1 using @id;</li>
+<li class="lvl-3">
+<p>表定义了主键,则pk就是聚集索引</p>
+</li>
+<li class="lvl-3">
+<p>没有定义主键,第一个非空唯一索引列就是聚集索引</p>
+</li>
+<li class="lvl-3">
+<p>否则,InnoDB会创建一个隐藏的row-id作为聚集索引</p>
+</li>
+</ol>
+<p>MyISAM索引采用B+的非聚簇索引:</p>
+<div class="code-wrapper"><pre><code class="hljs">不存储全部数据,只存储数据行的地址
+</code></pre></div>
+</blockquote>
+<h3 id="七-mysql预编译">七:mysql预编译</h3>
+<blockquote>
+<hr>
+<h4 id="Mysql架构">Mysql架构</h4>
+<div class="code-wrapper"><pre><code class="hljs asciidoc"><span class="hljs-strong">**连接层**</span>：处理连接/鉴权/安全管理)
+
+<span class="hljs-strong">**服务层**</span>：系统管理/sql接口/缓存/解析/预处理/优化
+
+<span class="hljs-strong">**引擎层**</span>：具体与文件系统打交道
+
+<span class="hljs-strong">**存储层**</span>:</code></pre></div>
+<h4 id="sql语句执行流程">sql语句执行流程:</h4>
+<div class="code-wrapper"><pre><code class="hljs brainfuck"><span class="hljs-comment">客户端请求</span> <span class="hljs-literal">---</span>&gt; <span class="hljs-comment">连接器（验证用户身份，给予权限）</span> <span class="hljs-literal">---</span>&gt; <span class="hljs-comment">查询缓存（存在缓存则直接返回，不存在则执行后续操作）</span> <span class="hljs-literal">---</span>&gt; <span class="hljs-comment">分析器（对SQL进行词法分析和语法分析操作）</span> <span class="hljs-literal">---</span>&gt; <span class="hljs-comment">优化器（主要对执行的sql优化选择最优的执行方案方法）</span> <span class="hljs-literal">---</span>&gt; <span class="hljs-comment">执行器（执行时会先看用户是否有执行权限，有才去使用这个引擎提供的接口）</span> <span class="hljs-literal">---</span>&gt; <span class="hljs-comment">去引擎层获取数据返回（如果开启查询缓存则会缓存查询结果）</span></code></pre></div>
+<p>sql执行前会进行解析和校验)</p>
+<p><strong>益处</strong>:加快执行速度,防止sql注入<br>
+<strong>场景</strong>:SQL语句一样,参数不一样,可以对SQL语句预编译</p>
+<p><strong>语法</strong>:prepare name from statement;</p>
+<ol>
+<li class="lvl-3">
+<p>定义:prepare statement_1 from ‘select * from user where id=?’; # 通过?进行占位</p>
+</li>
+<li class="lvl-3">
+<p>参数:set @id=2;</p>
+</li>
+<li class="lvl-3">
+<p>执行.execute statement_1 using @id;</p>
+</li>
 </ol>
 <p>怎么预防sql注入？</p>
 <ol>
-<li class="lvl-5">
+<li class="lvl-3">
 <p>不信任用户提交的数据(参数过滤,严格检查参数类型,转义,限制长度)</p>
 </li>
-<li class="lvl-5">
+<li class="lvl-3">
 <p>.mysql预编译(参数化查询,变量绑定)</p>
 </li>
 </ol>
 </blockquote>
-<h3 id="八-mysql-事务-不在分割的操作集合-acid实现原理">八:mysql 事务(不在分割的操作集合)acid实现原理</h3>
-<p><strong>1.ACID?：</strong></p>
+<h3 id="七-mysql-事务">七:mysql 事务</h3>
+<h4 id="ACID">ACID?</h4>
 <blockquote>
-<p><strong>1.事务的基本要素</strong>(ACID)</p>
-<div class="code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta prompt_">&gt;</span><span class="language-bash">**原子性(Atomicity)**:(undo <span class="hljs-built_in">log</span>回滚日志实现)指一个事务不可分割,是一个最小的操作单元(包含若干个操作),要么全部成功,要么全部失败</span>
-<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">**隔离性(Isolation)**:(锁和mvcc实现)多个事务并发执行,事务之间相互隔离</span>
-<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">**持久性(Durability)**:(redo <span class="hljs-built_in">log</span>实现)InnoDB提供了一个缓存Buffer,读取和写入都先在Buffer中(并同时把操作记录到redo <span class="hljs-built_in">log</span>,防止数据丢失)</span>
-<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">**一致性(Consistency)**:数据处于合法状态(满足预定约束就是合法)</span>
-<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">从数据库层面，数据库通过原子性、隔离性、持久性来保证一致性。也就是	说ACID四大特性之中，C(一致性)是目的，A(原子性)、I(隔离性)、D(持久性)是手段，是为了保证一致性，数据库提供的手段。数据库必须要实现AID三大特性，才有可能实现一致性。</span>
-<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">从应用层面，通过代码判断数据库数据是否有效，然后决定回滚还是提交数据。Innodb如何实现事务的?</span>
-<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">以update为例</span>
-<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">(1).开启事务,Innodb根据接受的update语句,找到数据所在页,并加该页缓存在Buffer pool(change buffer)中</span>
-<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">(2).执行update,修改Buffer pool中数据</span>
-<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">(3).记录 undo <span class="hljs-built_in">log</span>日志(便于事务回滚和mvcc)并写入Log Buffer中并关联redo <span class="hljs-built_in">log</span>(可刷盘)</span>
-<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">(4).记录 redo <span class="hljs-built_in">log</span>(prepare状态)日志(便于断电恢复数据)并写入Log Buffer中(可刷盘)</span>
-<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">(5).记录bin <span class="hljs-built_in">log</span>(数据表结构变更日志:用于主从复制和数据库恢复)</span>
-<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">(6-1).事务提交,redo <span class="hljs-built_in">log</span>(改为commit状态),可触发redo <span class="hljs-built_in">log</span>刷盘机制</span>
-<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">(6-2).事务回滚,则利用undo <span class="hljs-built_in">log</span>日志进行回滚</span></code></pre></div>
-<p><strong>事务并发的问题</strong></p>
-<div class="code-wrapper"><pre><code class="hljs less">&gt;**脏读**:事务<span class="hljs-selector-tag">A</span>读取了事务<span class="hljs-selector-tag">B</span>更新的数据,然后<span class="hljs-selector-tag">B</span>回滚,那么<span class="hljs-selector-tag">A</span>读取到的就是脏数据
-&gt;**不可重复**:事务<span class="hljs-selector-tag">A</span>多次读取同一数据，事务<span class="hljs-selector-tag">B</span>在事务<span class="hljs-selector-tag">A</span>多次读取的过程中，对数据作了更新并提交，导致事务<span class="hljs-selector-tag">A</span>多次读取同一数据时，结果不一致
-&gt;**幻读**：幻读是针对数据插入（<span class="hljs-selector-tag">INSERT</span>）操作来说的。假设事务<span class="hljs-selector-tag">A</span>对某些行的内容作了更改，但是还未提交，此时事务<span class="hljs-selector-tag">B</span>插入了与事务<span class="hljs-selector-tag">A</span>更改前的记录相同的记录行，并且在事务<span class="hljs-selector-tag">A</span>提交之前先提交了，而这时，在事务<span class="hljs-selector-tag">A</span>中查询，会发现好像刚刚的更改对于某些数据未起作用，但其实是事务<span class="hljs-selector-tag">B</span>刚插入进来的，让用户感觉很魔幻，感觉出现了幻觉，这就叫幻读
-
-&gt;不可重复读的和幻读很容易混淆，不可重复读侧重于修改，幻读侧重于新增或删除。解决不可重复读的问题只需锁住满足条件的行，解决幻读需要锁表</code></pre></div>
-<p><strong>Mysql事务隔离几倍</strong></p>
-<blockquote>
-<p>事务隔离级别主要解决事务并发的问题</p>
+<p><strong>原子性(Atomicity)</strong>:(undo log回滚日志实现)指一个事务不可分割,是一个最小的操作单元(包含若干个操作),要么全部成功,要么全部失败<br>
+<strong>隔离性(Isolation)</strong>:(锁和mvcc实现)多个事务并发执行,事务之间相互隔离<br>
+<strong>持久性(Durability)</strong>:(redo log实现)InnoDB提供了一个缓存Buffer,读取和写入都先在Buffer中(并同时把操作记录到redo log,防止数据丢失)<br>
+<strong>一致性(Consistency)</strong>:数据处于合法状态(满足预定约束就是合法)<br>
+从数据库层面，数据库通过原子性、隔离性、持久性来保证一致性。也就是说ACID四大特性之中，C(一致性)是目的，A(原子性)、I(隔离性)、D(持久性)是手段，是为了保证一致性，数据库提供的手段。数据库必须要实现AID三大特性，才有可能实现一致性。从应用层面，通过代码判断数据库数据是否有效，然后决定回滚还是提交数据。Innodb如何实现事务的?<br>
+以update为例<br>
+(1).开启事务,Innodb根据接受的update语句,找到数据所在页,并加该页缓存在Buffer pool(change buffer)中<br>
+(2).执行update,修改Buffer pool中数据<br>
+(3).记录 undo log日志(便于事务回滚和mvcc)并写入Log Buffer中并关联redo log(可刷盘)<br>
+(4).记录 redo log(prepare状态)日志(便于断电恢复数据)并写入Log Buffer中(可刷盘)<br>
+(5).记录bin log(数据表结构变更日志:用于主从复制和数据库恢复)<br>
+(6-1).事务提交,redo log(改为commit状态),可触发redo log刷盘机制<br>
+(6-2).事务回滚,则利用undo log日志进行回滚</p>
+<div class="code-wrapper"><pre><code class="hljs makefile"><span class="hljs-section">MVCC多版本控制:实现MVCC时用到了一致性视图，用于支持读提交和可重复读的实现</span>
+对于一行数据若是想实现可重复读取或者能够读取数据的另一个事务未提交前的原始值，那么必须对原始数据进行保存或者对更新操作进行保存，这样才能够查询到原始值
+在Mysql的MVCC中规定每一行数据都有多个不同的版本，一个事务更新操作完后就生成一个新的版本，并不是对全部数据的全量备份，因为全量备份的代价太大了</code></pre></div>
 </blockquote>
+<h4 id="事务隔离级别">事务隔离级别</h4>
+<blockquote>
+<p><strong>问题</strong></p>
+<div class="code-wrapper"><pre><code class="hljs less">&gt;<span class="hljs-number">1</span>.脏读:事务<span class="hljs-selector-tag">A</span>读取了事务<span class="hljs-selector-tag">B</span>已修改还没提交的数据
+&gt;<span class="hljs-number">2</span>.不可重复读:事务<span class="hljs-selector-tag">A</span>中先后多次读取同一个数据，读取的结果不一样(因为另外一个事务也访问该同一数据，并且可能修改这个数据)
+&gt;<span class="hljs-number">3</span>.幻读:幻读是针对数据插入（<span class="hljs-selector-tag">INSERT</span>）操作来说的。事务<span class="hljs-selector-tag">A</span>对某些行内容更改还未提交，事务<span class="hljs-selector-tag">B</span>插入了与事务<span class="hljs-selector-tag">A</span>更改前的记录相同的记录行，并在事务<span class="hljs-selector-tag">A</span>提交之前先提交了.在事务<span class="hljs-selector-tag">A</span>中查询，会发现好像刚刚的更改对于某些数据未起作用，但其实是事务<span class="hljs-selector-tag">B</span>刚插入进来的，让用户感觉很魔幻，感觉出现了幻觉，这就叫幻读</code></pre></div>
+<p><strong>隔离级别</strong></p>
+<div class="code-wrapper"><pre><code class="hljs pgsql">&gt;读未提交（<span class="hljs-keyword">READ</span> <span class="hljs-keyword">UNCOMMITTED</span>）
+&gt;读提交 （<span class="hljs-keyword">READ</span> <span class="hljs-keyword">COMMITTED</span>）
+&gt;可重复读 （<span class="hljs-keyword">REPEATABLE</span> <span class="hljs-keyword">READ</span>）
+&gt;串行化 （<span class="hljs-keyword">SERIALIZABLE</span>）</code></pre></div>
 <table>
 <thead>
 <tr>
-<th style="text-align:center">事务隔离级别</th>
-<th style="text-align:center">脏读</th>
-<th style="text-align:center">不可重复读</th>
-<th style="text-align:center">幻读</th>
+<th style="text-align:left">隔离级别</th>
+<th>脏读</th>
+<th>不可重复读</th>
+<th>幻读</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align:center">读未提交(read-uncommitted)</td>
-<td style="text-align:center">是</td>
-<td style="text-align:center">否</td>
-<td style="text-align:center">否</td>
+<td style="text-align:left">读未提交</td>
+<td>可能</td>
+<td>可能</td>
+<td>可能</td>
 </tr>
 <tr>
-<td style="text-align:center">不可重复读(read-committed)</td>
-<td style="text-align:center">否</td>
-<td style="text-align:center">是</td>
-<td style="text-align:center">是</td>
+<td style="text-align:left">读提交</td>
+<td>不可能</td>
+<td>可能</td>
+<td>可能</td>
 </tr>
 <tr>
-<td style="text-align:center">可重复读（repeatable-read）</td>
-<td style="text-align:center">否</td>
-<td style="text-align:center">否</td>
-<td style="text-align:center">是</td>
+<td style="text-align:left">可重复读</td>
+<td>不可能</td>
+<td>不可能</td>
+<td>可能</td>
 </tr>
 <tr>
-<td style="text-align:center">串行化（serializable）</td>
-<td style="text-align:center">否</td>
-<td style="text-align:center">否</td>
-<td style="text-align:center">否</td>
+<td style="text-align:left">串行化</td>
+<td>不可能</td>
+<td>不可能</td>
+<td>不可能</td>
 </tr>
 </tbody>
 </table>
+<p><strong>查看数据库隔离级别</strong></p>
+<div class="code-wrapper"><pre><code class="hljs sql"><span class="hljs-operator">&gt;</span><span class="hljs-keyword">show</span> variables <span class="hljs-keyword">like</span> <span class="hljs-string">&#x27;transaction_isolation&#x27;</span>;
+<span class="hljs-operator">&gt;</span><span class="hljs-keyword">SELECT</span> @<span class="hljs-variable">@transaction_isolation</span></code></pre></div>
+<p><strong>修改隔离级别</strong></p>
+<div class="code-wrapper"><pre><code class="hljs pgsql">&gt;<span class="hljs-keyword">set</span> <span class="hljs-keyword">global</span> <span class="hljs-keyword">transaction</span> <span class="hljs-keyword">isolation</span> <span class="hljs-keyword">level</span> <span class="hljs-keyword">read</span> <span class="hljs-keyword">committed</span>; #改为读提交</code></pre></div>
 </blockquote>
-<p><strong>3.mysql有几种日志?</strong></p>
+<h3 id="八-mysql有几种日志">八:mysql有几种日志</h3>
 <blockquote>
 <p>bin log(记录sql),redo log(),undo log,slog log,一般日志</p>
 </blockquote>
-<p><strong>4.mysql日志是否实时写入磁盘?(log buffer)</strong></p>
+<h4 id="mysql日志是否实时写入磁盘-log-buffer">mysql日志是否实时写入磁盘?(log buffer)</h4>
 <blockquote>
 <p>bin log:<br>
 sync_binlog=0:每次提交事务后不会马上写入到磁盘,先写到page cache,由操作系统决定写入什么时候写入磁盘(有丢失事务日志的风险)<br>
@@ -687,57 +816,84 @@ innodb_flush_log_at_trx_commit=0:每秒(log buffer中提交的事务)写入磁�
 innodb_flush_log_at_trx_commit=1:有事务提交立即调用fsync写入磁盘(不会丢失,性能差)<br>
 innodb_flush_log_at_trx_commit=2:有事务提交都写给操作系统的page cache,由操作系统决定什么时候调用fsync写入磁盘(一系列丢失)</p>
 </blockquote>
-<p><strong>5.binlog有几种录入格式?</strong></p>
+<h4 id="binlog有几种录入格式">binlog有几种录入格式?</h4>
 <blockquote>
 <p>STATEMENT:默认方式,基于SQL语句的复制记录sql语句,文件较小<br>
 ROW:基于行的复制,文件较大<br>
 MIXED:前两种混合</p>
 </blockquote>
-<p><strong>6.为什么将redo log的数据写到磁盘比将Buffer数据持久化到磁盘要快?</strong></p>
+<h4 id="为什么将redo-log的数据写到磁盘比将Buffer数据持久化到磁盘要快">为什么将redo log的数据写到磁盘比将Buffer数据持久化到磁盘要快?</h4>
 <blockquote>
 <p>1.Buffer数据持久化是随机写I/O,redo log是追加,顺序IO<br>
 2.Buffer数据持久化是以页page为单位,redo log只需要写入的真正部分(减少了无效I/O)</p>
 </blockquote>
-<p><strong>7.bin log和redo log(两段提交)区别？</strong></p>
+<h4 id="bin-log和redo-log-两段提交-区别？">bin log和redo log(两段提交)区别？</h4>
 <blockquote>
 <p>1.写入redo log(prepare状态)<br>
 2.写入bing log<br>
 3.提交事务,redo log(改为commit)</p>
 </blockquote>
-<h3 id="九-主从同步">九:主从同步</h3>
+<h3 id="九-锁机制">九:锁机制</h3>
+<blockquote>
+<p><strong>锁种类</strong></p>
+<div class="code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta prompt_">&gt;</span><span class="language-bash">1.锁粒度划分</span>
+ 表锁:粒度最大的锁，开销小，加锁快，不会出现死锁，粒度大导致并发性低()
+ 页锁：介于行锁和表锁之间的一种锁,页锁是在BDB中支持的一种锁机制，也很少没人提及和使用
+ 行锁: 粒度最小，加锁开销性能大，加锁慢，并且会出现死锁，但是行锁的锁冲突的几率低，并发性能高(行锁是InnoDB默认的支持的锁机制，MyISAM不支持行锁)
+<span class="hljs-meta prompt_"> </span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">2.使用方式划分</span>
+ 共享锁、排它锁
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">3.思路划分</span>
+ 乐观锁、悲观锁
+</code></pre></div>
+<p><strong>死锁</strong></p>
+<p>死锁在InnoDB中才会出现死锁</p>
+<blockquote>
+<p>1.对表有高并发时，尽量对该表执行串行化</p>
+<p>2.设置参数,innodb_lock_wait_timeout 超时时间</p>
+<p>3.innodb_deadlock_detect打开,当发现死锁时，自动回滚某个事务</p>
+</blockquote>
+</blockquote>
+<h3 id="十-mysql主从方案">十:mysql主从方案</h3>
 <blockquote>
 <p>Mysql主从复制中有三个线程:Master(binlog dump thread) Slave(I/O thread,SQL thread)<br>
 使用binlog+position偏移量进行增量同步</p>
-</blockquote>
 <p><strong>1.同步过程</strong></p>
-<div class="code-wrapper"><pre><code class="hljs">1. Master所有变更都记录到binlog中去(MySQL Server层的实现)
-1. 主节点binlog dump线程,当binlog有变动时,binlog dump线程读取内容并发送给从节点
-1. 从节点I/O线程接收binlog,并写入到relay log(中继日志)中
-1. 从节点SQL线程读取relay log并对数据进行重放
-</code></pre></div>
+<ol>
+<li class="lvl-6">
+<p>Master所有变更都记录到binlog中去(MySQL Server层的实现)</p>
+</li>
+<li class="lvl-6">
+<p>主节点binlog dump线程,当binlog有变动时,binlog dump线程读取内容并发送给从节点</p>
+</li>
+<li class="lvl-6">
+<p>从节点I/O线程接收binlog,并写入到relay log(中继日志)中</p>
+</li>
+<li class="lvl-6">
+<p>从节点SQL线程读取relay log并对数据进行重放</p>
+</li>
+</ol>
 <p><strong>2.同步策略</strong></p>
-<ul class="lvl-0">
-<li class="lvl-3">
+<ul class="lvl-1">
+<li class="lvl-2">
 <p>同步策略:Master会等待所有的Slave回应后才提交(这个策略严重影响性能)</p>
 </li>
-<li class="lvl-3">
+<li class="lvl-2">
 <p>半同步策略:Master至少等待一个Slave回应后才提交</p>
 </li>
-<li class="lvl-3">
+<li class="lvl-2">
 <p>异步策略:Master不会等待Slave回应就可以提交(默认)</p>
 </li>
-<li class="lvl-3">
+<li class="lvl-2">
 <p>延迟策略:Slave落后Master指定的时间</p>
 </li>
 </ul>
-<h3 id="十-mysql主从方案">十:mysql主从方案</h3>
-<blockquote>
+</blockquote>
 <p>mysql如何保证主从数据的一致性的？</p>
 <p>分片中间件:myCat/shardingSphere</p>
-</blockquote>
 <p><strong>一主多从:缓解读压力</strong></p>
 <ol>
-<li class="lvl-4">
+<li class="lvl-3">
 <p>主服务配置mysql.cnf:</p>
 <blockquote>
 <p>#主服务还需要创建对应权限的用户用于数据同步</p>
@@ -745,7 +901,7 @@ MIXED:前两种混合</p>
 server-id=3307      # 表示server编号</p>
 </blockquote>
 </li>
-<li class="lvl-4">
+<li class="lvl-3">
 <p>从服务执行sql命令</p>
 <blockquote>
 <p># 1.配置主服务</p>
@@ -759,7 +915,7 @@ server-id=3307      # 表示server编号</p>
 </ol>
 <p><strong>双主双从:缓解写压力</strong></p>
 <ol>
-<li class="lvl-4">
+<li class="lvl-3">
 <p>主1配置</p>
 <blockquote>
 <p>log-bin=mysql-bin</p>
@@ -770,7 +926,7 @@ server-id=3307      # 表示server编号</p>
 <p>sync-binlog=1        # 几次事务记录binlog</p>
 </blockquote>
 </li>
-<li class="lvl-4">
+<li class="lvl-3">
 <p>主2配置</p>
 <blockquote>
 <p>log-bin=mysql-bin</p>
@@ -787,27 +943,45 @@ server-id=3307      # 表示server编号</p>
 <p><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/397289720">https://www.zhihu.com/question/397289720</a><br>
 <a target="_blank" rel="noopener" href="https://juejin.cn/post/7153273187366043661">https://juejin.cn/post/7153273187366043661</a></p>
 </blockquote>
-<p><strong>三种方案:</strong></p>
+<h4 id="三种方案">三种方案:</h4>
 <div class="code-wrapper"><pre><code class="hljs">1. 自增id
 2. uuid: uuid导致页分裂,性能问题,存储空间较大
 3. 雪花算法及其改进算法
 </code></pre></div>
-<p><strong>分布式id实现方式:</strong></p>
+<h4 id="分布式id实现方式">分布式id实现方式:</h4>
 <blockquote>
-<p>uuid/单机数据库自增ID+步长/Redis自增ID/跳跃式自增ID/Snowflake及其改进算法</p>
-</blockquote>
-<p><strong>雪花算法(保证递增性)</strong>:64位</p>
-<blockquote>
-<p>1位:符号位<br>
-43位:时间戳<br>
-10位:机器id<br>
-12位:一个节点一毫秒产生ID的数量(4096)</p>
+<p><strong>满足条件</strong>:</p>
+<p>1.全局唯一:必须保证ID是全局性唯一的</p>
+<p>2.高性能:ID生成响应要快</p>
+<p>3.趋势递增</p>
+<p><strong>常见方式</strong></p>
+<p><strong>1.uuid:</strong></p>
+<div class="code-wrapper"><pre><code class="hljs pgsql"><span class="hljs-type">UUID</span>的核心思想是使用「机器的网卡、当地时间、一个随机数」来生成<span class="hljs-type">UUID</span>
+缺点:
+<span class="hljs-number">1.</span><span class="hljs-type">UUID</span>生成的无序的字符串，查询效率低下，
+<span class="hljs-number">2.</span>不具备自增特性,没有实际的业务含义
+<span class="hljs-number">3.</span>长度过长影响性能
+所以都不会使用<span class="hljs-type">UUID</span>作为分布式ID来使用</code></pre></div>
+<p><strong>2.单机数据库自增ID+步长R</strong></p>
+<div class="code-wrapper"><pre><code class="hljs angelscript">数据库的<span class="hljs-built_in">auto</span>_increment自增ID完全可以充当分布式ID
+缺点:
+<span class="hljs-number">1.</span>DB单点存在宕机风险，无法扛住高并发场景</code></pre></div>
+<p><strong>3.redis自增ID</strong></p>
+<div class="code-wrapper"><pre><code class="hljs tcl">利用redis的 <span class="hljs-keyword">incr</span>命令实现ID的原子性自增</code></pre></div>
+<p><strong>4.雪花算法(Snowflake)及其改进算法</strong></p>
+<div class="code-wrapper"><pre><code class="hljs makefile"><span class="hljs-section">**雪花算法(保证递增性)**:64位</span>
+<span class="hljs-section">1bit: 正数位</span>
+<span class="hljs-section">41bit: 时间戳</span>
+<span class="hljs-section">5bit: 机器id</span>
+<span class="hljs-section">5bit: 数据中心</span>
+<span class="hljs-section">12bit: 自增值</span></code></pre></div>
 </blockquote>
 <h3 id="十二-性能极限">十二:性能极限</h3>
 <p><strong>mysql性能极限</strong></p>
 <blockquote>
 <p>mysql单表字段数:建议20-50<br>
-mysql默认单字段大小：存储最大空间为1M,可以修改max_allowed_packet=16<br>
+mysql默认单字段大小：最大行长度限制是所有字典的总和,(65535)65532—(21845)21844<br>
+存储最大空间为1M,可以修改max_allowed_packet=16<br>
 mysql单表：老版mysql3.22中,还是ISAM存储引擎,单表限制为4GB<br>
 之后为INNODB 单表限制64TB<br>
 数据库:<br>
@@ -841,10 +1015,11 @@ MySQL单表大约在2千万条记录（4G）下能够良好运行，经过数据
 <p>char(最多存放255个字节)适用数据大小固定/较小/经常更新/不容易产生内存碎片:<br>
 1.长度固定,插入数据小于固定长度则用空格填充<br>
 2.存取速度比varchar快很多(甚至50%),空间换时间<br>
-varchar(最多存放65532个字节,等价于21845字符):<br>
+varchar(最多存放(65535)65532个字节,等价于(21845)21844字符):<br>
 1.varchar=长度+N(实际长度n&gt;255,用两个字节存放长度.小于255,用一个字节存放长度)<br>
 2.长度可变,按实际插入数据来存储()<br>
-3.填写2的n次方,varchar(8),varchar(64)</p>
+3.填写2的n次方,varchar(8),varchar(64)<br>
+4.因为InnoDB 的数据页默认是 16K，每个页中至少存放 2 行数据，因此建议VARCHAR字段的总长度不要超过 8K=8192字节byte。</p>
 </blockquote>
 <blockquote>
 <p>InnoDB表索引前缀长度为767字节,utf-8编码为255(255*3=765)<br>
@@ -888,32 +1063,32 @@ decimal是字符串存储</p>
 <blockquote>
 <p>恢复数据时可以先备份,在停止所有写入操作:flush tables with read lock或 set global read_only=1同时配置文件里设置read_only防止重启失效</p>
 <ol>
-<li class="lvl-4">
+<li class="lvl-3">
 <p>查看binglog是否开启</p>
 <div class="code-wrapper"><pre><code class="hljs sql"><span class="hljs-keyword">show</span> variables <span class="hljs-keyword">like</span> <span class="hljs-string">&#x27;%log_bin%&#x27;</span>;</code></pre></div>
 </li>
-<li class="lvl-6">
+<li class="lvl-3">
 <p>查看数据文件存放路径</p>
 <div class="code-wrapper"><pre><code class="hljs sql"><span class="hljs-keyword">show</span> variables <span class="hljs-keyword">like</span> <span class="hljs-string">&#x27;%datadir%&#x27;</span>;
 <span class="hljs-keyword">show</span> master status;  # 查看当前正在写入的binlog
 <span class="hljs-keyword">show</span> master logs;    # 查看所有binlog  <span class="hljs-keyword">show</span> <span class="hljs-type">binary</span> logs;</code></pre></div>
 </li>
-<li class="lvl-6">
+<li class="lvl-3">
 <p>查看binlog日志内容</p>
 <div class="code-wrapper"><pre><code class="hljs sql"><span class="hljs-keyword">show</span> binlog events <span class="hljs-keyword">in</span> <span class="hljs-string">&#x27;mysql-bin.000001&#x27;</span>\G;  # 确定需要回滚的事务的position</code></pre></div>
 </li>
-<li class="lvl-6">
+<li class="lvl-3">
 <p>将需要恢复的事务里的操作转为sql</p>
-<div class="code-wrapper"><pre><code class="hljs shell">/opt/bitnami/mysql/bin/mysqlbinlog  --no-defaults -v --database=database_name --start-position=&quot;966048&quot; --stop-position=&quot;981142&quot; /bitnami/mysql/data/mysql-bin.000007 &gt; /tmp/mysqllog.sql</code></pre></div>
+<div class="code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta prompt_"> #</span><span class="language-bash">使用--start-position或--start-datetime=<span class="hljs-string">&quot;2022-03-20 10:00:00&quot;</span></span>
+/opt/bitnami/mysql/bin/mysqlbinlog  --no-defaults -v --database=database_name --start-position=&quot;966048&quot; --stop-position=&quot;981142&quot; /bitnami/mysql/data/mysql-bin.000007 &gt; /tmp/mysqllog.sql</code></pre></div>
 </li>
-<li class="lvl-7">
+<li class="lvl-3">
 <p>将导出导出sql的delete转换为insert</p>
 </li>
 </ol>
-<div class="code-wrapper"><pre><code class="hljs">  <pre><code class="hljs shell">cat srliao.sql.bak| sed -n &#x27;/###/p&#x27; | sed &#x27;s/### //g;s/\/\*.*/,/g;s/DELETE FROM/;INSERT INTO/g;s/WHERE/SELECT/g;&#x27; |sed -r &#x27;s/(@17.*),/\1;/g&#x27; | sed &#x27;s/@1=//g&#x27;| sed &#x27;s/@[1-9]=/,/g&#x27; | sed &#x27;s/@[1-9][0-9]=/,/g&#x27; &gt; mysqllogOK.sql</code></pre></div>
-</code></pre>
+<p><code>shell cat srliao.sql.bak| sed -n '/###/p' | sed 's/### //g;s/\/\*.*/,/g;s/DELETE FROM/;INSERT INTO/g;s/WHERE/SELECT/g;' |sed -r 's/(@17.*),/\1;/g' | sed 's/@1=//g'| sed 's/@[1-9]=/,/g' | sed 's/@[1-9][0-9]=/,/g' &gt; mysqllogOK.sql </code></p>
 <ol start="6">
-<li class="lvl-6">
+<li class="lvl-3">
 <p>执行insert sql</p>
 <div class="code-wrapper"><pre><code class="hljs shell">source /tmp/mysqllogOK.sql</code></pre></div>
 </li>
@@ -1009,7 +1184,7 @@ delete是把目录撕了，truncate是把书的内容撕下来烧了，drop是�
   <div class="license-box my-3">
     <div class="license-title">
       <div>mysql常用操作命令和性能优化</div>
-      <div>https://centyuan.github.io/2023/11/06/数据库/mysql常用操作命令和性能优化/</div>
+      <div>https://centyuan.github.io/2023/11/19/数据库/mysql常用操作命令和性能优化/</div>
     </div>
     <div class="license-meta">
       
@@ -1021,7 +1196,7 @@ delete是把目录撕了，truncate是把书的内容撕下来烧了，drop是�
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年11月6日</div>
+          <div>2023年11月19日</div>
         </div>
       
       
@@ -1053,18 +1228,12 @@ delete是把目录撕了，truncate是把书的内容撕下来烧了，drop是�
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/11/06/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql%E7%9A%84deletetruncatedrop%E5%AF%B9%E6%AF%94%E5%92%8Cbinlog%E6%97%A5%E5%BF%97%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D/" title="">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile"></span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/11/06/%E7%88%AC%E8%99%AB/%E5%B8%B8%E8%A7%81%E5%8F%8D%E7%88%AC%E6%9C%BA%E5%88%B6/" title="常见反爬机制">
-                        <span class="hidden-mobile">常见反爬机制</span>
+                      <a href="/2023/11/19/%E6%95%B0%E6%8D%AE%E5%BA%93/redis/" title="Redis Note">
+                        <span class="hidden-mobile">Redis Note</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
