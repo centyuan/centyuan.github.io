@@ -24,7 +24,7 @@
 <meta property="og:description" content="1.配置说明 # socket &#x3D; 127.0.0.1:8000 # 项目目录 chdir &#x3D; &#x2F;root&#x2F;centyuanblog&#x2F; # 项目中wsgi.py文件的目录 wsgi-file &#x3D; &#x2F;root&#x2F;centyuanblog&#x2F;centyaunblog&#x2F;wsgi.py #指定PID文件的位置，记录主进程的PID号 pidfile &#x3D; uwsgi.pid # 后台运行且配置日志文件 daemo">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-11-10T07:42:05.890Z">
-<meta property="article:modified_time" content="2023-11-10T07:42:15.893Z">
+<meta property="article:modified_time" content="2023-11-21T14:22:12.973Z">
 <meta property="article:author" content="hlyuan">
 <meta property="article:tag" content="uwsgi">
 <meta name="twitter:card" content="summary_large_image">
@@ -223,7 +223,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          4.3k 字
+          4.5k 字
         
       </span>
     
@@ -234,7 +234,7 @@
         
         
         
-          36 分钟
+          38 分钟
         
       </span>
     
@@ -301,7 +301,10 @@
 <span class="hljs-attr">daemonize</span> = /root/centyuanblog/logs/uwsgi.log
 <span class="hljs-comment"># 服务停止时，自动移除unix socket和pid文件</span>
 <span class="hljs-attr">vacuum</span> = <span class="hljs-literal">true</span>
-<span class="hljs-comment"># 每个进程排队的请求数量，默认为 100 太小了。并发数 = procsses * threads * listen,最行之有效的方法</span>
+<span class="hljs-comment"># 设置socket的监听队列大小,默认为 100 太小了。并发数 = procsses * threads * listen,最行之有效的方法</span>
+<span class="hljs-comment"># Llinux系统内核对每个端口的监听队列进行了限制，默认是128,需要先修改系统的限制</span>
+<span class="hljs-comment"># echo 500 &gt; /proc/sys/net/core/somaxconn</span>
+<span class="hljs-comment"># 或sysctl -w net.core.somaxconn=500</span>
 <span class="hljs-attr">listen</span> = <span class="hljs-number">65535</span>
 <span class="hljs-comment"># 进程回收:为每个工作进程设置请求数的上限。当处理的请求总数超过这个量，进程回收重启,防止内存泄露</span>
 <span class="hljs-attr">max-requests</span> = <span class="hljs-number">5000</span>          <span class="hljs-comment"># 最大时间重启worker max-worker-lifetime = 30</span>
@@ -332,7 +335,8 @@
 <span class="hljs-attr">stats</span> = <span class="hljs-number">127.0</span>.<span class="hljs-number">0.1</span>:<span class="hljs-number">9191</span>  <span class="hljs-comment"># 在指定的地址上，开启状态服务，uwsgi top 可以监控</span>
 <span class="hljs-comment"># 自动重载，开发时非常方便</span>
 <span class="hljs-attr">python-autoreload</span> = <span class="hljs-number">1</span>
-
+<span class="hljs-comment"># 虚拟内存限制,通过使用POSIX/UNIX的setrlimit()函数来限制每个uWSGI进程的虚拟内存使用数,这个配置会限制uWSGI的进程占用虚拟内存# 不超过256M</span>
+<span class="hljs-attr">limit-as</span> = <span class="hljs-number">256</span> 
 <span class="hljs-comment"># .sock文件目录需与Nginx文件内的配置相同,和nginx关联,仅限于在同一主机上</span>
 <span class="hljs-attr">socket</span> = /root/centyuanblog/myblog_sock.sock
 <span class="hljs-attr">chmod-socket</span> = <span class="hljs-number">666</span>
