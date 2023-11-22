@@ -1,0 +1,791 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/person_fluid.jpg">
+  <link rel="icon" href="/img/person_fluid.jpg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="hlyuan">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="基础概念  **Producer: **Producer 即生产者，消息的产生者，是消息的入口 Broker:  Broker 是 kafka 一个实例，每个服务器上有一个或多个 kafka 的实例，简单的理解就是一台 kafka 服务器，kafka cluster表示集群的意思 Topic:  消息的主题，可以理解为消息队列，kafka的数据就保存在topic。在每个 broker 上都可以创建">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kafka Note">
+<meta property="og:url" content="https://centyuan.github.io/2023/11/22/%E4%B8%AD%E9%97%B4%E4%BB%B6/kakfa_note/index.html">
+<meta property="og:site_name" content="centyuan Blog">
+<meta property="og:description" content="基础概念  **Producer: **Producer 即生产者，消息的产生者，是消息的入口 Broker:  Broker 是 kafka 一个实例，每个服务器上有一个或多个 kafka 的实例，简单的理解就是一台 kafka 服务器，kafka cluster表示集群的意思 Topic:  消息的主题，可以理解为消息队列，kafka的数据就保存在topic。在每个 broker 上都可以创建">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-11-22T14:33:13.611Z">
+<meta property="article:modified_time" content="2023-11-22T14:33:54.976Z">
+<meta property="article:author" content="hlyuan">
+<meta property="article:tag" content="Kafka">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>Kafka Note - centyuan Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"centyuan.github.io","root":"/","version":"1.9.5","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.0.0"><link rel="alternate" href="/atom.xml" title="centyuan Blog" type="application/atom+xml">
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>centyuan</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/person_default.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Kafka Note"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-11-22 22:33" pubdate>
+          2023年11月22日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.2k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          35 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Kafka Note</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h4 id="基础概念">基础概念</h4>
+<blockquote>
+<p>**Producer: **Producer 即生产者，消息的产生者，是消息的入口</p>
+<p><strong>Broker:</strong>  Broker 是 kafka 一个实例，每个服务器上有一个或多个 kafka 的实例，简单的理解就是一台 kafka 服务器，kafka cluster表示集群的意思</p>
+<p><strong>Topic:</strong>  消息的主题，可以理解为消息队列，kafka的数据就保存在topic。在每个 broker 上都可以创建多个 topic</p>
+<p><strong>Partition:</strong>  Topic的分区，每个 topic 可以有多个分区，分区的作用是做负载，提高 kafka 的吞吐量。同一个 topic 在不同的分区的数据是不重复的，partition 的表现形式就是一个一个的文件夹,每个Partition都是一个有序队列</p>
+<p><strong>Replication:</strong>  每一个分区都有多个副本，副本的作用是做备胎，主分区（Leader）会将数据同步到从分区（Follower）。当主分区（Leader）故障的时候会选择一个备胎（Follower）上位，成为 Leader。在kafka中默认副本的最大数量是10个，且副本的数量不能大于Broker的数量，follower和leader绝对是在不同的机器，同一机器对同一个分区也只可能存放一个副本</p>
+<p><strong>Message:</strong> 每一条发送的消息主体</p>
+<p><strong>Consumer:</strong> 消费者，即消息的消费方，是消息的出口,在实际的应用中，建议消费者组的consumer的数量与partition的数量保持一致</p>
+<p><strong>Consumer Group:</strong>  可以将多个消费组组成一个消费者组，在 kafka 的设计中同一个分区的数据只能被消费者组中的某一个消费者消费。同一个消费者组的消费者可以消费同一个topic的不同分区的数据，这也是为了提高kafka的吞吐量</p>
+<p><strong>Zookeeper:</strong> kafka 集群依赖 zookeeper 来保存集群的的元信息，来保证系统的可用性</p>
+</blockquote>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/442468709">https://zhuanlan.zhihu.com/p/442468709</a><br>
+<a target="_blank" rel="noopener" href="https://juejin.cn/post/7238604003599695928">https://juejin.cn/post/7238604003599695928</a></p>
+<h4 id="基本命令">基本命令</h4>
+<div class="code-wrapper"><pre><code class="hljs jboss-cli"><span class="hljs-comment">#1.配置内网ip vim config/server.properties</span>
+listeners=PLAINTEXT:<span class="hljs-string">//10.0.0.11</span>:<span class="hljs-function">:9092</span>
+<span class="hljs-comment">#2.配置外网连接</span>
+advertised.listeners=PLAINTEXT<span class="hljs-function">:ip</span><span class="hljs-function">:9092</span>
+<span class="hljs-comment">#3.后台运行</span>
+nohup kafka-server-start.sh config/server.properties 2&gt;&amp;1 &amp;
+<span class="hljs-comment">#4.添加环境变量</span>
+vim ~<span class="hljs-string">/.bashrc</span>
+export KAFKA_HOME=<span class="hljs-string">/home/lighthouse/kafka_2.12-3.3.2</span>
+export PATH=$KAFKA_HOME/bin:$PATH
+<span class="hljs-comment">#5.查看所有topics</span>
+kafka-topics.sh <span class="hljs-params">--list</span> <span class="hljs-params">--bootstrap-server</span> 43.136.217.222<span class="hljs-function">:9092</span>
+<span class="hljs-comment">#6.创建topics</span>
+kafka-topics.sh <span class="hljs-params">--bootstrap-server</span> 43.136.217.222<span class="hljs-function">:9092</span> <span class="hljs-params">--create</span> <span class="hljs-params">--topic</span> web <span class="hljs-params">--replication-factor</span> 1 <span class="hljs-params">--partitions</span> 3
+<span class="hljs-comment">#7.查看某个topic状态</span>
+kafka-topics.sh <span class="hljs-params">--describe</span> <span class="hljs-params">--topic</span> web <span class="hljs-params">--bootstrap-server</span> 43.136.217.222<span class="hljs-function">:9092</span>
+<span class="hljs-comment">#8.查看消费组</span>
+kafka-consumer-groups.sh <span class="hljs-params">--list</span> <span class="hljs-params">--bootstrap-server</span> 43.136.217.222<span class="hljs-function">:9092</span>
+<span class="hljs-comment">#9.查看生产与消费情况</span>
+kafka-consumer-groups.sh <span class="hljs-params">--describe</span> <span class="hljs-params">--bootstrap-server</span> 43.136.217.222<span class="hljs-function">:9092</span>
+<span class="hljs-comment">#10.发送消息</span>
+kafka-console-producer.sh <span class="hljs-params">--broker-list</span> 43.136.217.222<span class="hljs-function">:9092</span> <span class="hljs-params">--topic</span> web
+<span class="hljs-comment">#11.消费,from-beginning消费之前的消息</span>
+kafka-console-consumer.sh <span class="hljs-params">--topic</span> web <span class="hljs-params">--bootstrap-server</span> 43.136.217.222<span class="hljs-function">:9092</span> <span class="hljs-params">--from-beginning</span>
+<span class="hljs-comment">#12.消费多个topic</span>
+kafka-console-consumer.sh <span class="hljs-params">--whitelist</span> <span class="hljs-string">&quot;web|quick_demo&quot;</span> <span class="hljs-params">--bootstrap-server</span> 43.136.217.222<span class="hljs-function">:9092</span>
+<span class="hljs-comment">#13.单播消费,一条消息只能被某一个消费者消费</span>
+分别在两个客户端执行
+kafka-console-consumer.sh <span class="hljs-params">--bootstrap-server</span> 43.136.217.222<span class="hljs-function">:9092</span> <span class="hljs-params">--consumer-property</span> group.id=testGroup <span class="hljs-params">--topic</span> web
+<span class="hljs-comment">#14.多播消费,一条消费能被多个消费者消费,类似publish-subscribe模式</span>
+保证消费者属于不同的消费组
+kafka-console-consumer.sh <span class="hljs-params">--bootstrap-server</span> 43.136.217.222<span class="hljs-function">:9092</span> <span class="hljs-params">--consumer-property</span> group.id=testGroup2 <span class="hljs-params">--topic</span> web</code></pre></div>
+<h4 id="Partition分区">Partition分区</h4>
+<blockquote>
+<p><code>leader-follower:</code></p>
+<p>生产者在向某个主题发送消息时，会根据分配策略将消息发送到对应的分区<br>
+kafka保证同一个分区内的数据是有序的，我们也可以认为一个分区就是一个有序的消息队列每个主题的某一个分区只能被同一个消费组下的其中一个消费者消费，因此我们可以说分区是消费并行度的基本单位。从消费者的角度讲，我们订阅消费了一个主题，也就订阅了该主题的所有分区</p>
+</blockquote>
+<h4 id="Kafka消息队列模式">Kafka消息队列模式</h4>
+<blockquote>
+<p><strong>一对一</strong>:</p>
+<p>消费者主动拉取数据，消息收到后消息清除</p>
+<p>`Producer -&gt; Mesage Queue -&gt; Consumer</p>
+<p><strong>一对多(发布/订阅模式)</strong></p>
+<p>消息生产者（发布）将消息发布到 topic 中，同时有多个消息消费者（订阅）消费该消息。和点对点方式不同，发布到 topic 中的消息会被所有订阅者消费</p>
+</blockquote>
+<h4 id="消息可靠生产和可靠消费">消息可靠生产和可靠消费</h4>
+<blockquote>
+<p><code>可靠生产:</code></p>
+<div class="code-wrapper"><pre><code class="hljs maxima">为保证 producer 发送的数据，能可靠的发送到指定的 topic，topic 中的每个 <span class="hljs-built_in">partition</span> 收到 producer 发送的数据后，
+都需要向 producer 发送 ack （acknowledgement 确认收到），如果 producer 收到 ack，就会进行下一轮的发送，否则重新发送数据。</code></pre></div>
+<p>ack确认+重试,通过send方法发送消息,并返回Future对象,get()方法会等待Future对象，处理异常看send()方法是否成功</p>
+<p><code>可靠消费:</code></p>
+<div class="code-wrapper"><pre><code class="hljs applescript">每个分区在同一时间只被一个 consumer 消费，通每个分区被消费的消息在日志中的位置仅仅是一个简单的整数：<span class="hljs-built_in">offset</span>，通过<span class="hljs-built_in">offset</span>来跟踪消费状态</code></pre></div>
+<p>手动提交偏移量offset+重试+死信队列,</p>
+</blockquote>
+<h4 id="kafka如何将数据写入到对应的分区">kafka如何将数据写入到对应的分区</h4>
+<p>1.send指定的分区<br>
+2.没有指定分区,则根据key的hash出一个分区<br>
+3.没有指定也没有key,则会轮询出一个分区</p>
+<blockquote>
+<p><code>发送消息的方法</code><br>
+ack机制：</p>
+<div class="code-wrapper"><pre><code class="hljs apache"><span class="hljs-attribute">0</span>:立即发送,不等待ack,<span class="hljs-number">1</span>:leader收到,-<span class="hljs-number">1</span>:producer等ISR中所有的fllower都确认收到数据</code></pre></div>
+<p>1.立即发送(不care消息是否成功发送,大部分情况下会成功,producer会自动重试)<br>
+2.同步发送(通过send方法发送消息,并返回Future对象,get()方法会等待Future对象，看send()方法是否成功)<br>
+3.异步发送(通过有回调函数的send发送消息,当producer收到Kafka broker的response会触发回调函数)</p>
+<p><code>kafka消费模式(客户端处理消息和提交反馈两个动作不是原子性)</code></p>
+<p><strong>数据传输的事务定义:</strong></p>
+<p>1.最多一次(客户端收到消息前自动提交反馈了)<br>
+2.最少一次(客户端处理消息提交反馈,提交反馈时服务可能挂掉,kafka认为消息未被消费,产生消息重复推送)<br>
+3.正好一次(保证消息处理和提交反馈在同一个事务中,既有原子性)</p>
+</blockquote>
+<h4 id="副本同步策略">副本同步策略</h4>
+<blockquote>
+<p>1.半数以上完成同步，就发送 ack</p>
+<div class="code-wrapper"><pre><code class="hljs excel">&gt;延迟低,选取新的 leader 时，容忍 <span class="hljs-built_in">n</span> 台节点的故障，需要 <span class="hljs-number">2</span><span class="hljs-built_in">n</span>+<span class="hljs-number">1</span> 个副本</code></pre></div>
+<p>2.全部完成同步，就发送 ack</p>
+<div class="code-wrapper"><pre><code class="hljs excel">&gt;延迟高,选取新的 leader 时，容忍 <span class="hljs-built_in">n</span> 台节点的故障，需要 <span class="hljs-built_in">n</span>+<span class="hljs-number">1</span> 个副本</code></pre></div>
+<p>kafka 采用第二种方案后，可能会出县一个问题：leader 收到数据后。所有的 follower 都开始同步数据，但是某个 follower 因为故障，迟迟不能与 leader 进行同步，那么 leader 就要一直等下去，直到它完成同步，才能发送 ack.</p>
+<p><code> 为了解决这个问题，leader 维护了一个动态的 in-sync replica（ISA）</code></p>
+<div class="code-wrapper"><pre><code class="hljs fortran">&gt;isr:<span class="hljs-keyword">In</span>-<span class="hljs-built_in">Sync</span> Replicas isr 是一个副本的列表，里面存储的都是能跟leader 数据一致的副本</code></pre></div>
+</blockquote>
+<h4 id="kafka-为什么那么快">kafka 为什么那么快</h4>
+<blockquote>
+<ul class="lvl-1">
+<li class="lvl-2">
+<p>顺序读写: 由于现代的操作系统提供了预读和写技术，磁盘的顺序写大多数情况下比随机写内存还要快。</p>
+</li>
+<li class="lvl-2">
+<p>零拷技术(Zero-copy): 减少拷贝次数</p>
+</li>
+<li class="lvl-2">
+<p>批量处理: Batching of Messages ,合并小的请求，然后以流的方式进行交互，直顶网络上限。</p>
+</li>
+<li class="lvl-2">
+<p>Pull 拉模式 使用拉模式进行消息的获取消费，与消费端处理能力相符</p>
+</li>
+</ul>
+</blockquote>
+<h4 id="Other">Other</h4>
+<blockquote>
+<p>kafka.errors.kafkaTimeoutError:KafkaTimeoutError:Batch for TopicPartition(topic=“notifyCenter_topic”,partition=0) containing 1 record(s) expired:30 seconds have passed since last append</p>
+<p>可以正常后去kafka topic信息发送消息时报这个错,原因是和kafka连接使用了代理，在发送消息时，拿到具体的节点地址不能发送，需要改成代理才行<br>
+kafka对跨网络的访问有个专门的参数:<br>
+advertised.listeners=PLAINTEXT://hostname:9092<br>
+这个参数配置了,默认返回给生产者或消费者的就是这个参数的内容</p>
+</blockquote>
+<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/" class="category-chain-item">中间件</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Kafka/" class="print-no-link">#Kafka</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Kafka Note</div>
+      <div>https://centyuan.github.io/2023/11/22/中间件/kakfa_note/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>hlyuan</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年11月22日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/11/22/Python%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E6%94%BE%E5%BC%83/GIL(%E8%BF%9B%E7%A8%8B%E7%BA%BF%E7%A8%8B%E5%8D%8F%E7%A8%8B)/" title="GIL/进程线程协程切换">
+                        <span class="hidden-mobile">GIL/进程线程协程切换</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <div> <span id="timeDate">载入天数...</span> <span id="times">载入时分秒...</span> <script src="/js/duration.js"></script> </div> <a href="https://gitee/centyuan" target="_blank" rel="nofollow noopener"><span>centyuan</span></a> <i class="iconfont icon-love"></i> <a href="https://centyuan.github.io" target="_blank" rel="nofollow noopener"><span>BLog</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
