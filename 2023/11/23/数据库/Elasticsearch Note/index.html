@@ -1,0 +1,949 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/person_fluid.jpg">
+  <link rel="icon" href="/img/person_fluid.jpg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="hlyuan">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="基本概念  索引Index: &gt;一个索引就是相似特征的文档集合，同比预于mysql的表，mongodb的文档(**保存一个文档doc到elasticsearch中的过程也叫索引(indexing)**) 映射mapping: &gt;处理数据的方式和规则(比如: 字段的数据类型，默认值，分析器，是否被索引，包括设置分片数(number_of_shards)和副本数(number_of_rep">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Elasticsearch Note">
+<meta property="og:url" content="https://centyuan.github.io/2023/11/23/%E6%95%B0%E6%8D%AE%E5%BA%93/Elasticsearch%20Note/index.html">
+<meta property="og:site_name" content="centyuan Blog">
+<meta property="og:description" content="基本概念  索引Index: &gt;一个索引就是相似特征的文档集合，同比预于mysql的表，mongodb的文档(**保存一个文档doc到elasticsearch中的过程也叫索引(indexing)**) 映射mapping: &gt;处理数据的方式和规则(比如: 字段的数据类型，默认值，分析器，是否被索引，包括设置分片数(number_of_shards)和副本数(number_of_rep">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-11-23T08:45:41.531Z">
+<meta property="article:modified_time" content="2023-11-23T14:07:37.775Z">
+<meta property="article:author" content="hlyuan">
+<meta property="article:tag" content="Elasticsearch">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>Elasticsearch Note - centyuan Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"centyuan.github.io","root":"/","version":"1.9.5","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.0.0"><link rel="alternate" href="/atom.xml" title="centyuan Blog" type="application/atom+xml">
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>centyuan</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/person_default.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Elasticsearch Note"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-11-23 16:45" pubdate>
+          2023年11月23日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          8.5k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          71 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Elasticsearch Note</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h4 id="基本概念">基本概念</h4>
+<blockquote>
+<p><strong>索引Index:</strong></p>
+<div class="code-wrapper"><pre><code class="hljs delphi">&gt;一个索引就是相似特征的文档集合，同比预于mysql的表，mongodb的文档<span class="hljs-comment">(**保存一个文档doc到elasticsearch中的过程也叫索引(indexing)**)</span></code></pre></div>
+<p><strong>映射mapping:</strong></p>
+<div class="code-wrapper"><pre><code class="hljs scss">&gt;处理数据的方式和规则(比如: 字段的数据类型，默认值，分析器，是否被索引，包括设置分片数(number_of_shards)和副本数(number_of_replicas))
+
+&gt;ES 的Mapping 类似于传统关系型数据库的表结构定义</code></pre></div>
+<p><strong>分片Shards:</strong></p>
+<div class="code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta prompt_">&gt;</span><span class="language-bash">一个索引可以存储超出单个节点硬件限制的大量数据，所有索引分片数决定了一个索引的最大存储</span></code></pre></div>
+<p><strong>副本Replicas:</strong></p>
+<p><strong>什么是倒排索引?</strong></p>
+<div class="code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta prompt_">&gt;</span><span class="language-bash">Elasticsearch分别为每个field都建立了一个倒排索引</span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">Term到所有包含该Term的文档的DocId列表的映射。ES 默认会对写入的数据都建立索引，并且常驻内存</span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">我们首先将每个文档的content域拆分成单独的词（我们称它为词条或tokens ），创建一个包含所有不重复词条的排序列表，然后列出每个词条出现在哪个文档</span>
+<span class="hljs-meta prompt_"></span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">主要采用以下几种数据结构</span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">1.倒排索引:保存了每个term对应的docId的列表，采用skipList的结构保存，用于快速跳跃</span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">2.FST（Finite State Transducer）: 原理上可以理解为前缀树，用于保存term字典的二级索引，用于加速查询，可以在FST上实现单Term、Term范围、Term前缀和通配符查询等。内部结构如下</span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">3.BKD-Tree： KD-Tree是一种保存多维空间点的数据结构，主要用于数值类型(包括空间点)的快速查找。</span></code></pre></div>
+<p><strong>动态更新索引</strong></p>
+<p>引入了按段搜索的概念。<strong>每一段本身都是一个倒排索引</strong></p>
+</blockquote>
+<h4 id="路由计算">路由计算</h4>
+<blockquote>
+<p>当索引一个文档的时候,文档会被存储到一个主分片中,<code>需要路由计算来确定文档应该存到那个分片中</code></p>
+<p>计算公式:</p>
+<p>shard = hash(rouging) % number_of_primary_shards   # 最后会得到一个数：0到number_of_primary_shards-1</p>
+<p>routing: 是一个可变值,默认为文档的**_id**</p>
+<p>number_of_primary_shards: 主分片数量</p>
+<p>所以索引创建时候确定了主分片数量后,就永远不能改变了，不然会导致之前所有路由的值都失效，文档在也找不到了</p>
+</blockquote>
+<h4 id="文档操作流程">文档操作流程</h4>
+<h5 id="文档写流程">文档写流程</h5>
+<blockquote>
+<p>1.client向任一节点发送请求</p>
+<p>2.节点通过文档的_id确定文档属于那个分片，将请求转发到对应<code>主分片</code>的节点上</p>
+<p>3.主分片执行成功后，并发将请求转发到副本分片上去，所有副本都成功后，将向客户端返回成功信息</p>
+<p><strong>注意事项</strong></p>
+<div class="code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta prompt_">&gt;</span><span class="language-bash">1.对于文档的新建，索引的创建和删除都写操作，必须在主分片上进行，然后在复制到副本上</span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">2.ES为了提高写入能力，采用并发写的方式，为了解决并发写过程中数据冲突问题，ES通过乐观锁控制(每个文档都有一个_version，文档修改时版本号递增)</span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">并发模式下，只要有副本在，写入延时最小也是两次单分片的写入耗时总和，效率会较低，但是这样的好处也很明显，避免写入后单个机器硬件故障导致数据丢失，在数据完整性和性能方面，一般都是优先选择数据，除非一些允许丢数据的特殊场景</span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">3.一旦所有的副本分片都报告写成功才会向协调节点报告成功，协调节点向客户端报告成功</span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">4.`ES为减少磁盘I/O次数，一般是每隔一段时间才会把数据写入磁盘持久化`</span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">对于内存数据丢失问题，ES借鉴数据库处理方式，增加Commitlog，在ES中叫translog(类似于mysql的binlog,用于宕机后内存数据的恢复，保存未持久化数据的操作日志)</span></code></pre></div>
+</blockquote>
+<h5 id="文档读流程">文档读流程</h5>
+<blockquote>
+<p>可以从主分片或任意副本分片检索文档</p>
+<p>1.向任一节点发送请求</p>
+<p>2.通过文档_id确定分片，由于 存在副本分片，通过轮训方式来确定访问那个节点的分片</p>
+<p>3.分片节点将文档返回给协调节点，协调节点在将文档返回给客户端</p>
+<p>在处理读取请求时，<strong>协调结点在每次请求的时候都会通过轮询所有的副本分片来达到负载均衡</strong>，已经被索引的文档可能已经存在于主分片上但是还没有复制到副本分片。在这种情况下，副本分片可能会报告文档不存在，但是主分片可能成功返回文档</p>
+</blockquote>
+<h5 id="文档删除更新">文档删除更新</h5>
+<blockquote>
+<p>段是不可改变的，只是在 <code>.del</code> 文件中被 <em>标记</em> 删除</p>
+<p><strong>近实时搜索</strong></p>
+<p>按段搜索降低了文档从索引到可被搜素的延迟，但是还是不够(Commiting 提交到磁盘还是很慢)</p>
+<p>在Elasticsearch和磁盘之间是文件系统缓存：</p>
+<p>在内存索引缓冲区中的文档会被写入到一个新的段中。但是这里新段会被先写入到文件系统缓存—这一步代价会比较低，稍后再被刷新到磁盘—这一步代价比较高。不过只要文件已经在缓存中，就可以像其它文件一样被打开和读取了(<strong>缓冲区的内容已经被写入一个可被搜索的段中，但还没有进行提交</strong>)</p>
+</blockquote>
+<h4 id="存储原理">存储原理</h4>
+<blockquote>
+<p>ES基于Lucene实现的，当添加一份文档时候，会经过一下流程</p>
+<p>1.Lucene进行分词等预处理</p>
+<p>2.将文档索引写入内存中，并将操作写入事务日志(translog，类似于mysql的binlog,保存未持久化数据的操作日志，用于宕机后内存数据恢复)</p>
+<p>3.Lucene每隔<code>refresh_interval</code>(配置项)时间将内存数据刷入到文件系统缓存中，称为segment，刷入文件系统缓存后，segment才可以被用于检索</p>
+<p>默认情况下，Lucene每隔30min或segment 空间大于512M，将缓存中的segment持久化落盘，称为一个commit point，此时删掉对应的transLog</p>
+<p>在Elasticsearch 中，写入和打开一个新段的轻量的过程叫做<code>refresh</code> 。<strong>默认情况下每个分片会每秒自动刷新一次</strong>。这就是为什么我们说Elasticsearch 是近实时搜索: <strong>文档的变化并不是立即对搜索可见，但会在一秒之内变为可见</strong></p>
+<p>并不是所有情况都需要每秒刷新,可以设置refresh_interval，降低每个索引刷新频率，达到优化索引速度</p>
+<p><strong>段合并</strong></p>
+<div class="code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta prompt_">&gt;</span><span class="language-bash">由于自动刷新每秒会创建一个新的段,这样会导致短时间内段的激增,段太多会消耗文件句柄并且每个请求都必须轮流检查每个段</span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">通过段合并来解决问题</span></code></pre></div>
+</blockquote>
+<h4 id="文档查询的优化">文档查询的优化</h4>
+<blockquote>
+<p>1.分片规模(为了让分片查询性能发挥到最优,需要对规模进行限制)</p>
+<p>2.增加副本数(分摊查询的负载)</p>
+<p>3.Mapping设计</p>
+<div class="code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta prompt_">&gt;</span><span class="language-bash">1.ES 默认会建立索引，行存，列存。对于某些并不重要的字段，可以通过指定（index: <span class="hljs-literal">false</span> ， store: <span class="hljs-literal">false</span> ，doc_values: <span class="hljs-literal">false</span>）来关闭，以减少冗余存储成本</span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">2.ES 默认对于数值字段建立BKDTree 索引，但是倒排索引能够最大发挥Lucene 的查询性能。所以对于有限枚举值的数值字段，也建议使用keyword 类型以创建倒排索引</span></code></pre></div>
+<p>4.<strong>查询 Routing 路由优化</strong></p>
+<div class="code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta prompt_">&gt;</span><span class="language-bash">单个查询会扫描所有分片，容易遇到长尾效应，且大量节点在空转，可利用ES路由能力，大幅提高查询吞吐、降低长尾</span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">过写入时支持指定routing ，ES 会计算 target_shard_id = <span class="hljs-built_in">hash</span>(routing) 将写入数据路由到指定分片上，这样在查询时，也可以通过指定routing，快速定位到目前数据所在的分片，查询的效率能够提升一个数量级</span></code></pre></div>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/647279604">ES查询优化攻略</a></p>
+</blockquote>
+<h4 id="文档写入速度的优化">文档写入速度的优化</h4>
+<blockquote>
+<p>ES的默认配置是综合了数据的可靠性和写入程度,实际需要根据场景优化</p>
+<div class="code-wrapper"><pre><code class="hljs pgsql">&gt;<span class="hljs-number">1.</span>加大Translog Flush，目的是降低Iops、Writeblock
+Flush的目的将操作系统的文件缓存中的段持久化到硬盘，Translog 的数据量达到<span class="hljs-number">512</span>MB 或者<span class="hljs-number">30</span> 分钟时，会触发一次Flush
+&gt;<span class="hljs-number">2.</span>增加<span class="hljs-keyword">Index</span> <span class="hljs-keyword">Refresh</span> 间隔，目的是减少Segment Merge 的次数
+ 	新的数据写入索引时，Lucene 就会自动创建一个新的段，Lucene 将待写入的数据先写到内存中，超过<span class="hljs-number">1</span> 秒（默认）时就会触发一次<span class="hljs-keyword">Refresh</span>，然后<span class="hljs-keyword">Refresh</span> 会把内存中的的数据刷新到操作系统的文件缓存系统中
+&gt;<span class="hljs-number">3.</span>调整Bulk 线程池和队列
+&gt;<span class="hljs-number">4.</span>优化节点间的任务分布
+&gt;<span class="hljs-number">5.</span>优化Lucene 层的索引建立，目的是降低CPU 及IO
+&gt;<span class="hljs-number">6.</span>大批量写的时候，可以先禁止<span class="hljs-keyword">Replica</span>复制
+设置<span class="hljs-keyword">index</span>.number_of_replicas: <span class="hljs-number">0</span> 关闭副本。在写入完成后，<span class="hljs-keyword">Replica</span> 修改回正常的状态</code></pre></div>
+</blockquote>
+<h4 id="ES节点和集群">ES节点和集群</h4>
+<h5 id="节点">节点</h5>
+<blockquote>
+<p>一个节点就是一个运行的ES实例,每个节点都有一个唯一的名称作为身份标识，如果没有设置名称，默认使用 UUID 作为名称每个节点都知道集群中任一文档的位置，可以直接将请求转发到任一节点，每个节点都可以扮演协调节点(coordinating node)角色</p>
+</blockquote>
+<h5 id="节点角色">节点角色</h5>
+<blockquote>
+<p>ES中节点有角色的区分的，通过配置文件conf/elasticsearch.yml中配置以下配置进行角色的设定</p>
+<div class="code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta prompt_">&gt;</span><span class="language-bash">node.master:  <span class="hljs-literal">true</span>/false</span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">node.data: <span class="hljs-literal">true</span>/false</span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">（1）仅为候选主节点</span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">（2）既是候选主节点也是数据节点</span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">（3）仅为数据节点</span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">（4）既不是候选主节点也不是数据节点</span></code></pre></div>
+<p>Mater节点：无需参与文档层面的变更和搜索，负责管理集群的变更(如索引的创建和删除，节点的加入和删除)</p>
+<p>data节点: 持有数据和倒排索引</p>
+<p>client节点: 将node.master和node.data都设置成false，那么该节点就是一个客户端节点，将请求路由到集群其他节点，扮演一个协调节点角色，用于负载均衡</p>
+</blockquote>
+<h5 id="节点发现机制">节点发现机制</h5>
+<blockquote>
+<p>ZenDiscovery 是ES内置发现机制，提供<code>多播</code>和<code>单播</code>两种方式</p>
+<p><strong>多播:</strong></p>
+<div class="code-wrapper"><pre><code class="hljs gcode">&gt;一个节点可以向多台机器发送请求<span class="hljs-comment">(生产中不建议这样用,会产生大量不必要的通信)</span></code></pre></div>
+<p><strong>单播:(默认)</strong></p>
+<div class="code-wrapper"><pre><code class="hljs crmsh">&gt;当一个节点请求到单播列表中的成员时，就会得到整个集群所有节点的状态，然后请求<span class="hljs-literal">master</span>节点并加入集群</code></pre></div>
+</blockquote>
+<h5 id="选主">选主</h5>
+<blockquote>
+<p>Master的选主过程中要确保只有一个master，ES通过一个参数quorum的代表多数派阈值，保证选举出的master被至少quorum个的候选主节点认可，以此来保证只有一个master</p>
+<p><strong>脑裂问题</strong></p>
+<div class="code-wrapper"><pre><code class="hljs crmsh">&gt;集群选出多个<span class="hljs-literal">Master</span>节点，使得数据更新时出现不一致,这种现象称为脑裂
+
+&gt;`脑裂问题可能的原因`
+&gt;<span class="hljs-number">1</span>.网络问题: 节点访问不到<span class="hljs-literal">Master</span>，而选举新的<span class="hljs-literal">Master</span>，实际<span class="hljs-literal">master</span>并没有宕机
+&gt;<span class="hljs-number">2</span>.节点负载:</code></pre></div>
+</blockquote>
+<h4 id="三种ES基本操作">三种ES基本操作</h4>
+<blockquote>
+<p>1.使用request发送http请求</p>
+<p>2.使用官方提供的elasticsearch</p>
+<p>3.ORM包elasticsearch-dsl</p>
+</blockquote>
+<h4 id="查询描述">查询描述</h4>
+<div class="code-wrapper"><pre><code class="hljs lasso"><span class="hljs-number">1</span>、must (must字段对应的是个列表，也就是说可以有多个并列的查询条件，一个文档满足各个子条件后才最终返回)
+<span class="hljs-number">2</span>、should (只要符合其中一个条件就返回)
+<span class="hljs-number">3</span>、must_not (与must相反，也就是说可以有多个并列的查询条件，一个文档各个子条件后才最终的结果都不满足)
+<span class="hljs-number">4</span>、filter(条件过滤查询，过滤条件的范围用range表示<span class="hljs-literal">gt</span>表示大于、<span class="hljs-literal">lt</span>表示小于、<span class="hljs-literal">gte</span>表示大于等于、<span class="hljs-literal">lte</span>表示小于等于)
+
+bool查询总结
+    must：与关系，相当于关系型数据库中的 <span class="hljs-literal">and</span>。
+    should：或关系，相当于关系型数据库中的 <span class="hljs-literal">or</span>。
+    must_not：非关系，相当于关系型数据库中的 <span class="hljs-literal">not</span>。
+    filter：过滤条件。
+
+range：条件筛选范围。
+<span class="hljs-literal">gt</span>：大于，相当于关系型数据库中的 &gt;。
+<span class="hljs-literal">gte</span>：大于等于，相当于关系型数据库中的 &gt;=。
+<span class="hljs-literal">lt</span>：小于，相当于关系型数据库中的 &lt;。
+<span class="hljs-literal">lte</span>：小于等于，相当于关系型数据库中的 &lt;=
+
+<span class="hljs-number">1.1</span>、term
+<span class="hljs-number">1</span>）term查询<span class="hljs-built_in">keyword</span>字段。
+term不会分词。而<span class="hljs-built_in">keyword</span>字段也不分词。需要完全匹配才可。
+<span class="hljs-number">2</span>）term查询text字段
+因为text字段会分词，而term不分词，所以term查询的条件必须是text字段分词后的某一个。
+<span class="hljs-number">1.2</span>.<span class="hljs-keyword">match</span>
+<span class="hljs-number">1</span>）<span class="hljs-keyword">match</span>查询<span class="hljs-built_in">keyword</span>字段
+<span class="hljs-keyword">match</span>会被分词，而<span class="hljs-built_in">keyword</span>不会被分词，<span class="hljs-keyword">match</span>的需要跟<span class="hljs-built_in">keyword</span>的完全匹配可以。
+其他的不完全匹配的都是失败的。
+<span class="hljs-number">2</span>）<span class="hljs-keyword">match</span>查询text字段
+<span class="hljs-keyword">match</span>分词，text也分词，只要<span class="hljs-keyword">match</span>的分词结果和text的分词结果有相同的就匹配。
+<span class="hljs-number">1.3</span>.match_phrase
+<span class="hljs-number">1</span>）match_phrase匹配<span class="hljs-built_in">keyword</span>字段。
+这个同上必须跟keywork一致才可以。
+<span class="hljs-number">2</span>）match_phrase匹配text字段。
+match_phrase是分词的，text也是分词的。match_phrase的分词结果必须在text字段分词中都包含，而且顺序必须相同，而且必须都是连续的。
+<span class="hljs-number">1.4</span>.query_string
+<span class="hljs-number">1</span>）query_string查询<span class="hljs-built_in">keyword</span>类型的字段，试过了，无法查询。
+
+<span class="hljs-number">2</span>）query_string查询text类型的字段。
+
+和match_phrase区别的是，不需要连续，顺序还可以调换。
+</code></pre></div>
+<h4 id="Elasticsearch包操作">Elasticsearch包操作</h4>
+<div class="code-wrapper"><pre><code class="hljs routeros"><span class="hljs-keyword">from</span> elasticsearch import Elasticsearch
+es = Elasticsearch([&#123;<span class="hljs-string">&quot;host&quot;</span>: <span class="hljs-string">&quot;123.60.180.204&quot;</span>, <span class="hljs-string">&quot;port&quot;</span>: 9200&#125;], <span class="hljs-attribute">timeout</span>=3600)
+<span class="hljs-comment"># 1.查询</span>
+query = &#123;
+    <span class="hljs-string">&quot;query&quot;</span>: &#123;
+        <span class="hljs-string">&quot;match_all&quot;</span>: &#123;&#125;
+    &#125;
+&#125;
+re = es.search(<span class="hljs-attribute">index</span>=<span class="hljs-string">&quot;teacher&quot;</span>, <span class="hljs-attribute">body</span>=query)
+
+<span class="hljs-comment"># term/terms查询,terms可以指定多个条件</span>
+query = &#123;
+    <span class="hljs-string">&quot;query&quot;</span>: &#123;
+        <span class="hljs-string">&quot;term&quot;</span>: &#123;
+            # <span class="hljs-string">&quot;name&quot;</span>:[<span class="hljs-string">&quot;汪老师&quot;</span>,<span class="hljs-string">&quot;老师&quot;</span>]
+            <span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;老师&quot;</span>
+        &#125;
+    &#125;
+&#125;
+result = es.search(<span class="hljs-attribute">index</span>=<span class="hljs-string">&quot;teacher&quot;</span>, <span class="hljs-attribute">body</span>=query)
+<span class="hljs-built_in">print</span>(result)
+
+<span class="hljs-comment"># 范围查询</span>
+ query = &#123;
+  <span class="hljs-string">&quot;query&quot;</span>:&#123;<span class="hljs-string">&quot;&quot;</span>&#125;
+  &#125;
+
+<span class="hljs-comment"># 2.插入单条数据</span>
+result = es.index(<span class="hljs-attribute">index</span>=<span class="hljs-string">&quot;teacher&quot;</span>, <span class="hljs-attribute">doc_type</span>=<span class="hljs-string">&quot;_doc&quot;</span>, body=&#123;
+<span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;老师名称&quot;</span>,
+<span class="hljs-string">&quot;description&quot;</span>: <span class="hljs-string">&quot;是个可爱的语文老师&quot;</span>,
+<span class="hljs-string">&quot;age&quot;</span>: <span class="hljs-string">&quot;20&quot;</span>,
+<span class="hljs-string">&quot;sex&quot;</span>: <span class="hljs-string">&quot;男&quot;</span>
+&#125;)
+<span class="hljs-comment"># 3.插入多条数据</span>
+doc = [
+&#123;<span class="hljs-string">&quot;index&quot;</span>: &#123;<span class="hljs-string">&quot;_index&quot;</span>: <span class="hljs-string">&quot;teacher&quot;</span>, <span class="hljs-string">&quot;_type&quot;</span>: <span class="hljs-string">&quot;_doc&quot;</span>, <span class="hljs-string">&quot;_id&quot;</span>: 1&#125;&#125;,
+&#123;<span class="hljs-string">&quot;name&quot;</span>:<span class="hljs-string">&quot;汪老师&quot;</span>,<span class="hljs-string">&quot;description&quot;</span>:<span class="hljs-string">&quot;语文老师&quot;</span>,<span class="hljs-string">&quot;age&quot;</span>:26,<span class="hljs-string">&quot;sex&quot;</span>:<span class="hljs-string">&quot;女&quot;</span>&#125;,
+&#123;<span class="hljs-string">&quot;index&quot;</span>: &#123;<span class="hljs-string">&quot;_index&quot;</span>: <span class="hljs-string">&quot;teacher&quot;</span>, <span class="hljs-string">&quot;_type&quot;</span>: <span class="hljs-string">&quot;_doc&quot;</span>, <span class="hljs-string">&quot;_id&quot;</span>: 2&#125;&#125;,
+&#123;<span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;何老师&quot;</span>, <span class="hljs-string">&quot;description&quot;</span>: <span class="hljs-string">&quot;政治老师&quot;</span>, <span class="hljs-string">&quot;age&quot;</span>: 26&#125;,
+&#123;<span class="hljs-string">&quot;index&quot;</span>: &#123;<span class="hljs-string">&quot;_index&quot;</span>: <span class="hljs-string">&quot;teacher&quot;</span>, <span class="hljs-string">&quot;_type&quot;</span>: <span class="hljs-string">&quot;_doc&quot;</span>, <span class="hljs-string">&quot;_id&quot;</span>: 2&#125;&#125;,
+&#123;<span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;老师&quot;</span>, <span class="hljs-string">&quot;description&quot;</span>: <span class="hljs-string">&quot;老师&quot;</span>, <span class="hljs-string">&quot;sex&quot;</span>: <span class="hljs-string">&quot;女&quot;</span>&#125;
+]
+es.bulk(<span class="hljs-attribute">index</span>=<span class="hljs-string">&quot;teacher&quot;</span>,doc_type=&quot;_doc&quot;,body=doc)</code></pre></div>
+<h4 id="elasticsearch-dsl">elasticsearch-dsl</h4>
+<div class="code-wrapper"><pre><code class="hljs clean"><span class="hljs-keyword">from</span> datetime <span class="hljs-keyword">import</span> datetime
+<span class="hljs-keyword">from</span> elasticsearch_dsl <span class="hljs-keyword">import</span> Document, Date, Nested, Boolean, analyzer, InnerDoc, Completion, Keyword, Text, Integer
+
+<span class="hljs-keyword">from</span> elasticsearch_dsl.connections <span class="hljs-keyword">import</span> connections
+
+connections.create_connection(hosts=[<span class="hljs-string">&quot;123.060.180.204:9200&quot;</span>])
+es = connections.create_connection(hosts=[<span class="hljs-string">&quot;127.0.0.1:9200&quot;</span>], timeout=<span class="hljs-number">20</span>)
+res = Search(using=es).index(<span class="hljs-string">&quot;test_index&quot;</span>).query()
+
+<span class="hljs-keyword">class</span> Article(Document):
+    title = Text(fields=&#123;<span class="hljs-string">&#x27;title&#x27;</span>: Keyword()&#125;)
+    author = Text()
+
+    <span class="hljs-keyword">class</span> Index:
+        name = <span class="hljs-string">&#x27;myindex&#x27;</span>  # 索引名
+
+<span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:
+    Article.init()  # 创建映射
+    # 保存数据
+    article = Article()
+    article.title = <span class="hljs-string">&quot;test&quot;</span>
+    article.author = <span class="hljs-string">&quot;lxx&quot;</span>
+    article.save()  # 保存数据
+# # 查询数据
+# s = Article.search()
+# s = s.filter(<span class="hljs-string">&#x27;match&#x27;</span>, title=<span class="hljs-string">&quot;test&quot;</span>)
+# results = s.execute()
+# print(results)
+
+# # 删除数据
+# s = Article.search()
+# s = s.filter(<span class="hljs-string">&#x27;match&#x27;</span>, title=<span class="hljs-string">&quot;test&quot;</span>).delete()
+# # 修改数据
+# s = Article().search()
+# s = s.filter(<span class="hljs-string">&#x27;match&#x27;</span>, title=<span class="hljs-string">&quot;test&quot;</span>)
+# results = s.execute()
+# print(results[<span class="hljs-number">0</span>])
+# results[<span class="hljs-number">0</span>].title = <span class="hljs-string">&quot;xxx&quot;</span>
+# results[<span class="hljs-number">0</span>].save()</code></pre></div>
+<blockquote></blockquote>
+<h4 id="Others">Others</h4>
+<div class="code-wrapper"><pre><code class="hljs"># ./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v7.6.2/elasticsearch-analysis-ansj-7.6.2.0-release.zip
+
+ # docker run --name my_es7 -p 9200:9200  -p 9300:9300 -e &quot;discovery.type=single-node&quot; -e ES_JAVA_OPTS=&quot;-Xms84m -Xmx512m&quot; -v /root/my_elasticsearch/data:/usr/share/elasticsearch/data -v  /root/my_elasticsearch/plugins:/usr/share/elasticsearch/plugins -d elasticsearch:7.6.2
+</code></pre></div>
+<h1></h1>
+<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/" class="category-chain-item">中间件</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Elasticsearch/" class="print-no-link">#Elasticsearch</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Elasticsearch Note</div>
+      <div>https://centyuan.github.io/2023/11/23/数据库/Elasticsearch Note/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>hlyuan</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年11月23日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/11/23/%E6%95%B0%E6%8D%AE%E5%BA%93/Elasticsearch-Note/" title="Elasticsearch Note">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Elasticsearch Note</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/11/22/%E4%B8%AD%E9%97%B4%E4%BB%B6/kakfa_note/" title="Kafka Note">
+                        <span class="hidden-mobile">Kafka Note</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <div> <span id="timeDate">载入天数...</span> <span id="times">载入时分秒...</span> <script src="/js/duration.js"></script> </div> <a href="https://gitee/centyuan" target="_blank" rel="nofollow noopener"><span>centyuan</span></a> <i class="iconfont icon-love"></i> <a href="https://centyuan.github.io" target="_blank" rel="nofollow noopener"><span>BLog</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

@@ -1,0 +1,1272 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/person_fluid.jpg">
+  <link rel="icon" href="/img/person_fluid.jpg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="hlyuan">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="概述  REmote DIctionary Server(Redis) 是一个由 Salvatore Sanfilippo 写的 key-value 存储系统，是跨平台的非关系型数据库。 是一个开源的使用 ANSI C 语言编写、遵守 BSD 协议、支持网络、可基于内存、分布式、可选持久性的键值对(Key-Value)存储数据库，并提供多种语言的 API。 单线程: Redis是单线程的(所谓多线">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redis Note">
+<meta property="og:url" content="https://centyuan.github.io/2023/11/19/%E6%95%B0%E6%8D%AE%E5%BA%93/Redis%20Note/index.html">
+<meta property="og:site_name" content="centyuan Blog">
+<meta property="og:description" content="概述  REmote DIctionary Server(Redis) 是一个由 Salvatore Sanfilippo 写的 key-value 存储系统，是跨平台的非关系型数据库。 是一个开源的使用 ANSI C 语言编写、遵守 BSD 协议、支持网络、可基于内存、分布式、可选持久性的键值对(Key-Value)存储数据库，并提供多种语言的 API。 单线程: Redis是单线程的(所谓多线">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://pic4.zhimg.com/v2-83d9146cac1b288a30fbb841534b6e73_r.jpg">
+<meta property="article:published_time" content="2023-11-19T06:01:03.573Z">
+<meta property="article:modified_time" content="2023-11-22T14:17:29.645Z">
+<meta property="article:author" content="hlyuan">
+<meta property="article:tag" content="Redis">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://pic4.zhimg.com/v2-83d9146cac1b288a30fbb841534b6e73_r.jpg">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>Redis Note - centyuan Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"centyuan.github.io","root":"/","version":"1.9.5","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.0.0"><link rel="alternate" href="/atom.xml" title="centyuan Blog" type="application/atom+xml">
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>centyuan</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/person_default.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Redis Note"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-11-19 14:01" pubdate>
+          2023年11月19日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          13k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          110 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Redis Note</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h4 id="概述">概述</h4>
+<blockquote>
+<p>REmote DIctionary Server(Redis) 是一个由 Salvatore Sanfilippo 写的 key-value 存储系统，是跨平台的非关系型数据库。</p>
+<p>是一个开源的使用 ANSI C 语言编写、遵守 BSD 协议、支持网络、可基于内存、分布式、可选持久性的键值对(Key-Value)存储数据库，并提供多种语言的 API。</p>
+<p><strong>单线程:</strong> Redis是单线程的(所谓多线程,是说Redis处理客户端的请求及执行命令，并不是整个Redis都是单线程)</p>
+<p>4.0后有了多线程,处理命令请求的核心模块,其他地方已经有了多线程比如:后台删除对象，生成dump文件，以及6.0中网络I/O实现了多线程</p>
+<p><strong>IO多路复用机制:</strong></p>
+<p>多路指的是多个TCP连接,复用指的是一个或多个线程，<code>I/O</code> 多路复用的核心原理就是不再由应用程序自己来监听连接，而是由服务器内核替应用程序监听</p>
+<p>在redis中，多路复用有多重实现如: select,epoll,evport,kqueue</p>
+<p>通俗解释:</p>
+<div class="code-wrapper"><pre><code class="hljs makefile"><span class="hljs-section">以买奶茶为例:你点了一杯奶茶</span>
+<span class="hljs-section">同步阻塞IO:，啥也不干，就等着,没做其他的叫阻塞，等奶茶叫同步</span>
+<span class="hljs-section">同步非阻塞IO:一会刷刷抖音，一会瞅瞅奶茶好没，没阻塞干其他的，但是在同步等奶茶好没</span>
+<span class="hljs-section">异步阻塞IO:服务员给你个小票,好了通知你来取,但是你没干其他的，叫阻塞，好了通知你叫异步,这个最傻</span>
+<span class="hljs-section">异步非阻塞IO:服务员给你个小票,好了通知你来取，你可以刷刷抖音</span>
+<span class="hljs-section">事件驱动机制:</span>
+ 奶茶做好了并不知道是谁的，就需要每个问下，这个就是select模型,最多只能监听1024个socket,poll解决了这个限制
+ 奶茶做好了也不知道是谁的,就大声喊下“某某的奶茶好了<span class="hljs-string">&quot;,这就是多路复用中的epoll模型</span>
+<span class="hljs-string"> </span>
+<span class="hljs-string"> </span>
+<span class="hljs-string"></span></code></pre></div>
+</blockquote>
+<h4 id="1-基础命令">1.基础命令</h4>
+<div class="code-wrapper"><pre><code class="hljs plaintext">select number(0-15):切换数据库
+dbsize:查看当前数据库的key的数量
+flushdb:清空当前数据库
+flushall:清空所有库
+keys *:查看当前库所有key
+exists key:key是否存在
+type key:查看key类型
+del key:删除
+unlink key:非阻塞删除,先将keys从keyspaces删除,真正的删除在后续异步操作中
+expire key 10:设置10秒过期时间
+ttl  key :-1表示永不过期,-2表示已过期
+info memory:查看内存使用情况
+config set maxmemory 100mb:动态命令配置redis最大内存 config get maxmemory
+淘汰策略:
+1.noeviction(默认,只读不写)
+2.lru:最近最少使用(allkeys-lru,volatile-lru)
+3.random:随机淘汰(allkeys-random,volatile-random)
+4.ttl:过期时间淘汰(volatile-ttl:配置过期的键中删除马上过期的,volatile-lfu:配置过期键中删除使用频率最少的)
+5.allkeys-lfu:所有键删除使用频率最少的
+定时(每个过期key都需创建一个定时器)/惰性(访问key,判定key是否过期)/定期</code></pre></div>
+<p><img src="https://pic4.zhimg.com/v2-83d9146cac1b288a30fbb841534b6e73_r.jpg" srcset="/img/loading.gif" lazyload alt="Redis数据类型"></p>
+<h4 id="2-五大基本数据类型">2.五大基本数据类型</h4>
+<blockquote>
+<p>在Redis有个核心对象<strong>redisObject</strong>,用来表示String,Hash,List,Set,ZSet</p>
+</blockquote>
+<blockquote>
+<h5 id="1-String字符串">1.String字符串</h5>
+<blockquote>
+<p>字符串是一种基本的数据类型，Redis对字符串进行了特别设计，一种二进制安全的字符串对象，可以包含任何数据。比如jpg图片或者序列化的对象。string 类型的值最大能存储 512MB,类似Java的ArrayList,pyton的list,在第一次append也会超额分配,来减少频繁的内存分配</p>
+</blockquote>
+<p>底层实现:动态字符串</p>
+<div class="code-wrapper"><pre><code class="hljs plaintext">底层数据结构存储方式有三种:
+int, raw,embstr
+1.如果是整数值就会使用int的存储方式
+2.使用【简单动态字符串SDS】(Simple dynamic string):
+ 如果是字符串且长度大于32个字节,,encoding设置为raw
+ 如果是字符串且长度小于等于32个字节,encoding设置为embstr</code></pre></div>
+<p><strong>SDS与c语言字符串对比</strong></p>
+<div class="code-wrapper"><pre><code class="hljs excel">redis在SDS上对c语言的字符串做了自己的设计和优化，具体优势有以下几点：
+（<span class="hljs-number">1</span>）c中字符串并不会记录长度，每次获取字符串的长度都会遍历得到，[时间的复杂度是O(<span class="hljs-built_in">n</span>)]，而Redis中获取字符串只要读取<span class="hljs-built_in">len</span>的值就可，[时间复杂度变为O(<span class="hljs-number">1</span>)]。
+（<span class="hljs-number">2</span>）c中两个字符串拼接，没有分配足够长度的内存空间就「会出现缓冲区溢出的情况」；SDS会先根据<span class="hljs-built_in">len</span>属性判断空间是否满足要求，若是空间不够，会进行空间扩展，所以不会出现缓冲区溢出的情况。
+（<span class="hljs-number">3</span>）SDS还提供「空间预分配」和「惰性空间释放」两种策略。在字符串分配空间时，分配的空间比实际要多，这样就能减少连续的执行字符串增长带来内存重新分配的次数。
+当字符串被缩短的时候，SDS也不会立即回收不适用的空间，而是通过free属性将不使用的空间记录下来，等后面使用的时候再释放。
+
+具体的空间预分配原则是：「当修改字符串后的长度<span class="hljs-built_in">len</span>小于<span class="hljs-number">1</span>MB，就会预分配和<span class="hljs-built_in">len</span>一样长度的空间，即<span class="hljs-built_in">len</span>=free；若是<span class="hljs-built_in">len</span>大于<span class="hljs-number">1</span>MB，free分配的空间大小就为<span class="hljs-number">1</span>MB」。
+
+（<span class="hljs-number">4</span>）SDS是二进制安全的，除了可以储存字符串，还可以储存二进制文件（如图片、音频，视频等文件的二进制数据）；
+而c中字符串是以空字符(\0)串作为结束符，一些图片中含有结束符，因此不是二进制安全的。
+</code></pre></div>
+<p>应用场景: 存储图片，统计粉丝数</p>
+<h5 id="2-List列表">2.List列表</h5>
+<blockquote>
+<p>quicklist: 将多个ziplist使用双向指针串起来,即满足快速插入删除,又不会出现太大的空间冗余</p>
+</blockquote>
+<p>底层实现：</p>
+<p>Redis3.2之前:</p>
+<ul class="lvl-1">
+<li class="lvl-4">
+<p>列表中元素较少和长度较小时: ziplist(压缩链表)</p>
+</li>
+<li class="lvl-5">
+<p>列表中元素角度和长度较大时: linkedlist(双向链表)</p>
+</li>
+</ul>
+<p>Redis3.2之后：quicklist</p>
+<h6 id="ziplist">ziplist</h6>
+<div class="code-wrapper"><pre><code class="hljs nestedtext"><span class="hljs-attribute">是一组连续内存块组成的顺序的数据结构,能够节省空间,使用多个节点来存储数据</span>
+<span class="hljs-attribute">**压缩列表并不是以某种压缩算法进行压缩存储数据，而是它表示一组连续的内存空间的使用，节省空间**</span>
+<span class="hljs-attribute">内存结构图如下</span><span class="hljs-punctuation">:</span>
+<span class="hljs-attribute">| zlbytes | zltail | zllen | entry1 | entry2 ... | zlend |</span>
+<span class="hljs-attribute">zlbytes</span><span class="hljs-punctuation">:</span> <span class="hljs-string">4个字节大小,记录压缩列表占用内存的字节数</span>
+<span class="hljs-attribute">zltail</span><span class="hljs-punctuation">:</span> <span class="hljs-string">4个字节大小,记录尾节点距起始位置的偏移量,用于快速定位到尾节点</span>
+<span class="hljs-attribute">zllen</span><span class="hljs-punctuation">:</span> <span class="hljs-string">2个字节大小,记录列表表中的节点数</span>
+<span class="hljs-attribute">entry</span><span class="hljs-punctuation">:</span> <span class="hljs-string">列表中一个节点</span>
+   <span class="hljs-attribute">entry由三部分组成</span><span class="hljs-punctuation">:</span>
+   <span class="hljs-attribute">1.previous_entry_ength</span><span class="hljs-punctuation">:</span> <span class="hljs-string">表示前一个节点entry的长度,因为地址是连续的，可用于计算前一个节点的地址</span>
+   <span class="hljs-attribute">2.encoding</span><span class="hljs-punctuation">:</span> <span class="hljs-string">保存的是content的内容类型和长度</span>
+   <span class="hljs-attribute">3.content</span><span class="hljs-punctuation">:</span> <span class="hljs-string">保存每个节点内容</span>
+<span class="hljs-attribute">zlend</span><span class="hljs-punctuation">:</span> <span class="hljs-string">表示压缩列表的特殊结束符号 &#x27;0xFF&#x27;</span>
+<span class="hljs-attribute">总结</span><span class="hljs-punctuation">:</span>
+ziplist的优点是内存紧凑，访问效率高，缺点是更新效率低，并且数据量较大时，可能导致大量的内存复制</code></pre></div>
+<h6 id="linkedlist">linkedlist</h6>
+<div class="code-wrapper"><pre><code class="hljs css">和普通链表一样,指向前后节点的指针
+插入/修改/更新的时间复杂度:<span class="hljs-built_in">O</span>(<span class="hljs-number">1</span>)
+查询时间复杂度: <span class="hljs-built_in">O</span>(n)
+
+链表的特性：
+每一个节点都有指向前一个节点和后一个节点的指针。
+头节点和尾节点的prev和next指针指向为null，所以链表是无环的。
+链表有自己长度的信息，获取长度的时间复杂度为<span class="hljs-built_in">O</span>(<span class="hljs-number">1</span>)。
+总结：
+linkedlist的优点是节点修改的效率高，但是需要额外的内存开销，并且节点较多时，会产生大量的内存碎片</code></pre></div>
+<h6 id="quicklist">quicklist</h6>
+<div class="code-wrapper"><pre><code class="hljs">就是双向链表与压缩列表的组合,包含多个内存不连续的节点，但每个节点本身就是一个 ziplist</code></pre></div>
+<p>应用场景:阻塞队列</p>
+<h5 id="3-Hash哈希">3.Hash哈希</h5>
+<blockquote>
+<p>当field-value长度较短个数较少: ziplist,否则使用: hashtable</p>
+<p>当hash对象可以同时满足一下两个条件时，哈希对象使用ziplist编码：</p>
+<p>1.哈希对象保存的所有键值对的键和值的字符串长度都小于64字节</p>
+<p>​    2.哈希对象保存的键值对数量小于512个</p>
+</blockquote>
+<p>底层实现方式为：hashtable,ziplist,其中hashtable的key是String类型</p>
+<h6 id="ziplist压缩列表">ziplist压缩列表</h6>
+<div class="code-wrapper"><pre><code class="hljs makefile">同上
+<span class="hljs-section">使用ziplist的优点:</span>
+  1.相比hashtable,ziplist结构减少了指针,节约了内存
+  2.相比linkedlist,ziplist存储时内存分配是连续的,查询更快
+<span class="hljs-section">ziplist如何实现hash存储的:</span>
+  将同一个键值对的两个节点紧挨着保存,保存键的节点在前,保存值的节点在后,新加入的键值对,放在压缩列表表尾</code></pre></div>
+<h6 id="hashtable">hashtable</h6>
+<div class="code-wrapper"><pre><code class="hljs bash">和字典底层类型类似，通过链地址法解决<span class="hljs-built_in">hash</span>冲突
+当对其扩容时，需要<span class="hljs-built_in">rehash</span>,但是Redis不是一次性把所有数据全部<span class="hljs-built_in">rehash</span>成功，这样会导致Redis对外停止服务,Redis内部为了解决这种情况采用【渐进式<span class="hljs-built_in">rehash</span>】,将所有<span class="hljs-built_in">rehash</span>的操作分成多步进行，直到都<span class="hljs-built_in">rehash</span>完成</code></pre></div>
+<p>应用场景:存储用户数据,分布式生成唯一id</p>
+<h5 id="4-Set集合">4.Set集合</h5>
+<blockquote>
+<p>一个无序的、自动去重的集合数据类型</p>
+</blockquote>
+<p>底层实现: hashtable,intset</p>
+<h6 id="hashtable-2">hashtable</h6>
+<div class="code-wrapper"><pre><code class="hljs arcade">同上
+其实是value为<span class="hljs-literal">null</span>(所有value指向同一个内部值)的<span class="hljs-built_in">hash</span>表</code></pre></div>
+<h6 id="intset">intset</h6>
+<div class="code-wrapper"><pre><code class="hljs angelscript"><span class="hljs-built_in">int</span><span class="hljs-keyword">set</span>叫整数集合，查询方式一般采用二分查找法，实际查询复杂度也就在log(n)
+使用条件:
+ - 元素个数不少于默认值<span class="hljs-number">512</span>
+ - 元素可以用整数表示
+<span class="hljs-built_in">int</span><span class="hljs-keyword">set</span>底层结构:
+  <span class="hljs-built_in">uint32</span>_t encoding; <span class="hljs-comment">//编码类型</span>
+  <span class="hljs-built_in">uint32</span>_t length;   <span class="hljs-comment">//元素的数量</span>
+  <span class="hljs-built_in">int8</span>_t contents [] <span class="hljs-comment">//元素的数组</span></code></pre></div>
+<p>应用场景:去重、抽奖、共同好友、二度好友</p>
+<h5 id="5-Zset有序集合">5.Zset有序集合</h5>
+<blockquote>
+<p>有序（有限score排序，score相同则元素字典序），自动去重的集合数据类型</p>
+</blockquote>
+<p>底层实现: ziplist 和skiplist(跳跃表)</p>
+<h6 id="ziplist-2">ziplist</h6>
+<div class="code-wrapper"><pre><code class="hljs markdown">同上
+满足以下两个条件使用ziplist，其他时候使用skiplist:
+<span class="hljs-bullet"> 1.</span> 有序集合元素数量小于128个
+<span class="hljs-bullet"> 2.</span> 所有元素长度小于64字节</code></pre></div>
+<h6 id="skiplist">skiplist</h6>
+<div class="code-wrapper"><pre><code class="hljs">跳跃表是一种有序的数据结构,每个节点维持多个指向其他节点的指针，从而能快速访问
+skiplist由如下几个特点：
+ 1.有很多层组成，由上到下节点数逐渐密集，最上层的节点最稀疏，跨度也最大。
+ 2.每一层都是一个有序链表，只扫包含两个节点，头节点和尾节点。
+ 3.每一层的每一个节点都含有指向同一层下一个节点和下一层同一个位置节点的指针。
+ 4.如果一个节点在某一层出现，那么该以下的所有链表同一个位置都会出现该节点。</code></pre></div>
+<p>应用场景:在实现排序类型的业务是比较常见的</p>
+<p>如:最热门帖子,排行榜</p>
+<p>参考:<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/148562122">Redis五种数据类型</a></p>
+</blockquote>
+<div class="code-wrapper"><pre><code class="hljs gams">Redis 中支持的数据类型到 <span class="hljs-number">6.0</span><span class="hljs-number">.6</span> 版本，一共有 <span class="hljs-number">9</span> 种。分别是：
+<span class="hljs-keyword">Binary</span>-safe strings（二进制安全字符串）
+Lists（列表）
+<span class="hljs-keyword">Sets</span>（集合）
+Sorted <span class="hljs-comment">sets</span>（有序集合）
+Hashes（哈希）
+Bit <span class="hljs-comment">arrays (or simply bitmaps)</span>（位图）
+HyperLogLogs 用来做基数统计
+geospatial 用来经纬度
+Streams</code></pre></div>
+<h4 id="3-操作命令">3. 操作命令</h4>
+<h5 id="1-String">1.String</h5>
+<div class="code-wrapper"><pre><code class="hljs mipsasm"><span class="hljs-comment"># nx不存在时才会成功,ex设置过期时间</span>
+set cent <span class="hljs-keyword">bingxi </span>nx ex <span class="hljs-number">20</span>
+set cent <span class="hljs-keyword">bingxi</span>
+<span class="hljs-keyword"></span><span class="hljs-comment"># 取值的范围</span>
+getrange cent <span class="hljs-number">0</span> <span class="hljs-number">3</span>
+<span class="hljs-comment"># 设置和过期时间</span>
+setex cent <span class="hljs-number">20</span> <span class="hljs-keyword">bingxi</span>
+<span class="hljs-keyword"></span><span class="hljs-comment"># 设置新值并返回旧值</span>
+getset cent newbingxi
+<span class="hljs-comment"># 设置多个key value</span>
+mset <span class="hljs-built_in">k1</span> <span class="hljs-built_in">v1</span> k2 v2 k3 v3
+<span class="hljs-comment"># setnx key:不存在成功</span>
+setnx cent <span class="hljs-keyword">bingxi</span>
+<span class="hljs-keyword"></span><span class="hljs-comment"># msetnx 设置多个:都不存在才成功</span>
+msetnx k11 v11 k22 v22
+get cent
+<span class="hljs-comment"># 取多个key</span>
+mget <span class="hljs-built_in">k1</span> k2 k3
+<span class="hljs-comment"># 取值的范围</span>
+getrange cent <span class="hljs-number">0</span> <span class="hljs-number">3</span>
+<span class="hljs-comment"># 值里面追加</span>
+append cent yuan
+<span class="hljs-comment"># 获取key长度</span>
+strlen cent
+<span class="hljs-comment"># 数字类型值加1  incr操作是原子性的:不会被线程调度机制打断</span>
+incr cent
+<span class="hljs-comment"># 数字类型加步长</span>
+incrby cent <span class="hljs-number">10</span>
+<span class="hljs-comment"># 数字类型值减1</span>
+decr cent
+<span class="hljs-comment"># 数字类型减步长</span>
+decrby cent <span class="hljs-number">10</span>
+<span class="hljs-comment"># 发布订阅</span>
+<span class="hljs-keyword">subscribe </span>channel_yuan  <span class="hljs-comment"># 订阅频道</span>
+publish channel_yuan helloworld <span class="hljs-comment"># 推送消息到频道</span></code></pre></div>
+<h5 id="2-List">2.List</h5>
+<div class="code-wrapper"><pre><code class="hljs tcl"><span class="hljs-comment"># 从左边插入一个或多个 ###从左边结果为n a u y</span>
+lpush cent y u a n
+<span class="hljs-comment"># 从右边插入一个或多个 ###从右边结果为y u a n</span>
+rpush cent y u a n
+<span class="hljs-comment"># 从左边/右边吐出一个值</span>
+lpop/rpop key
+<span class="hljs-comment"># 从key1列表右边吐出一个值,插到key2列表左边</span>
+rpoplpush key1 key2
+<span class="hljs-keyword">lrange</span> cent <span class="hljs-number">1</span> <span class="hljs-number">4</span>:取值  ### <span class="hljs-number">0</span> <span class="hljs-number">-1</span>:取所有
+<span class="hljs-comment"># 按照索引下表获得元素</span>
+<span class="hljs-keyword">lindex</span> cent <span class="hljs-number">2</span>
+<span class="hljs-comment"># 获取列表长度</span>
+llen cent
+<span class="hljs-comment"># 在列表value值后面或前面插入一个新值</span>
+<span class="hljs-keyword">linsert</span> cent <span class="hljs-keyword">after</span>/before &lt;value&gt; &lt;new_value&gt;
+<span class="hljs-comment"># 将列表2的位置的值替换成newvalue</span>
+<span class="hljs-keyword">lset</span> cent <span class="hljs-number">2</span> newvalue
+<span class="hljs-comment"># 删除（指定值进行删除）</span>
+lrem &lt;key&gt; &lt;n&gt; &lt;value&gt;</code></pre></div>
+<h5 id="3-Hash">3.Hash</h5>
+<div class="code-wrapper"><pre><code class="hljs gherkin"><span class="hljs-comment"># 添加数据</span>
+hset <span class="hljs-variable">&lt;key&gt;</span> <span class="hljs-variable">&lt;field&gt;</span> <span class="hljs-variable">&lt;value&gt;</span>
+<span class="hljs-comment"># 取出数据</span>
+hget <span class="hljs-variable">&lt;key&gt;</span> <span class="hljs-variable">&lt;field&gt;</span>
+<span class="hljs-comment"># 批量设置多个值</span>
+hmset <span class="hljs-variable">&lt;key&gt;</span> <span class="hljs-variable">&lt;field1&gt;</span> <span class="hljs-variable">&lt;value2&gt;</span> <span class="hljs-variable">&lt;field2&gt;</span> <span class="hljs-variable">&lt;value2&gt;</span>
+<span class="hljs-comment"># 查看hash中field是否存在</span>
+hexists <span class="hljs-variable">&lt;key&gt;</span> <span class="hljs-variable">&lt;field&gt;</span>
+<span class="hljs-comment"># 查看hash中所有field</span>
+hkeys <span class="hljs-variable">&lt;key&gt;</span>
+<span class="hljs-comment"># 查看hash中所有value</span>
+hvals <span class="hljs-variable">&lt;key&gt;</span>
+<span class="hljs-comment"># hash对应field加上n</span>
+hincrby <span class="hljs-variable">&lt;key&gt;</span> <span class="hljs-variable">&lt;field&gt;</span> n
+<span class="hljs-comment"># 添加hash中对应field:当field不存在时</span>
+hsetnx <span class="hljs-variable">&lt;key&gt;</span> <span class="hljs-variable">&lt;field&gt;</span> <span class="hljs-variable">&lt;value&gt;</span></code></pre></div>
+<h5 id="4-Set">4.Set</h5>
+<div class="code-wrapper"><pre><code class="hljs gherkin"><span class="hljs-comment"># 添加，第二次插入相同元素将被忽略</span>
+sadd <span class="hljs-variable">&lt;key&gt;</span> <span class="hljs-variable">&lt;value1&gt;</span> <span class="hljs-variable">&lt;value2&gt;</span>
+<span class="hljs-comment"># 取集合所有值</span>
+smembers <span class="hljs-variable">&lt;key&gt;</span>
+<span class="hljs-comment"># 判断值是否在集合中,有返回,无返回0</span>
+sismember <span class="hljs-variable">&lt;key&gt;</span> <span class="hljs-variable">&lt;value&gt;</span>
+<span class="hljs-comment"># 返回集合元素个数</span>
+scard <span class="hljs-variable">&lt;key&gt;</span>
+<span class="hljs-comment"># 删除集合中某些值</span>
+srem <span class="hljs-variable">&lt;key&gt;</span> <span class="hljs-variable">&lt;value1&gt;</span> <span class="hljs-variable">&lt;value2&gt;</span>
+<span class="hljs-comment"># 随机吐出一个值</span>
+spop <span class="hljs-variable">&lt;key&gt;</span>
+<span class="hljs-comment"># 随机从集合取出n个值</span>
+srandmember <span class="hljs-variable">&lt;key&gt;</span> n
+<span class="hljs-comment"># 把集合中某个值移动到另一个集合</span>
+smove <span class="hljs-variable">&lt;source&gt;</span> <span class="hljs-variable">&lt;destination&gt;</span> value
+<span class="hljs-comment"># 返回两个集合的交集</span>
+sinter <span class="hljs-variable">&lt;key1&gt;</span> <span class="hljs-variable">&lt;key2&gt;</span>
+<span class="hljs-comment"># 返回两个集合并集</span>
+sunion <span class="hljs-variable">&lt;key1&gt;</span> <span class="hljs-variable">&lt;key2&gt;</span>
+<span class="hljs-comment"># 返回两个集合的差集,key1中的,不包含key2的</span>
+sdiff <span class="hljs-variable">&lt;key1&gt;</span> <span class="hljs-variable">&lt;key2&gt;</span></code></pre></div>
+<h5 id="5-ZSet">5. ZSet</h5>
+<div class="code-wrapper"><pre><code class="hljs pf">
+<span class="hljs-comment"># 添加元素</span>
+zadd <span class="hljs-variable">&lt;key&gt;</span> <span class="hljs-variable">&lt;score1&gt;</span> <span class="hljs-variable">&lt;value1&gt;</span> <span class="hljs-variable">&lt;score2&gt;</span> <span class="hljs-variable">&lt;value2&gt;</span>
+<span class="hljs-comment"># 取出所有值</span>
+zrange <span class="hljs-variable">&lt;key&gt;</span> <span class="hljs-number">0</span> -<span class="hljs-number">1</span>
+<span class="hljs-comment"># 取出值和评分</span>
+zrange <span class="hljs-variable">&lt;key&gt;</span> <span class="hljs-number">0</span> -<span class="hljs-number">1</span> withscores
+<span class="hljs-comment"># 取出评分在min,max之间的值</span>
+zrangebyscore <span class="hljs-variable">&lt;key&gt;</span> <span class="hljs-keyword">min</span> <span class="hljs-keyword">max</span>          <span class="hljs-comment"># zrevrangebyscore 从大到小</span>
+<span class="hljs-comment"># 增加value对应的score n</span>
+zincrby <span class="hljs-variable">&lt;key&gt;</span> n <span class="hljs-variable">&lt;value&gt;</span>
+<span class="hljs-comment"># 删除</span>
+zrem <span class="hljs-variable">&lt;key&gt;</span> <span class="hljs-variable">&lt;value&gt;</span>
+<span class="hljs-comment"># 统计score在min,max之间元素个数</span>
+zcount <span class="hljs-variable">&lt;key&gt;</span> <span class="hljs-keyword">min</span> <span class="hljs-keyword">max</span>
+<span class="hljs-comment"># 返回value对应的排名 从0开始</span>
+zrank <span class="hljs-variable">&lt;key&gt;</span> <span class="hljs-variable">&lt;value&gt;</span>
+
+<span class="hljs-comment"># 6.redis6的新数据类型</span>
+Bitmaps实现了对位的操作字符串
+<span class="hljs-comment"># 设置值 key 偏移量</span>
+setbit <span class="hljs-variable">&lt;key&gt;</span> offset <span class="hljs-number">1</span>
+<span class="hljs-comment"># 取值</span>
+getbit <span class="hljs-variable">&lt;key&gt;</span> offset</code></pre></div>
+<p>详细参考:<a target="_blank" rel="noopener" href="https://www.runoob.com/w3cnote/python-redis-intro.html">redis使用介绍</a></p>
+<h4 id="4-Redis事务">4.Redis事务</h4>
+<blockquote>
+<p>Redis事务(transaction)可以理解为一个打包的批量执行脚本，多个命令缓存在服务端,没有像Mysql关系型数据库事务隔离级别的概念，不能保证原子性操作,中间某条指令的失败不会导致前面已做指令的回滚,也不会造成后续的指令不做。</p>
+<p><strong>特点</strong>:</p>
+<div class="code-wrapper"><pre><code class="hljs makefile"><span class="hljs-section">&gt;1.命令执行异常情况:命令执行时候出现异常,不影响其他命令的执行。</span>
+<span class="hljs-section">&gt;2.指令或参数错误:命令入队失败,整个事务被取消。</span></code></pre></div>
+<p><strong>事务使用:</strong></p>
+<div class="code-wrapper"><pre><code class="hljs mipsasm">&gt;<span class="hljs-number">1</span>.<span class="hljs-keyword">multi开启事务:redis会将后续命令逐个放入队列中，</span>
+<span class="hljs-keyword"></span>
+<span class="hljs-keyword">multi</span>
+<span class="hljs-keyword"></span>
+&gt;<span class="hljs-number">2</span>.多个命令(入队时:命令失败,其他命令都不会执行,执行时:会跳过错误命令继续执行)
+
+SET <span class="hljs-keyword">book_name </span><span class="hljs-string">&quot;c++ plus&quot;</span>
+SADD tag <span class="hljs-string">&quot;C++&quot;</span> <span class="hljs-string">&quot;Programming&quot;</span> <span class="hljs-string">&quot;Mastering Series&quot;</span>
+
+&gt;<span class="hljs-number">3</span>. EXEC执行事务(执行时:命令失败,不影响其他命令)
+
+EXEC
+
+&gt;<span class="hljs-number">4</span>.<span class="hljs-keyword">discard取消事务(放弃事务中所有命令)</span>
+<span class="hljs-keyword"></span>
+&gt;<span class="hljs-number">5</span>.WATCH、UNWATCH在事务中用于乐观锁
+
+在<span class="hljs-keyword">multi之前,watch监视一个(或多个) </span>key ，如果在事务执行之前这个(或这些) key 被其他命令所改动，那么事务将被打断，EXEC会放弃队列中所有命令</code></pre></div>
+<p><strong>为什么Redis不支持事务回滚:</strong></p>
+<div class="code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta prompt_">&gt;</span><span class="language-bash">多数事务失败是语法错误或数据结构类型错误导致的，语法错误在命令入队检查，类型错误在执行时检查,Redis为提升性能而采用这种简单事务</span></code></pre></div>
+</blockquote>
+<h4 id="5-管道Pipeline">5.管道Pipeline</h4>
+<blockquote>
+<p>Pipeline是客户端行为,Pipeline打包的命令会被立即执行,事务是服务端行为，事务会被缓存，一起执行</p>
+</blockquote>
+<blockquote>
+<p>redis是一种基于客户端-服务端模型以及请求/响应协议的TCP服务</p>
+<p>1.默认在执行每次请求都会创建（连接池申请连接）和断开（归还连接池）一次连接</p>
+<p>2.服务器进程会系统调用read()读取消息,处理完成后调用write把返回结果写入,这一过程涉及用户态到内核太的切换，管道使read/write一次处理多个命令</p>
+<p>通常一个请求会遵循以下步骤:</p>
+<p>​	1.客户端向服务端发送一个请求,并监听Socket返回,通常是阻塞模式,等待服务响应</p>
+<p>​	2.服务端处理命令,并将结果返回客户端</p>
+<p>总结:如果想要在一次请求中指定多个命令，则可以使用pipline实现一次请求指定多个命令,不具有原子性,且并不是管道中命令越多越好(这个会消耗一定内存)</p>
+</blockquote>
+<h4 id="6-配置说明">6.配置说明</h4>
+<div class="code-wrapper"><pre><code class="hljs bash"><span class="hljs-comment"># 1.开启远程访问</span>
+注释<span class="hljs-built_in">bind</span> 127.0.0.1
+关闭保护模式:protected-mode no
+<span class="hljs-comment"># 2.tcp-backlog未完成三次握手队列+已完成三次握手队列(高并发提升客户端连接,改成更大的值)</span>
+tcp-backlog 511 
+<span class="hljs-comment"># 3.连接超时配置 0为永不超时,秒为单位</span>
+<span class="hljs-built_in">timeout</span> 0
+<span class="hljs-comment"># 4.tcp-keepalive</span>
+<span class="hljs-comment"># 300秒执行一次心跳检测,来决定是否释放连接</span>
+tcp-keepalive 300
+<span class="hljs-comment"># 5.设置密码</span>
+requirepass 123456
+conig <span class="hljs-built_in">set</span> requirepass 123456   <span class="hljs-comment"># 命令设置</span>
+<span class="hljs-comment"># 6.设置客户端最大连接数</span>
+maxclients 10000
+<span class="hljs-comment"># 7.后台启动</span>
+修改redis.conf:daemonize <span class="hljs-built_in">yes</span>
+<span class="hljs-comment">#多实例关闭,指定端口关闭:redis-cli -p 6379 shutdown</span>
+<span class="hljs-comment"># 8.哨兵模式配置优先级 值越小优先级越高</span>
+slave-priority 100
+<span class="hljs-comment"># 9.设置内存大小</span>
+maxmemory 3G   <span class="hljs-comment"># 一般为3G</span>
+<span class="hljs-comment"># 10.配置RDB持久化文件名</span>
+dbfilename dump.rdb</code></pre></div>
+<h4 id="7-Redis持久化方案">7.Redis持久化方案</h4>
+<blockquote>
+<p>Redis是基于内存的key-value数据库,数据保存在内存中,为此提供了数据持久化,防止内存数据丢失，redis启动后会加载持久化文件</p>
+<p>分为RDB和AOF两种方式</p>
+</blockquote>
+<h5 id="RDB-Redis-DataBase-默认持久化方式">RDB(Redis DataBase:默认持久化方式)</h5>
+<blockquote>
+<p>RDB是默认持久化方式,按一定时间周期将内存中数据以快照形式保存到硬盘中(默认文件名dump.rdb)</p>
+<p><strong>命令方式</strong></p>
+<p>save(生产中一般不使用)：Reids save命令执行一个同步保存操作，将当前Redis实例的所有数据快照(snapshort)以RDB文件的方式保存到磁盘</p>
+<p>bgsave：bgsave执行后，会立刻返回OK，Redis 会fork一个子进程，原来的redis主进程继续执行后续操作，新fork的子进程负责将数据保存到磁盘，然后退出</p>
+<p>区别：</p>
+<ul class="lvl-1">
+<li class="lvl-2">
+<p>save是<strong>同步</strong>持久化数据，而bgsave是<strong>异步</strong>持久化数据。</p>
+</li>
+<li class="lvl-2">
+<p><code>save</code>不会fork子进程，通过<strong>主进程</strong>持久化数据，会<strong>阻塞</strong>处理客户端的请求，而<code>bdsave</code>会<code>fork</code>子进程持久化数据，同时还可以处理客户端请求，高效。</p>
+</li>
+<li class="lvl-2">
+<p>save<strong>不会消耗内存</strong>，而bgsave<strong>会消耗内存</strong>。</p>
+</li>
+</ul>
+<p><strong>相关配置</strong></p>
+<div class="code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta prompt_">&gt;</span><span class="language-bash"><span class="hljs-comment"># 生成的文件名称</span></span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">dbfilename dump.rdb</span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash"><span class="hljs-comment"># 路径</span></span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">dri /var/lib/redis</span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash"><span class="hljs-comment"># yes表示Redis无法写入硬盘了,关闭Redis的写操作</span></span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">stop-writes-on-bgsave-error <span class="hljs-built_in">yes</span></span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash"><span class="hljs-comment"># yes表示持久化文件压缩</span></span> 
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">rdbcompression <span class="hljs-built_in">yes</span></span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash"><span class="hljs-comment"># yes表示持久化之前检测完整性,会增加大约10%性能消耗</span></span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">rdbchecksum <span class="hljs-built_in">yes</span></span></code></pre></div>
+<p><strong>持久化触发时机:</strong></p>
+<p>1.save:使用save命令手动触发</p>
+<p>2.bgsave: 使用bgsave命令手动触发</p>
+<p>3.自动化:配置文件中配置 save</p>
+<div class="code-wrapper"><pre><code class="hljs apache"><span class="hljs-attribute">save</span> <span class="hljs-number">900</span> <span class="hljs-number">1</span>    # 表示<span class="hljs-number">900</span>秒内如果至少有<span class="hljs-number">1</span>个key值变化，则进行持久化保存数据
+<span class="hljs-attribute">save</span> <span class="hljs-number">300</span> <span class="hljs-number">10</span>   # 表示<span class="hljs-number">300</span>秒内如果至少有<span class="hljs-number">10</span>个key值发生变化，则进行持久化
+<span class="hljs-attribute">save</span> <span class="hljs-number">60</span> <span class="hljs-number">10000</span> # 表示<span class="hljs-number">60</span>秒内如果至少有<span class="hljs-number">10000</span>个key值发生变化，则进行持久化</code></pre></div>
+<p><strong>优缺点</strong></p>
+<div class="code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta prompt_">&gt;</span><span class="language-bash">RDB持久化的文件是紧凑的二进制文件</span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">优点:</span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">1.适合于大规模的数据恢复，并且还原速度快(redis服务启动后会找到dump.rdb自动恢复)</span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">2.生成多个数据文件，适合冷备份</span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">3.fork子进程处理，对外提供的读写影响小</span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">缺点:</span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">1.占用两倍内存</span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">2.会丢失最后一次快照数据</span></code></pre></div>
+</blockquote>
+<h5 id="AOF-Append-Only-File">AOF(Append Only File)</h5>
+<blockquote>
+<p>AOF持久化机制是以日志的形式记录Redis中的每一次的增删改操作，不会记录查询操作，以文本的形式记录，打开记录的日志文件就可以查看操作记录</p>
+<p>默认是不开启的</p>
+<p><strong>相关配置</strong></p>
+<div class="code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta prompt_">&gt;</span><span class="language-bash">appendonly <span class="hljs-built_in">yes</span>  <span class="hljs-comment"># 开启AOF</span></span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">appendfilename <span class="hljs-string">&quot;appendonly.aof&quot;</span>   <span class="hljs-comment"># 配置生成的文件名</span></span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash"><span class="hljs-comment"># 备份模式</span></span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">appendfsync always/everysec/no</span></code></pre></div>
+<p><strong>持久化触发时机</strong></p>
+<p>AOF带来的持久化更加安全可靠，默认提供<strong>三种</strong>触发机制</p>
+<div class="code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta prompt_">&gt;</span><span class="language-bash">AOF带来的持久化更加安全可靠，默认提供三种触发机制</span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">no：服务器不主动调用 fsync 函数，由操作系统决定何时将缓冲区里面的命令写入到硬盘。这种模式下，服务器遭遇意外停机时，丢失命令的数量是不确定的，所以这种策略，不确定性较大，不安全。</span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">always：服务器每写入一个命令，就调用一次 fsync 函数，将缓冲区里面的命令写入到硬盘。这种模式下，服务器出现故障，也不会丢失任何已经成功执行的命令数据，但是其执行速度较慢。</span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">everysec(默认)：服务器每一秒调用一次 fsync 函数，将缓冲区里面的命令写入到硬盘。这种模式下，服务器出现故障，最多只丢失一秒钟内的执行的命令数据，通常都使用它作为 AOF 配置策略</span></code></pre></div>
+<p><strong>优缺点</strong></p>
+<div class="code-wrapper"><pre><code class="hljs isbl">&gt;优点:
+<span class="hljs-number">1</span>.AOF更好保证数据不会被丢失，最多只丢失一秒内的数据
+<span class="hljs-number">2</span>.通过<span class="hljs-variable">fork</span>一个子进程处理持久化操作，保证了主进程不会进程<span class="hljs-variable">io</span>操作，能高效的处理客户端的请求
+<span class="hljs-number">3</span>.AOF的日志文件的记录可读性非常的高
+&gt;缺点:
+<span class="hljs-number">1</span>.相同数据，<span class="hljs-variable">AOF</span>文件大于<span class="hljs-function"><span class="hljs-title">RDB</span>(日志文件很多重复的操作，甚至是无效的操作，导致日志文件越来越大)</span>
+<span class="hljs-number">2</span>.AOF恢复速度比<span class="hljs-variable">RDB</span>慢</code></pre></div>
+<p><strong>AOF重写机制</strong></p>
+<div class="code-wrapper"><pre><code class="hljs perl">&gt;日志文件很多无效操作,通过bgrewriteaof命令。将内存中的数据以命令的方式保存到临时文件中，同时会<span class="hljs-keyword">fork</span>出一条新进程来将文件重写。
+&gt;重写操作也会<span class="hljs-keyword">fork</span>一个子进程来处理重写操作，重写以内存中的数据作为重写的源，避免了操作的冗余性，保证了数据的最新</code></pre></div>
+</blockquote>
+<h5 id="混合持久化">混合持久化</h5>
+<blockquote>
+<p>在redis4.0后混合持久化（RDB+AOF）对重写的优化，4.0版本的混合持久化默认是关闭的，可以通过以下的配置开启混合持久化</p>
+<div class="code-wrapper"><pre><code class="hljs pgsql">&gt;aof-<span class="hljs-keyword">user</span>-rdb-preamble <span class="hljs-keyword">no</span></code></pre></div>
+<p>混合持久化结合<strong>RDB持久化</strong>和<strong>AOF持久化</strong>的优点，由于绝大部分的格式是RDB格式，加载速度快，增量数据以AOF方式保存，数据更少的丢失</p>
+</blockquote>
+<p>总结:</p>
+<blockquote>
+<p>rdb适合大规模的数据恢复，由于rdb时异快照的形式持久化数据，恢复的数据快，在一定的时间备份一次，而aof的保证数据更加完整，损失的数据只在秒内。</p>
+<p>具体哪种更适合生产，在官方的建议中两种持久化机制同时开启</p>
+</blockquote>
+<h4 id="8-淘汰策略">8.淘汰策略</h4>
+<blockquote>
+<p>Redis提供了<strong>6种的淘汰策略</strong>，其中默认的是<code>noeviction</code>，这6中淘汰策略如下：</p>
+<ol>
+<li class="lvl-3"><code>noeviction</code>(<strong>默认策略</strong>)：不删除策略,若是内存的大小达到阀值的时候，所有申请内存的指令都会报错。</li>
+<li class="lvl-3"><code>allkeys-lru</code>：在所有key中优先删除最近最少使用(less recently used ,LRU) 的 key。</li>
+<li class="lvl-3"><code>volatile-lru</code>：所有<strong>设置了过期时间的key使用LRU算法</strong>进行淘汰。</li>
+<li class="lvl-3"><code>allkeys-random</code>：所有的key使用<strong>随机淘汰</strong>的方式进行淘汰。</li>
+<li class="lvl-3"><code>volatile-random</code>：所有<strong>设置了过期时间的key使用随机淘汰</strong>的方式进行淘汰。</li>
+<li class="lvl-3"><code>volatile-ttl</code>：在设置了超时时间（expire ）的key中优先删除剩余时间(time to live,TTL) 短的key。。</li>
+</ol>
+</blockquote>
+<h4 id="9-过期键删除策略">9.过期键删除策略</h4>
+<blockquote>
+<p><strong>1、</strong> 定时删除:创建一个定时器，定时的执行对key的删除操作。</p>
+<p><strong>2、</strong> 惰性删除:每次只有再访问key的时候，才会检查key的过期时间，若是已经过期了就执行删除。</p>
+<p><strong>3、</strong> 定期删除:每隔一段时间，就会检查删除掉过期的key。至于要删除多少过期键，以及要检查多少个数据库，则由算法决定。</p>
+</blockquote>
+<h4 id="10-Redis集群方式">10.Redis集群方式</h4>
+<blockquote>
+<p>1.主从复制</p>
+<p>2.哨兵sentinel</p>
+<p>3.Cluster</p>
+</blockquote>
+<h5 id="1-主从-一主二从-薪火相传-反客为主">1.主从(一主二从,薪火相传,反客为主)</h5>
+<blockquote>
+<p>从服务挂了,重启之后变成master需要手动slaveof加入,然后会同步主服务器数据,主服务挂了,重启不影响主从之间关系</p>
+<p>从服务下还可以设置从服务,手动:slaveof no one主服务挂了,从服务变为主服务:</p>
+<p><strong>配置流程:</strong></p>
+<div class="code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta prompt_">&gt;</span><span class="language-bash"><span class="hljs-comment">#1.创建/myredis文件夹</span></span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash"><span class="hljs-comment">#2.创建redis6379.conf,redis6380.conf,redis6381.conf</span></span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash"><span class="hljs-comment">#3.修改各自配置文件</span></span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">include /myredis/redis.conf</span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">pidfile /var/run/redis_6379.pid</span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">port 6379</span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">dbfilename dump6379.rdb</span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash"><span class="hljs-comment">#4.启动几个redis redis-server /myredis/redis6379.conf</span></span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash"><span class="hljs-comment">#5.查看主从情况:info replication</span></span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash"><span class="hljs-comment">#6.设置主从:slaveof 127.0.0.1 6379</span></span>
+</code></pre></div>
+<p><strong>主从同步流程:</strong></p>
+<p>1.第一次从服务连上主服务器后,向主服务器发送数据同步请求<br>
+2.主服务器数据持久化到RDB文件,将RDB文件发送到从服务器进行同步<br>
+3.每次主服务器写操作后,主动将数据同步到从服务器</p>
+</blockquote>
+<h5 id="2-哨兵模式-基于主从模式-增加了哨兵来监控与自动处理故障">2.哨兵模式(基于主从模式,增加了哨兵来监控与自动处理故障)</h5>
+<blockquote>
+<p>哨兵模式有以下的优点（功能点）：</p>
+<ol>
+<li class="lvl-3"><strong>监控</strong>：监控master和slave是否正常运行，以及哨兵之间也会相互监控</li>
+<li class="lvl-3"><strong>自动故障恢复</strong>：当master出现故障的时候，会自动选举一个slave作为master顶上去</li>
+</ol>
+<p><strong>配置流程:</strong></p>
+<div class="code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta prompt_">&gt;</span><span class="language-bash"><span class="hljs-comment"># 1.创建sentinel.conf</span></span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">sentinel monitor mymaster 127.0.0.1 6379 1</span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">mymaster:为监控对象起的名称,1为至少有多少哨兵同意</span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash"><span class="hljs-comment"># 2.启动哨兵</span></span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">redis-sentinel /myredis/sentinel.conf</span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash"><span class="hljs-comment"># 选举new master策略</span></span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">1.选择优先级靠前的</span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">2.选择偏移量最大的(偏移量指获得原主机数据最全的)</span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">3.选择runid最小的slave从服务(Redis实例启动后随机生成一个40位的runid)</span></code></pre></div>
+</blockquote>
+<h5 id="3-Cluster集群配置-16384个插槽-写入数据-计算key的插槽分配到对应主服务所在的插槽">3.Cluster集群配置(16384个插槽,写入数据,计算key的插槽分配到对应主服务所在的插槽)</h5>
+<blockquote>
+<div class="code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta prompt_">&gt;</span><span class="language-bash"><span class="hljs-comment"># 集群实现扩容,集群不支持多键操作</span></span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">1. 每个redis.conf加上集群配置</span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">cluster-enabled <span class="hljs-built_in">yes</span>                   <span class="hljs-comment"># 打开集群</span></span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">cluster-config-file nodes-6379.conf   <span class="hljs-comment"># 设置节点配置文件名</span></span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">cluster-node-timeout 15000            <span class="hljs-comment"># 设置节点失联时间单位为毫秒,超过该时间,集群自动进行主从切换</span></span>
+<span class="hljs-meta prompt_"></span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">2.启动每个Redis实例 redis-server /myredis/redis.conf,确保nodes-xxxx.conf等文件都生成</span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">3.在redis src下执行依赖ruby环境,实现redis实例合成集群</span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash"><span class="hljs-comment"># 1.表示一主一从</span></span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">redis-cli --cluster create --cluster-replicas  1 ip:port ip2:port2</span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash"><span class="hljs-comment"># 集群连接-c</span></span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">redis-cli -c -p 6379</span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash"><span class="hljs-comment"># 查看集群状态</span></span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">cluster nodes</span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash"><span class="hljs-comment"># yes为某一段插槽的主从挂了,整个集群都挂掉.no为某一段插槽主从挂了,该插槽数据不能使用</span></span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">cluster-require-full-coverage <span class="hljs-built_in">yes</span></span></code></pre></div>
+<p>更多参考:<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/194143258">Redis主从复制、哨兵、Cluster三种模式</a></p>
+</blockquote>
+<h4 id="11-三大缓存问题">11.三大缓存问题</h4>
+<blockquote>
+<p>1.缓存穿透</p>
+<p>2.缓存击穿</p>
+<p>3.缓存雪崩</p>
+</blockquote>
+<h5 id="1-缓存穿透">1.缓存穿透</h5>
+<blockquote>
+<p>指访问大量缓存不存在的数据(和不存在的空值),缓存命中率降低了</p>
+<p><strong>解决方案</strong></p>
+<p>1.对数据库中的空值进行缓存,设置较短的过期时间(维护较简单，但是效果不好)</p>
+<p>2.使用布隆过滤器(维护复杂，效果很好)</p>
+</blockquote>
+<h5 id="2-缓存击穿">2.缓存击穿</h5>
+<blockquote>
+<p>冷门数据大并发，或者是一个<code>key</code>非常热点，有着大并发,当这个key失效的随间，持续的<strong>大并发</strong>就穿破缓存，直接请求数据库，瞬间对数据库的访问压力增大</p>
+<p><strong>解决方案</strong></p>
+<p>1.预先设置热门数据,设置较大的过期时间,实时调整</p>
+<p>2.加锁，对第一个进来的请求执行并做缓存,接下来的就命中缓存</p>
+</blockquote>
+<h5 id="3-缓存雪崩">3.缓存雪崩</h5>
+<blockquote>
+<p>缓存雪崩 是指在某一个时间段，缓存集中过期失效。此刻无数的请求直接绕开缓存，直接请求数据库</p>
+<p><strong>解决方案</strong></p>
+<p>1.构建多级缓存架构和redis集群</p>
+<p>2.分散过期时间</p>
+<p>3.限流降级</p>
+</blockquote>
+<p>更多参考<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/140772422">Redis缓存三大问题</a></p>
+<h4 id="12-相关问题">12.相关问题</h4>
+<blockquote>
+<p><strong>Redis为什么这么快?</strong></p>
+<div class="code-wrapper"><pre><code class="hljs mathematica"><span class="hljs-operator">&gt;</span><span class="hljs-number">1.</span><span class="hljs-variable">Redis</span> 是纯内存结构的，避免了磁盘 <span class="hljs-built_in">I</span><span class="hljs-operator">/</span><span class="hljs-built_in">O</span> 等耗时操作。
+<span class="hljs-operator">&gt;</span><span class="hljs-number">2.</span><span class="hljs-variable">Redis</span> 命令处理的核心模块为单线程，减少了锁竞争，以及频繁创建线程和销毁线程的代价，减少了线程上下文切换的消耗。
+<span class="hljs-operator">&gt;</span><span class="hljs-number">3.</span>采用了 <span class="hljs-built_in">I</span><span class="hljs-operator">/</span><span class="hljs-built_in">O</span> 多路复用机制，大大提升了并发效率。</code></pre></div>
+<p><strong>Redis为什么是单线程?</strong></p>
+<div class="code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta prompt_">&gt;</span><span class="language-bash">CPU不是redis的瓶颈,不会有太多的计算和逻辑判断,最有可能机器内存和网络带宽</span>
+</code></pre></div>
+<p><strong>Redis6.0为什么引入了多线程?</strong></p>
+<div class="code-wrapper"><pre><code class="hljs mathematica"><span class="hljs-operator">&gt;</span>瓶颈在网络<span class="hljs-built_in">I</span><span class="hljs-operator">/</span><span class="hljs-built_in">O</span>模块带来的<span class="hljs-variable">CPU</span>耗时<span class="hljs-operator">,</span>引入的多线程用来处理网络<span class="hljs-built_in">I</span><span class="hljs-operator">/</span><span class="hljs-built_in">O</span>部分。</code></pre></div>
+<p><strong>是否有并发安全问题?</strong></p>
+<div class="code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta prompt_">&gt;</span><span class="language-bash">内存操作，依然是单线程运行的。redis 的多线程部分只是用来处理网络数据的读写和协议解析，执行命令仍然是单线程顺序执行，也就不存在并发安全问题</span></code></pre></div>
+<p><strong>如何开启多线程？</strong></p>
+<div class="code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta prompt_">&gt;</span><span class="language-bash">配置文件开启多线程：</span>
+<span class="hljs-meta prompt_"></span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">io-thread-do-reads <span class="hljs-built_in">yes</span></span>
+<span class="hljs-meta prompt_"></span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">io-thread 线程数</span></code></pre></div>
+</blockquote>
+<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Redis/" class="category-chain-item">Redis</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Redis/" class="print-no-link">#Redis</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Redis Note</div>
+      <div>https://centyuan.github.io/2023/11/19/数据库/Redis Note/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>hlyuan</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年11月19日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/11/19/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C%E5%91%BD%E4%BB%A4%E5%92%8C%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/" title="mysql常用操作命令和性能优化">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">mysql常用操作命令和性能优化</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/11/15/Python%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E6%94%BE%E5%BC%83/InterviewQS/" title="InterviewQS">
+                        <span class="hidden-mobile">InterviewQS</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <div> <span id="timeDate">载入天数...</span> <span id="times">载入时分秒...</span> <script src="/js/duration.js"></script> </div> <a href="https://gitee/centyuan" target="_blank" rel="nofollow noopener"><span>centyuan</span></a> <i class="iconfont icon-love"></i> <a href="https://centyuan.github.io" target="_blank" rel="nofollow noopener"><span>BLog</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
