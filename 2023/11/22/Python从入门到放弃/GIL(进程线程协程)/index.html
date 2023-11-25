@@ -24,7 +24,7 @@
 <meta property="og:description" content="GIL  Global interperter Lock全局解释器锁,并不是Python特性,CPython引入的概念，python完全可以不依赖GIL 为什么使用GIL? 每个线程在执行过程中都要先获取GIl，保证同一时刻只有一个线程运行,目的是解决多线程之间的数据完整性和状态同步, 并且因为使用引用技术管理内存，所以某个对象的引用计数不能被两个线程同时增加和减少，不然造成内存泄露,GIL对线程">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-11-22T14:18:03.539Z">
-<meta property="article:modified_time" content="2023-11-22T14:10:17.403Z">
+<meta property="article:modified_time" content="2023-11-25T04:36:29.600Z">
 <meta property="article:author" content="hlyuan">
 <meta property="article:tag" content="GIL">
 <meta name="twitter:card" content="summary_large_image">
@@ -223,7 +223,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2.6k 字
+          3.4k 字
         
       </span>
     
@@ -234,7 +234,7 @@
         
         
         
-          22 分钟
+          29 分钟
         
       </span>
     
@@ -298,8 +298,22 @@
 <blockquote>
 <p>CPU 寄存器和程序计数器就是 CPU 上下文，因为它们都是 CPU 在运行任何任务前，必须的依赖环境</p>
 <ol>
-<li class="lvl-3">CPU寄存器是CPU内置的小容量高速的内存</li>
-<li class="lvl-3">程序计数器用来存储CPU正在执行的指令位置,或者将执行的下一条指令位置</li>
+<li class="lvl-3">CPU寄存器是CPU内置的小容量高速的内存(用来存放指令和数据等内容的一块内存)，速度很快，可以存储一些计算过程中的信息</li>
+</ol>
+  <div class="code-wrapper"><pre><code class="hljs x86asm">x64架构下一共有<span class="hljs-number">16</span>个通用寄存器，以<span class="hljs-string">&#x27;r&#x27;</span>开头
+列举几个重要的寄存器的使用:
+<span class="hljs-symbol">rax:</span> 用于存放函数返回值和中间件计算结果
+<span class="hljs-built_in">rsp</span>、<span class="hljs-built_in">rbp</span>: 栈顶,栈低寄存器，用于存放当前函数栈的栈顶，栈低地址
+<span class="hljs-built_in">rdi</span>、<span class="hljs-built_in">rsi</span>、<span class="hljs-built_in">rdx</span>、<span class="hljs-built_in">rcx</span>、<span class="hljs-built_in">r8</span>、<span class="hljs-built_in">r9</span>: 调用函数时依次存放第<span class="hljs-number">1</span>个到第<span class="hljs-number">6</span>个参数,多余<span class="hljs-number">6</span>个参数则会被压入栈
+<span class="hljs-symbol">rip:</span> 用于存放下一条指令地址,<span class="hljs-meta">CPU</span>会取此寄存器地址去找到下一条指令并执行</code></pre></div>
+<p><strong>函数调用过程</strong></p>
+  <div class="code-wrapper"><pre><code class="hljs x86asm">函数是在一块栈空间运行的，这个栈顶和栈低地址存放在<span class="hljs-built_in">rsp</span>,<span class="hljs-built_in">rbp</span>里面，且函数的局部变量也会存在栈中某一快内存中
+函数调用就是从一个函数栈跳转到相领另一个函数栈罢了，调用返回后还需要恢复原函数栈的状态,必须在调用时通过寄存器和栈空间的配合来存储一些数据，方便调用完成后恢复
+重点:具有调用关系的两个函数栈空间一定是相邻的，也就是说主调方的函数栈空间与被调方的函数栈空间一点是相邻的</code></pre></div>
+<ol start="2">
+<li class="lvl-3">
+<p>程序计数器用来存储CPU正在执行的指令位置,或者将执行的下一条指令位置</p>
+</li>
 </ol>
 </blockquote>
 <h5 id="CPU上下文切换">CPU上下文切换</h5>
@@ -364,9 +378,21 @@ Linux 通过 TLB（Translation Lookaside <span class="hljs-built_in">Buffer</spa
 </blockquote>
 <h4 id="协程切换">协程切换</h4>
 <blockquote>
-<div class="code-wrapper"><pre><code class="hljs makefile"><span class="hljs-section">协程:是一种比线程更加轻量级的微线程，一个线程也可以拥有多个协程</span></code></pre></div>
-<p><strong>协程切换完全在用户空间进行</strong>，协程拥有自己的寄存器上下文和栈，协程调度切换时，将寄存器上下文和栈保存到其他地方，在切回来的时候，恢复先前保存的寄存器上下文和栈，</p>
-<p>当前协程的 CPU 寄存器状态保存起来，然后将需要切换进来的协程的 CPU 寄存器状态加载的 CPU 寄存器上就 ok 了,在用户空间不涉及内核空间</p>
+<div class="code-wrapper"><pre><code class="hljs gcode">协程:是一种比线程更加轻量级的微线程，一个线程也可以拥有多个协程
+协程与函数调用栈是密切相关的，协程拥有自己的上下文<span class="hljs-comment">(函数栈状态/寄存器值)</span></code></pre></div>
+<p><strong>协程上下文</strong></p>
+<div class="code-wrapper"><pre><code class="hljs cpp">协程是一段子程序(其实就是函数), 只要保存当前函数栈状态和寄存器指，就可以描述这个协程的全部状态
+- 函数栈状态
+- 寄存器值
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">coctx_t</span>
+&#123;
+	<span class="hljs-type">void</span> *regs[ <span class="hljs-number">14</span> ];       <span class="hljs-comment">// 一个数组，保存了14个寄存器的值 </span>
+	<span class="hljs-type">size_t</span> ss_size;         <span class="hljs-comment">// 协程栈大小</span>
+	<span class="hljs-type">char</span> *ss_sp;            <span class="hljs-comment">// 协程栈指针</span>
+&#125;;</code></pre></div>
+<p>1.保存当前协程的CPU寄存器的值保存到协程上下文中的regs数组中</p>
+<p>2.将新协程上下文的regs数组中值取出来赋值给对应的寄存器</p>
+<p>切换在用户空间不涉及内核空</p>
 </blockquote>
 <h4 id="进程线程区别">进程线程区别</h4>
 <blockquote>
@@ -376,6 +402,26 @@ Linux 通过 TLB（Translation Lookaside <span class="hljs-built_in">Buffer</spa
 4执行过程:进程有(执行入口/顺序执行/执行开销大),线程不能独立运行(依附于进程,执行开销小)<br>
 5切换:进程切换资源消耗大,线程切换消耗小<br>
 (进程切换需要切换页表,页表切换后,TLB失效,地址转化时需要重新查找页表。线程切换不需要切换页表)</p>
+</blockquote>
+<h4 id="切换对比">切换对比</h4>
+<blockquote>
+<p>程序=指令序列+上下文  # 信息=位+上下文</p>
+<p>**指令:**就是寄存器地址指向的值，也就是CPU要执行的命令</p>
+<p><strong>上下文:</strong></p>
+<div class="code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta prompt_">&gt;</span><span class="language-bash">CPU上下文：</span>
+操作数寄存器，栈寄存器，状态寄存器等各类寄存器
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">进程上下文:</span>
+寄存器,信号,分配的内存空间,文件描述符等各类由CPU抽象出来的资源
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">线程上下文:</span> 
+寄存器，线程堆栈
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">函数上下文:</span>
+当前的命名空间
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">协程上下文:</span>
+	寄存器
+</code></pre></div>
+<p>进程切换：需要切换系统资源和指令，操作最重</p>
+<p>线程切换：只切换线程堆栈，不需要切换系统资源</p>
+<p>协程切换:   都在用户空间进行，不需要进行系统调用</p>
 </blockquote>
 <script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
                 
