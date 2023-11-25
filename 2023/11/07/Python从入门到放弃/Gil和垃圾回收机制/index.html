@@ -24,9 +24,9 @@
 <meta property="og:description" content="一:GIL 1. GIL是什么?  Global interperter Lock是全局解释器锁(并不是python的特性,CPython时所引入的概念,python完全可以不依赖GIL) 每个线程在执行过程都要先获取GIL,保证同一时刻只有一个线程运行,目的是解决多线程之间数据完整性和状态同步,在单核CPU时代对Python有积极作用,在多核CPU时代,阻碍了python在多核cpu的并发。 p">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-11-07T02:26:14.275Z">
-<meta property="article:modified_time" content="2023-11-24T09:04:56.079Z">
+<meta property="article:modified_time" content="2023-11-25T04:45:05.627Z">
 <meta property="article:author" content="hlyuan">
-<meta property="article:tag" content="python">
+<meta property="article:tag" content="Python">
 <meta name="twitter:card" content="summary_large_image">
   
   
@@ -416,10 +416,10 @@ None</code></pre></div>
 <p>2.老年代存活时间最长,甚至整个系统的生命周期</p>
 <p>触发机制:当某世代中被分配的对象与被释放的对象之差达某一阈值,且比该代年轻的代也会被扫描</p>
 <p>查看各世代阈值:</p>
-<div class="code-wrapper"><pre><code class="hljs python">&gt;<span class="hljs-keyword">import</span> gc
-&gt;<span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;各世代的阈值:&quot;</span>,gc.get_threshold())
-&gt;<span class="hljs-comment"># 设置各世代阈值</span>
-&gt;gc.set_threshold(<span class="hljs-number">800</span>, <span class="hljs-number">20</span>, <span class="hljs-number">20</span>)</code></pre></div>
+<div class="code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">import</span> gc
+<span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;各世代的阈值:&quot;</span>,gc.get_threshold())
+<span class="hljs-comment"># 设置各世代阈值</span>
+gc.set_threshold(<span class="hljs-number">800</span>, <span class="hljs-number">20</span>, <span class="hljs-number">20</span>)</code></pre></div>
 <p>优点:</p>
 <p>执行垃圾回收过程中，程序会被暂停，即stop-the-world为了减少程序的暂停时间，采用分代回收(Generational Collection)降低垃圾收集耗时,是一种空间换时间的方式</p>
 </blockquote>
@@ -461,7 +461,7 @@ None</code></pre></div>
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/python/" class="print-no-link">#python</a>
+        <a href="/tags/Python/" class="print-no-link">#Python</a>
       
     </div>
   
