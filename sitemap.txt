@@ -1,3 +1,5 @@
+https://centyuan.github.io/2023/11/30/Python%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E6%94%BE%E5%BC%83/Python%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/
+https://centyuan.github.io/2023/11/22/%E4%B8%AD%E9%97%B4%E4%BB%B6/kakfa_note/
 https://centyuan.github.io/2023/11/27/K8s%E5%92%8CDocker/Docker_Note/
 https://centyuan.github.io/2023/11/25/%E8%AE%A4%E8%AF%81%E5%92%8C%E6%8E%88%E6%9D%83/CookieSessionTokenJWT/
 https://centyuan.github.io/2023/11/05/Python%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E6%94%BE%E5%BC%83/Python%E4%B8%AD%E7%9A%84%E5%A0%86%E5%92%8C%E6%A0%88/
@@ -11,7 +13,6 @@ https://centyuan.github.io/2023/11/06/Python%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0
 https://centyuan.github.io/2023/11/06/Python%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E6%94%BE%E5%BC%83/Python%20@property%E8%AF%A6%E8%A7%A3/
 https://centyuan.github.io/2023/11/22/Python%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E6%94%BE%E5%BC%83/GIL(%E8%BF%9B%E7%A8%8B%E7%BA%BF%E7%A8%8B%E5%8D%8F%E7%A8%8B)/
 https://centyuan.github.io/2023/11/23/%E6%95%B0%E6%8D%AE%E5%BA%93/Elasticsearch_Note/
-https://centyuan.github.io/2023/11/22/%E4%B8%AD%E9%97%B4%E4%BB%B6/kakfa_note/
 https://centyuan.github.io/2023/11/14/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/
 https://centyuan.github.io/2023/11/20/%E4%B8%AD%E9%97%B4%E4%BB%B6/rabbitmq_note/
 https://centyuan.github.io/2023/11/19/%E6%95%B0%E6%8D%AE%E5%BA%93/Redis_Note/

@@ -24,7 +24,7 @@
 <meta property="og:description" content="基础概念  **Producer: **Producer 即生产者，消息的产生者，是消息的入口 Broker:  Broker 是 kafka 一个实例，每个服务器上有一个或多个 kafka 的实例，简单的理解就是一台 kafka 服务器，kafka cluster表示集群的意思 Topic:  消息的主题，可以理解为消息队列，kafka的数据就保存在topic。在每个 broker 上都可以创建">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-11-22T14:33:13.611Z">
-<meta property="article:modified_time" content="2023-11-23T01:46:51.707Z">
+<meta property="article:modified_time" content="2023-11-28T03:01:56.242Z">
 <meta property="article:author" content="hlyuan">
 <meta property="article:tag" content="Kafka">
 <meta name="twitter:card" content="summary_large_image">
@@ -342,10 +342,11 @@ kafka保证同一个分区内的数据是有序的，我们也可以认为一个
 <p><code>可靠生产:</code></p>
 <div class="code-wrapper"><pre><code class="hljs maxima">为保证 producer 发送的数据，能可靠的发送到指定的 topic，topic 中的每个 <span class="hljs-built_in">partition</span> 收到 producer 发送的数据后，
 都需要向 producer 发送 ack （acknowledgement 确认收到），如果 producer 收到 ack，就会进行下一轮的发送，否则重新发送数据。</code></pre></div>
-<p>ack确认+重试,通过send方法发送消息,并返回Future对象,get()方法会等待Future对象，处理异常看send()方法是否成功</p>
+<p>1.使用Callback的api发送消息(ack确认+重试),</p>
+<p>2.通过send方法发送消息,并返回Future对象,get()方法会等待Future对象，处理异常看send()方法是否成功</p>
 <p><code>可靠消费:</code></p>
 <div class="code-wrapper"><pre><code class="hljs applescript">每个分区在同一时间只被一个 consumer 消费，通每个分区被消费的消息在日志中的位置仅仅是一个简单的整数：<span class="hljs-built_in">offset</span>，通过<span class="hljs-built_in">offset</span>来跟踪消费状态</code></pre></div>
-<p>手动提交偏移量offset+重试+死信队列,</p>
+<p>1.手动提交偏移量offset+重试+死信队列</p>
 </blockquote>
 <h4 id="kafka如何将数据写入到对应的分区">kafka如何将数据写入到对应的分区</h4>
 <p>1.send指定的分区<br>
