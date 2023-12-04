@@ -25,7 +25,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://pic4.zhimg.com/v2-83d9146cac1b288a30fbb841534b6e73_r.jpg">
 <meta property="article:published_time" content="2023-11-19T06:01:03.573Z">
-<meta property="article:modified_time" content="2023-11-22T14:17:29.645Z">
+<meta property="article:modified_time" content="2023-11-30T13:24:17.753Z">
 <meta property="article:author" content="hlyuan">
 <meta property="article:tag" content="Redis">
 <meta name="twitter:card" content="summary_large_image">
@@ -225,7 +225,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          13k 字
+          15k 字
         
       </span>
     
@@ -236,7 +236,7 @@
         
         
         
-          110 分钟
+          122 分钟
         
       </span>
     
@@ -295,10 +295,7 @@
 <span class="hljs-section">异步非阻塞IO:服务员给你个小票,好了通知你来取，你可以刷刷抖音</span>
 <span class="hljs-section">事件驱动机制:</span>
  奶茶做好了并不知道是谁的，就需要每个问下，这个就是select模型,最多只能监听1024个socket,poll解决了这个限制
- 奶茶做好了也不知道是谁的,就大声喊下“某某的奶茶好了<span class="hljs-string">&quot;,这就是多路复用中的epoll模型</span>
-<span class="hljs-string"> </span>
-<span class="hljs-string"> </span>
-<span class="hljs-string"></span></code></pre></div>
+ 奶茶做好了也不知道是谁的,就大声喊下“某某的奶茶好了<span class="hljs-string">&quot;,这就是多路复用中的epoll模型</span></code></pre></div>
 </blockquote>
 <h4 id="1-基础命令">1.基础命令</h4>
 <div class="code-wrapper"><pre><code class="hljs plaintext">select number(0-15):切换数据库
@@ -336,8 +333,8 @@ config set maxmemory 100mb:动态命令配置redis最大内存 config get maxmem
 int, raw,embstr
 1.如果是整数值就会使用int的存储方式
 2.使用【简单动态字符串SDS】(Simple dynamic string):
- 如果是字符串且长度大于32个字节,,encoding设置为raw
- 如果是字符串且长度小于等于32个字节,encoding设置为embstr</code></pre></div>
+如果是字符串且长度大于32个字节,,encoding设置为raw
+如果是字符串且长度小于等于32个字节,encoding设置为embstr</code></pre></div>
 <p><strong>SDS与c语言字符串对比</strong></p>
 <div class="code-wrapper"><pre><code class="hljs excel">redis在SDS上对c语言的字符串做了自己的设计和优化，具体优势有以下几点：
 （<span class="hljs-number">1</span>）c中字符串并不会记录长度，每次获取字符串的长度都会遍历得到，[时间的复杂度是O(<span class="hljs-built_in">n</span>)]，而Redis中获取字符串只要读取<span class="hljs-built_in">len</span>的值就可，[时间复杂度变为O(<span class="hljs-number">1</span>)]。
@@ -365,6 +362,7 @@ int, raw,embstr
 <p>列表中元素角度和长度较大时: linkedlist(双向链表)</p>
 </li>
 </ul>
+<p><strong>在 Redis 7.0 中，压缩列表数据结构已经废弃了，交由 listpack 数据结构来实现了。</strong></p>
 <p>Redis3.2之后：quicklist</p>
 <h6 id="ziplist">ziplist</h6>
 <div class="code-wrapper"><pre><code class="hljs nestedtext"><span class="hljs-attribute">是一组连续内存块组成的顺序的数据结构,能够节省空间,使用多个节点来存储数据</span>
@@ -435,7 +433,7 @@ linkedlist的优点是节点修改的效率高，但是需要额外的内存开�
 <p>应用场景:去重、抽奖、共同好友、二度好友</p>
 <h5 id="5-Zset有序集合">5.Zset有序集合</h5>
 <blockquote>
-<p>有序（有限score排序，score相同则元素字典序），自动去重的集合数据类型</p>
+<p>有序（score从小到大排序，score相同则元素字典序），自动去重的集合数据类型</p>
 </blockquote>
 <p>底层实现: ziplist 和skiplist(跳跃表)</p>
 <h6 id="ziplist-2">ziplist</h6>
@@ -454,16 +452,16 @@ skiplist由如下几个特点：
 <p>如:最热门帖子,排行榜</p>
 <p>参考:<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/148562122">Redis五种数据类型</a></p>
 </blockquote>
-<div class="code-wrapper"><pre><code class="hljs gams">Redis 中支持的数据类型到 <span class="hljs-number">6.0</span><span class="hljs-number">.6</span> 版本，一共有 <span class="hljs-number">9</span> 种。分别是：
-<span class="hljs-keyword">Binary</span>-safe strings（二进制安全字符串）
-Lists（列表）
-<span class="hljs-keyword">Sets</span>（集合）
-Sorted <span class="hljs-comment">sets</span>（有序集合）
-Hashes（哈希）
-Bit <span class="hljs-comment">arrays (or simply bitmaps)</span>（位图）
-HyperLogLogs 用来做基数统计
-geospatial 用来经纬度
-Streams</code></pre></div>
+<div class="code-wrapper"><pre><code class="hljs apache"><span class="hljs-attribute">Redis</span> 中支持的数据类型到 <span class="hljs-number">6</span>.<span class="hljs-number">0</span>.<span class="hljs-number">6</span> 版本，一共有 <span class="hljs-number">9</span> 种。分别是：
+<span class="hljs-attribute">Binary</span>-safe strings（二进制安全字符串）
+<span class="hljs-attribute">Lists</span>（列表）
+<span class="hljs-attribute">Sets</span>（集合）
+<span class="hljs-attribute">Sorted</span> sets（有序集合）
+<span class="hljs-attribute">Hashes</span>（哈希）
+<span class="hljs-attribute">BitMap</span>（<span class="hljs-number">2</span>.<span class="hljs-number">2</span> 版新增）：二值状态统计的场景，比如签到、判断用户登陆状态、连续签到用户总数等；
+<span class="hljs-attribute">HyperLogLog</span>（<span class="hljs-number">2</span>.<span class="hljs-number">8</span> 版新增）：海量数据基数统计的场景，比如百万级网页 UV 计数等；
+<span class="hljs-attribute">GEO</span>（<span class="hljs-number">3</span>.<span class="hljs-number">2</span> 版新增）：存储地理位置信息的场景，比如滴滴叫车；
+<span class="hljs-attribute">Stream</span>（<span class="hljs-number">5</span>.<span class="hljs-number">0</span> 版新增）：消息队列，相比于基于 List 类型实现的消息队列，有这两个特有的特性：自动生成全局唯一消息ID，支持以消费组形式消费数据</code></pre></div>
 <h4 id="3-操作命令">3. 操作命令</h4>
 <h5 id="1-String">1.String</h5>
 <div class="code-wrapper"><pre><code class="hljs mipsasm"><span class="hljs-comment"># nx不存在时才会成功,ex设置过期时间</span>
@@ -589,7 +587,7 @@ getbit <span class="hljs-variable">&lt;key&gt;</span> offset</code></pre></div>
 <p>详细参考:<a target="_blank" rel="noopener" href="https://www.runoob.com/w3cnote/python-redis-intro.html">redis使用介绍</a></p>
 <h4 id="4-Redis事务">4.Redis事务</h4>
 <blockquote>
-<p>Redis事务(transaction)可以理解为一个打包的批量执行脚本，多个命令缓存在服务端,没有像Mysql关系型数据库事务隔离级别的概念，不能保证原子性操作,中间某条指令的失败不会导致前面已做指令的回滚,也不会造成后续的指令不做。</p>
+<p>Redis事务(transaction)可以理解为一个打包的批量执行脚本，多个命令缓存在服务端,没有像Mysql关系型数据库事务隔离级别的概念，<strong>不能保证原子性操作,中间某条指令的失败不会导致前面已做指令的回滚,也不会造成后续的指令不做</strong></p>
 <p><strong>特点</strong>:</p>
 <div class="code-wrapper"><pre><code class="hljs makefile"><span class="hljs-section">&gt;1.命令执行异常情况:命令执行时候出现异常,不影响其他命令的执行。</span>
 <span class="hljs-section">&gt;2.指令或参数错误:命令入队失败,整个事务被取消。</span></code></pre></div>
@@ -617,42 +615,34 @@ EXEC
 </blockquote>
 <h4 id="5-管道Pipeline">5.管道Pipeline</h4>
 <blockquote>
-<p>Pipeline是客户端行为,Pipeline打包的命令会被立即执行,事务是服务端行为，事务会被缓存，一起执行</p>
+<p>管道技术(Pipeline)是客户端提供的一种批处理技术，用于一次处理多个 Redis 命令，从而提高整个交互的性能</p>
+<p>事务：是服务端行为，事务会被缓存，一起执行</p>
 </blockquote>
 <blockquote>
-<p>redis是一种基于客户端-服务端模型以及请求/响应协议的TCP服务</p>
-<p>1.默认在执行每次请求都会创建（连接池申请连接）和断开（归还连接池）一次连接</p>
-<p>2.服务器进程会系统调用read()读取消息,处理完成后调用write把返回结果写入,这一过程涉及用户态到内核太的切换，管道使read/write一次处理多个命令</p>
+<p>redis是基于客户端-服务端模型以及请求/响应协议的TCP服务,服务器进程会系统调用read()读取消息,处理完成后调用write把返回结果写入,这一过程涉及用户态到内核太的切换，管道使read/write一次处理多个命令,可以解决多个命令执行时的网络等待</p>
 <p>通常一个请求会遵循以下步骤:</p>
 <p>​	1.客户端向服务端发送一个请求,并监听Socket返回,通常是阻塞模式,等待服务响应</p>
 <p>​	2.服务端处理命令,并将结果返回客户端</p>
 <p>总结:如果想要在一次请求中指定多个命令，则可以使用pipline实现一次请求指定多个命令,不具有原子性,且并不是管道中命令越多越好(这个会消耗一定内存)</p>
 </blockquote>
 <h4 id="6-配置说明">6.配置说明</h4>
-<div class="code-wrapper"><pre><code class="hljs bash"><span class="hljs-comment"># 1.开启远程访问</span>
-注释<span class="hljs-built_in">bind</span> 127.0.0.1
-关闭保护模式:protected-mode no
-<span class="hljs-comment"># 2.tcp-backlog未完成三次握手队列+已完成三次握手队列(高并发提升客户端连接,改成更大的值)</span>
-tcp-backlog 511 
-<span class="hljs-comment"># 3.连接超时配置 0为永不超时,秒为单位</span>
-<span class="hljs-built_in">timeout</span> 0
-<span class="hljs-comment"># 4.tcp-keepalive</span>
-<span class="hljs-comment"># 300秒执行一次心跳检测,来决定是否释放连接</span>
-tcp-keepalive 300
-<span class="hljs-comment"># 5.设置密码</span>
-requirepass 123456
-conig <span class="hljs-built_in">set</span> requirepass 123456   <span class="hljs-comment"># 命令设置</span>
-<span class="hljs-comment"># 6.设置客户端最大连接数</span>
-maxclients 10000
-<span class="hljs-comment"># 7.后台启动</span>
-修改redis.conf:daemonize <span class="hljs-built_in">yes</span>
-<span class="hljs-comment">#多实例关闭,指定端口关闭:redis-cli -p 6379 shutdown</span>
-<span class="hljs-comment"># 8.哨兵模式配置优先级 值越小优先级越高</span>
-slave-priority 100
-<span class="hljs-comment"># 9.设置内存大小</span>
-maxmemory 3G   <span class="hljs-comment"># 一般为3G</span>
-<span class="hljs-comment"># 10.配置RDB持久化文件名</span>
-dbfilename dump.rdb</code></pre></div>
+<div class="code-wrapper"><pre><code class="hljs tap">**redis.conf**
+<span class="hljs-comment"># 开启远程访问</span>
+	注释bind 127.0.0.1
+	关闭保护模式:protected-mode no
+tcp-backlog<span class="hljs-number"> 511 </span>    <span class="hljs-comment"># tcp-backlog未完成三次握手队列+已完成三次握手队列(高并发提升客户端连接,改成更大的值)</span>
+timeout<span class="hljs-number"> 0 </span>          <span class="hljs-comment"># 连接超时配置 0为永不超时,秒为单位</span>
+tcp-keepalive<span class="hljs-number"> 300 </span>  <span class="hljs-comment"># 300秒执行一次心跳检测,来决定是否释放连接</span>
+requirepass<span class="hljs-number"> 123456 </span> <span class="hljs-comment"># 设置密码</span>
+conig set requirepass<span class="hljs-number"> 123456 </span>  <span class="hljs-comment"># 命令设置</span>
+maxclients<span class="hljs-number"> 10000 </span>   <span class="hljs-comment"># 设置客户端最大连接数</span>
+daemonize yes  <span class="hljs-comment"># 设置后台启动</span>
+slave-priority<span class="hljs-number"> 100 </span>  <span class="hljs-comment"># 哨兵模式配置优先级 值越小优先级越高</span>
+maxmemory 3G         <span class="hljs-comment"># 置内存大小一般为3G</span>
+dbfilename dump.rdb  <span class="hljs-comment"># 配置RDB持久化文件名</span>
+rdbcompression yes   <span class="hljs-comment"># 指定存储至本地数据库时是否压缩数据</span>
+
+<span class="hljs-comment">#多实例关闭,指定端口关闭:redis-cli -p 6379 shutdown</span></code></pre></div>
 <h4 id="7-Redis持久化方案">7.Redis持久化方案</h4>
 <blockquote>
 <p>Redis是基于内存的key-value数据库,数据保存在内存中,为此提供了数据持久化,防止内存数据丢失，redis启动后会加载持久化文件</p>
@@ -744,14 +734,14 @@ dbfilename dump.rdb</code></pre></div>
 </blockquote>
 <h4 id="8-淘汰策略">8.淘汰策略</h4>
 <blockquote>
-<p>Redis提供了<strong>6种的淘汰策略</strong>，其中默认的是<code>noeviction</code>，这6中淘汰策略如下：</p>
+<p>Redis提供了<strong>6种的淘汰策略</strong>，其中默认的是<code>no-eviction</code>，这6中淘汰策略如下：</p>
 <ol>
-<li class="lvl-3"><code>noeviction</code>(<strong>默认策略</strong>)：不删除策略,若是内存的大小达到阀值的时候，所有申请内存的指令都会报错。</li>
+<li class="lvl-3"><code>no-eviction</code>(<strong>默认策略</strong>)：不删除策略,若是内存的大小达到阀值的时候，所有申请内存的指令都会报错。</li>
 <li class="lvl-3"><code>allkeys-lru</code>：在所有key中优先删除最近最少使用(less recently used ,LRU) 的 key。</li>
 <li class="lvl-3"><code>volatile-lru</code>：所有<strong>设置了过期时间的key使用LRU算法</strong>进行淘汰。</li>
 <li class="lvl-3"><code>allkeys-random</code>：所有的key使用<strong>随机淘汰</strong>的方式进行淘汰。</li>
 <li class="lvl-3"><code>volatile-random</code>：所有<strong>设置了过期时间的key使用随机淘汰</strong>的方式进行淘汰。</li>
-<li class="lvl-3"><code>volatile-ttl</code>：在设置了超时时间（expire ）的key中优先删除剩余时间(time to live,TTL) 短的key。。</li>
+<li class="lvl-3"><code>volatile-ttl</code>：在设置了过期时间（expire ）的key中优先删除剩余时间(time to live,TTL) 短的key。。</li>
 </ol>
 </blockquote>
 <h4 id="9-过期键删除策略">9.过期键删除策略</h4>
@@ -766,10 +756,12 @@ dbfilename dump.rdb</code></pre></div>
 <p>2.哨兵sentinel</p>
 <p>3.Cluster</p>
 </blockquote>
-<h5 id="1-主从-一主二从-薪火相传-反客为主">1.主从(一主二从,薪火相传,反客为主)</h5>
+<h5 id="1-主从">1.主从</h5>
 <blockquote>
-<p>从服务挂了,重启之后变成master需要手动slaveof加入,然后会同步主服务器数据,主服务挂了,重启不影响主从之间关系</p>
-<p>从服务下还可以设置从服务,手动:slaveof no one主服务挂了,从服务变为主服务:</p>
+<p>一主二从,薪火相传,反客为主<br>
+master： read/wirte<br>
+slave:    only read<br>
+一般是读写分离,master负责write，slave负责read，slave要变成master需要手动slaveof加入,master挂了重启不影响主从之间关系</p>
 <p><strong>配置流程:</strong></p>
 <div class="code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta prompt_">&gt;</span><span class="language-bash"><span class="hljs-comment">#1.创建/myredis文件夹</span></span>
 <span class="hljs-meta prompt_">&gt;</span><span class="language-bash"><span class="hljs-comment">#2.创建redis6379.conf,redis6380.conf,redis6381.conf</span></span>
@@ -783,16 +775,22 @@ dbfilename dump.rdb</code></pre></div>
 <span class="hljs-meta prompt_">&gt;</span><span class="language-bash"><span class="hljs-comment">#6.设置主从:slaveof 127.0.0.1 6379</span></span>
 </code></pre></div>
 <p><strong>主从同步流程:</strong></p>
-<p>1.第一次从服务连上主服务器后,向主服务器发送数据同步请求<br>
-2.主服务器数据持久化到RDB文件,将RDB文件发送到从服务器进行同步<br>
-3.每次主服务器写操作后,主动将数据同步到从服务器</p>
+<div class="code-wrapper"><pre><code class="hljs crmsh">&gt;<span class="hljs-number">1</span>.<span class="hljs-literal">slave</span>启动后向<span class="hljs-literal">master</span>发送SYNC命令,<span class="hljs-literal">master</span>收到请求后,使用bgsave保存快照(RDB持久化),期间执行的些命令会被缓存起来
+&gt;<span class="hljs-number">2</span>.<span class="hljs-literal">master</span>将快照发给<span class="hljs-literal">slave</span>,并且继续缓存期间的写命令
+&gt;<span class="hljs-number">3</span>.<span class="hljs-literal">slave</span>收到快照后就会加载到内存中
+&gt;<span class="hljs-number">4</span>.最后<span class="hljs-literal">master</span>将缓存的命令同步给<span class="hljs-literal">slave</span></code></pre></div>
 </blockquote>
-<h5 id="2-哨兵模式-基于主从模式-增加了哨兵来监控与自动处理故障">2.哨兵模式(基于主从模式,增加了哨兵来监控与自动处理故障)</h5>
+<h5 id="2-哨兵模式">2.哨兵模式</h5>
 <blockquote>
+<p>基于主从模式,增加了哨兵来监控与自动处理故障</p>
 <p>哨兵模式有以下的优点（功能点）：</p>
 <ol>
-<li class="lvl-3"><strong>监控</strong>：监控master和slave是否正常运行，以及哨兵之间也会相互监控</li>
-<li class="lvl-3"><strong>自动故障恢复</strong>：当master出现故障的时候，会自动选举一个slave作为master顶上去</li>
+<li class="lvl-3">
+<p><strong>监控</strong>：监控master和slave是否正常运行，以及哨兵之间也会相互监控</p>
+</li>
+<li class="lvl-3">
+<p><strong>自动故障恢复</strong>：当master出现故障的时候，会自动选举一个slave作为master顶上去,选举算法<strong>Raft算法</strong></p>
+</li>
 </ol>
 <p><strong>配置流程:</strong></p>
 <div class="code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta prompt_">&gt;</span><span class="language-bash"><span class="hljs-comment"># 1.创建sentinel.conf</span></span>
@@ -804,8 +802,18 @@ dbfilename dump.rdb</code></pre></div>
 <span class="hljs-meta prompt_">&gt;</span><span class="language-bash">1.选择优先级靠前的</span>
 <span class="hljs-meta prompt_">&gt;</span><span class="language-bash">2.选择偏移量最大的(偏移量指获得原主机数据最全的)</span>
 <span class="hljs-meta prompt_">&gt;</span><span class="language-bash">3.选择runid最小的slave从服务(Redis实例启动后随机生成一个40位的runid)</span></code></pre></div>
+<p>当哨兵启动后，会与master建立一条连接，用于订阅master的<code>_sentinel_:hello</code>频道,该频道用于获取监控该master的其它哨兵的信息。并且还会建立一条定时向master发送INFO命令获取master信息的连接</p>
+<p><strong>当哨兵与master建立连接后，定期会向（10秒一次）master和slave发送INFO命令，若是master被标记为主观下线，频率就会变为1秒一次</strong></p>
 </blockquote>
-<h5 id="3-Cluster集群配置-16384个插槽-写入数据-计算key的插槽分配到对应主服务所在的插槽">3.Cluster集群配置(16384个插槽,写入数据,计算key的插槽分配到对应主服务所在的插槽)</h5>
+<h5 id="3-Cluster集群配置">3.Cluster集群配置</h5>
+<blockquote>
+<p>集群模式实现了数据的分布式存储和数据的分片,每个节点存储不同内容</p>
+<p><strong>Redis Cluster:</strong></p>
+<div class="code-wrapper"><pre><code class="hljs asciidoc">&gt;<span class="hljs-strong">**多主多从，去中心化**</span>：从节点作为备用，复制主节点，不做读写操作
+&gt;<span class="hljs-strong">**不支持处理多个key**</span>：因为数据分散在多个节点，在数据量大高并发的情况下会影响性能
+&gt;<span class="hljs-strong">**支持动态扩容节点**</span>：算是Rerdis Cluster最大的优点之一
+&gt;<span class="hljs-strong">**节点之间相互通信，相互选举，不再依赖sentinel**</span>：准确来说是主节点之间相互“监督”，保证及时故障转移</code></pre></div>
+</blockquote>
 <blockquote>
 <div class="code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta prompt_">&gt;</span><span class="language-bash"><span class="hljs-comment"># 集群实现扩容,集群不支持多键操作</span></span>
 <span class="hljs-meta prompt_">&gt;</span><span class="language-bash">1. 每个redis.conf加上集群配置</span>
@@ -814,16 +822,27 @@ dbfilename dump.rdb</code></pre></div>
 <span class="hljs-meta prompt_">&gt;</span><span class="language-bash">cluster-node-timeout 15000            <span class="hljs-comment"># 设置节点失联时间单位为毫秒,超过该时间,集群自动进行主从切换</span></span>
 <span class="hljs-meta prompt_"></span>
 <span class="hljs-meta prompt_">&gt;</span><span class="language-bash">2.启动每个Redis实例 redis-server /myredis/redis.conf,确保nodes-xxxx.conf等文件都生成</span>
+<span class="hljs-meta prompt_"></span>
 <span class="hljs-meta prompt_">&gt;</span><span class="language-bash">3.在redis src下执行依赖ruby环境,实现redis实例合成集群</span>
 <span class="hljs-meta prompt_">&gt;</span><span class="language-bash"><span class="hljs-comment"># 1.表示一主一从</span></span>
-<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">redis-cli --cluster create --cluster-replicas  1 ip:port ip2:port2</span>
+redis-cli --cluster create --cluster-replicas  1 ip:port ip2:port2
 <span class="hljs-meta prompt_">&gt;</span><span class="language-bash"><span class="hljs-comment"># 集群连接-c</span></span>
-<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">redis-cli -c -p 6379</span>
+redis-cli -c -p 6379
 <span class="hljs-meta prompt_">&gt;</span><span class="language-bash"><span class="hljs-comment"># 查看集群状态</span></span>
-<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">cluster nodes</span>
+cluster nodes
 <span class="hljs-meta prompt_">&gt;</span><span class="language-bash"><span class="hljs-comment"># yes为某一段插槽的主从挂了,整个集群都挂掉.no为某一段插槽主从挂了,该插槽数据不能使用</span></span>
-<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">cluster-require-full-coverage <span class="hljs-built_in">yes</span></span></code></pre></div>
+cluster-require-full-coverage yes</code></pre></div>
 <p>更多参考:<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/194143258">Redis主从复制、哨兵、Cluster三种模式</a></p>
+<p><strong>哈希槽</strong></p>
+<div class="code-wrapper"><pre><code class="hljs dns">&gt;一个Redis Cluster包含（<span class="hljs-number">0-16384</span>)各哈希槽
+&gt;<span class="hljs-number">3</span>个节点:<span class="hljs-keyword">A</span>节点(<span class="hljs-number">0</span>-<span class="hljs-number">5499</span>),B节点(<span class="hljs-number">5500-10999</span>),C节点(<span class="hljs-number">11000-16383</span>)
+&gt;计算方式: slot=CRC16（key）/<span class="hljs-number">16384</span></code></pre></div>
+<p><strong>集群中执行命令流程</strong></p>
+<div class="code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta prompt_">&gt;</span><span class="language-bash">1.客户端向集群节点发送数据命令</span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">2.计算键key属于那个槽slot</span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">3.槽在当前节点直接执行命令</span>
+ 槽不在当前节点:节点向客户端返回Redirected(MOVED命令),指引客户端转向至正确的节点,并再次发送要执行的命令</code></pre></div>
+<p><strong>Redis Cluster是如何将数据分片的?</strong></p>
 </blockquote>
 <h4 id="11-三大缓存问题">11.三大缓存问题</h4>
 <blockquote>
@@ -837,6 +856,14 @@ dbfilename dump.rdb</code></pre></div>
 <p><strong>解决方案</strong></p>
 <p>1.对数据库中的空值进行缓存,设置较短的过期时间(维护较简单，但是效果不好)</p>
 <p>2.使用布隆过滤器(维护复杂，效果很好)</p>
+<p><strong>布隆过滤器</strong></p>
+<div class="code-wrapper"><pre><code class="hljs mathematica"><span class="hljs-operator">&gt;</span>是一个很长的二进制向量和一系列随机映射函数，用于检索一个元素是否在一个集合中
+<span class="hljs-operator">&gt;</span>优点：
+空间效率和查询时间都比一般的算法要好的多，增加和查询的时间复杂度为<span class="hljs-built_in">O</span><span class="hljs-punctuation">(</span><span class="hljs-built_in">N</span><span class="hljs-punctuation">)</span><span class="hljs-built_in">N</span>为<span class="hljs-variable">hash</span>函数个数
+<span class="hljs-operator">&gt;</span>缺点：
+是有一定的误识别率和删除困难</code></pre></div>
+<p>Redis中的布隆过滤器底层是<strong>一个大型位数组（二进制数组）+多个无偏hash函数</strong></p>
+<div class="code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta prompt_">&gt;</span><span class="language-bash">多个<span class="hljs-built_in">hash</span>函数计算一个值的不同<span class="hljs-built_in">hash</span>，并产生多个索引值,将数组上对应的索引位置置为1</span></code></pre></div>
 </blockquote>
 <h5 id="2-缓存击穿">2.缓存击穿</h5>
 <blockquote>
@@ -869,11 +896,22 @@ dbfilename dump.rdb</code></pre></div>
 <div class="code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta prompt_">&gt;</span><span class="language-bash">内存操作，依然是单线程运行的。redis 的多线程部分只是用来处理网络数据的读写和协议解析，执行命令仍然是单线程顺序执行，也就不存在并发安全问题</span></code></pre></div>
 <p><strong>如何开启多线程？</strong></p>
 <div class="code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta prompt_">&gt;</span><span class="language-bash">配置文件开启多线程：</span>
-<span class="hljs-meta prompt_"></span>
 <span class="hljs-meta prompt_">&gt;</span><span class="language-bash">io-thread-do-reads <span class="hljs-built_in">yes</span></span>
-<span class="hljs-meta prompt_"></span>
 <span class="hljs-meta prompt_">&gt;</span><span class="language-bash">io-thread 线程数</span></code></pre></div>
+<p><strong>如何实现优先级队列？</strong></p>
+<div class="code-wrapper"><pre><code class="hljs fsharp"><span class="hljs-operator">&gt;</span>使用Zset,是一个有序队列,每个元素<span class="hljs-keyword">member</span>都有一个分数score</code></pre></div>
+<p><strong>如何实现延迟队列?</strong></p>
+<p>使用Zset，score为当前时间+时间戳</p>
+<div class="code-wrapper"><pre><code class="hljs maxima">&gt;生产者:
+&gt;# <span class="hljs-built_in">key</span>为队列的名称，score为当前的时间戳+延迟时间，<span class="hljs-built_in">member</span>为消息体
+&gt;zadd <span class="hljs-built_in">key</span> score <span class="hljs-built_in">member</span>
+&gt;消费者:一直循环从redis的zset队列获取数据
+&gt;# <span class="hljs-built_in">key</span>为队列的名称，<span class="hljs-built_in">min</span>为<span class="hljs-number">0</span>，<span class="hljs-built_in">max</span>为当前的时间戳，<span class="hljs-built_in">limit</span>为单次个数
+&gt;zrangebyscore <span class="hljs-built_in">key</span> <span class="hljs-built_in">min</span> <span class="hljs-built_in">max</span> <span class="hljs-built_in">limit</span>
+&gt;消费删除:
+&gt;zrem <span class="hljs-built_in">key</span> <span class="hljs-built_in">member</span></code></pre></div>
 </blockquote>
+<p>参考<a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/2315477">Redis常见面试题</a></p>
 <script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
                 
               </div>
