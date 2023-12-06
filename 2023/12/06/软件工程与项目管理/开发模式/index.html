@@ -16,24 +16,30 @@
   <meta name="author" content="hlyuan">
   <meta name="keywords" content="">
   
-    <meta name="description" content="公钥私钥  是概念上的区分，发出去的为公钥，自己手上的为私钥，实际生成RSA秘钥时，其中一份包含另一份的完整信息成为私钥，且公私钥都可以做加密方和解密方  CA  CA是证书的签发机构，它是公钥基础设施（Public Key Infrastructure，PKI）的核心。CA是负责签发证书、认证证书、管理已颁发证书的机关。CA 拥有一个证书（内含公钥和私钥）  证书  采用第三方(CA证书商)担保">
+    <meta name="description" content="瀑布型开发模式(Waterfall)  在1970年由温斯顿·罗伊斯（Winston Royce）提出，作为最早出现的软件开发模型,它把项目分解成一系列可管理的步骤或阶段。每个阶段完成后才能进行到下一个阶段。这种类型的开发过程通常用于大型系统中 例如: &gt;1.需求分析Requirements &gt;2.设计Design &gt;3.开发编码Development &gt;4.测试Testi">
 <meta property="og:type" content="article">
-<meta property="og:title" content="签名&#x2F;证书&#x2F;CA">
-<meta property="og:url" content="https://centyuan.github.io/2023/12/06/%E6%9C%89%E8%B6%A3%E7%9A%84%E6%9D%82%E7%83%A9/%E7%AD%BE%E5%90%8D%E8%AF%81%E4%B9%A6CA/index.html">
+<meta property="og:title" content="开发模式">
+<meta property="og:url" content="https://centyuan.github.io/2023/12/06/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E4%B8%8E%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86/%E5%BC%80%E5%8F%91%E6%A8%A1%E5%BC%8F/index.html">
 <meta property="og:site_name" content="centyuan Blog">
-<meta property="og:description" content="公钥私钥  是概念上的区分，发出去的为公钥，自己手上的为私钥，实际生成RSA秘钥时，其中一份包含另一份的完整信息成为私钥，且公私钥都可以做加密方和解密方  CA  CA是证书的签发机构，它是公钥基础设施（Public Key Infrastructure，PKI）的核心。CA是负责签发证书、认证证书、管理已颁发证书的机关。CA 拥有一个证书（内含公钥和私钥）  证书  采用第三方(CA证书商)担保">
+<meta property="og:description" content="瀑布型开发模式(Waterfall)  在1970年由温斯顿·罗伊斯（Winston Royce）提出，作为最早出现的软件开发模型,它把项目分解成一系列可管理的步骤或阶段。每个阶段完成后才能进行到下一个阶段。这种类型的开发过程通常用于大型系统中 例如: &gt;1.需求分析Requirements &gt;2.设计Design &gt;3.开发编码Development &gt;4.测试Testi">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2023-12-06T12:45:07.373Z">
-<meta property="article:modified_time" content="2023-12-06T13:30:56.405Z">
+<meta property="og:image" content="https://pic1.zhimg.com/v2-f2d80010dd243fcf0be79b4912336928_b.jpg">
+<meta property="og:image" content="https://pic2.zhimg.com/v2-d298635b8709380c43d2586e89743f49_b.jpg">
+<meta property="og:image" content="https://pic2.zhimg.com/v2-c2d09dc5651246d63e7670ca05537939_b.jpg">
+<meta property="og:image" content="https://pic3.zhimg.com/v2-29bcef534ecc9ddc2c60eb6f3ff47356_b.jpg">
+<meta property="og:image" content="https://pic2.zhimg.com/v2-908b1911e1e41b750a987ffd3e1471d9_b.jpg">
+<meta property="article:published_time" content="2023-12-06T13:51:10.851Z">
+<meta property="article:modified_time" content="2023-12-06T14:32:06.798Z">
 <meta property="article:author" content="hlyuan">
-<meta property="article:tag" content="证书签名">
+<meta property="article:tag" content="开发模式">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://pic1.zhimg.com/v2-f2d80010dd243fcf0be79b4912336928_b.jpg">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>签名/证书/CA - centyuan Blog</title>
+  <title>开发模式 - centyuan Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -200,7 +206,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="签名/证书/CA"></span>
+            <span id="subtitle" data-typed-text="开发模式"></span>
           
         </div>
 
@@ -211,7 +217,7 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-12-06 20:45" pubdate>
+        <time datetime="2023-12-06 21:51" pubdate>
           2023年12月6日 晚上
         </time>
       </span>
@@ -223,7 +229,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          4.2k 字
+          2k 字
         
       </span>
     
@@ -234,7 +240,7 @@
         
         
         
-          35 分钟
+          17 分钟
         
       </span>
     
@@ -271,182 +277,86 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">签名/证书/CA</h1>
+            <h1 id="seo-header">开发模式</h1>
             
             
               <div class="markdown-body">
                 
-                <h4 id="公钥私钥">公钥私钥</h4>
+                <h4 id="瀑布型开发模式-Waterfall">瀑布型开发模式(Waterfall)</h4>
 <blockquote>
-<p>是概念上的区分，发出去的为公钥，自己手上的为私钥，实际生成RSA秘钥时，其中一份包含另一份的完整信息成为私钥，且公私钥都可以做加密方和解密方</p>
+<p>在1970年由温斯顿·罗伊斯（Winston Royce）提出，作为最早出现的软件开发模型,它把项目分解成一系列可管理的步骤或阶段。每个阶段完成后才能进行到下一个阶段。这种类型的开发过程通常用于大型系统中</p>
+<p>例如:</p>
+<div class="code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta prompt_">&gt;</span><span class="language-bash">1.需求分析Requirements</span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">2.设计Design</span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">3.开发编码Development</span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">4.测试Testing</span>	
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">5.部署Deployment</span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">6.维护Maintenance</span></code></pre></div>
+<p>优点：易于理解与规划;明确性强，便于人员间分工合作,有利于控制风险;适合于大规模复杂应用场景。</p>
+<p>缺点：不适合小规模或者快速原型制作;缺乏灵活度，难以适应变化;对团队协作要求高。</p>
 </blockquote>
-<h4 id="CA">CA</h4>
+<p><img src="https://pic1.zhimg.com/v2-f2d80010dd243fcf0be79b4912336928_b.jpg" srcset="/img/loading.gif" lazyload alt="瀑布"></p>
+<h4 id="迭代式开发">迭代式开发</h4>
 <blockquote>
-<p>CA是证书的签发机构，它是公钥基础设施（Public Key Infrastructure，PKI）的核心。<strong>CA是负责签发证书、认证证书、管理已颁发证书的机关。CA 拥有一个证书（内含公钥和私钥）</strong></p>
-</blockquote>
-<h4 id="证书">证书</h4>
-<blockquote>
-<p>采用第三方(CA证书商)担保，确保证书中发出来的公钥是服务器提供的，在用证书中服务器的公钥加密信息与服务器通信</p>
-<p><strong>证书流程</strong></p>
-<div class="code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta prompt_">&gt;</span><span class="language-bash">1.服务器把公钥和个人信息发送给证书商CA,证书商用私钥对其签名,形成CA证书，确保证书内的公钥是服务器提供的</span>
-<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">2.证书商把CA证书给服务器</span>
-<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">3.用户访问服务器,先向服务器申请证书，并用证书商的公钥解密，拿到服务器的信息和服务器公钥</span>
-<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">4.用户使用服务器公钥和服务器通信(由于非对称加密较慢,实际中服务器和客户端会相互协商，指定某对称加密秘钥来进行通信加密)</span>
-<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">5.用证书中的服务器公钥加密通信加密使用的对称秘钥</span></code></pre></div>
-</blockquote>
-<h4 id="SSL证书">SSL证书</h4>
-<blockquote>
-<p>称为服务器 SSL 证书，是遵守 SSL 协议的一种数字证书，由全球信任的证书颁发机构(CA)验证服务器身份后颁发。将 SSL 证书安装在网站服务器上，可实现网站身份验证和数据加密传输双重功能。SSL 协议及其继任者 TLS 协议，是一种实现网络通信加密的安全协议，可在客户端(浏览器)和服务器端(网站)之间建立一条加密通道，保证数据在传输过程中不被窃取或篡改</p>
-<div class="code-wrapper"><pre><code class="hljs abnf">这个证书总共有 <span class="hljs-number">3</span> 个测评等级，其中，EV SSL 证书最高，OV SSL 证书其次，而 DV SSL 证书最弱。DV SSL 证书只验证域名所有权，仅为加密传输信息的作用，并不能证明网站的真实身份<span class="hljs-comment">;OV SSL 证书是需要验证网站所有单位的真实身份的标准型 SSL 证书，而 EV SSL 证书则是遵循全球统一严格身份验证标准办法的 SSL 证书，是目前业界最高安全级别的 SSL 证书。其中，OV SSL 主要在国内网站应用，而 EV SSL 则在国外网站应用更多。靠谱的商用网站一般都会部署 EV SSL 证书或 OV SSL 证书，绝对不会部署已经被欺诈网站滥用的 DV SSL 证书</span></code></pre></div>
-</blockquote>
-<h5 id="SSL证书分类和文件种类">SSL证书分类和文件种类</h5>
-<blockquote>
-<p><strong>证书的分类</strong></p>
-<div class="code-wrapper"><pre><code class="hljs makefile"><span class="hljs-section">CA证书: 就是根证书。如果不安全该证书，即使安装了其他证书，浏览器也会提示不安全，但是在单向https认证中，该证书的安装是可选的。</span>
-<span class="hljs-section">服务器证书: SSL证书中必须要安装的证书之一，通过证书的key生成csr文件，然后再通过CA证书签名，生成服务器的证书。</span>
-<span class="hljs-section">客户端证书: 在双向https验证中，就必须有客户端证书，生成方式同服务器证书一样，单向证书则不用生成</span></code></pre></div>
-<p><strong>证书的格式</strong></p>
-<div class="code-wrapper"><pre><code class="hljs jboss-cli">CER：服务器证书、CA根证书链。CRT证书的微软型式，可以在微软系统环境下将<span class="hljs-string">.crt</span>转换为<span class="hljs-string">.cer</span>（<span class="hljs-string">.both</span> DER编码的<span class="hljs-string">.cer</span>，或base64 [PEM]编码的<span class="hljs-string">.cer</span>）。
-KEY：私钥。KEY扩展名用于私钥。 键可以被编码为二进制DER或ASCII PEM。
-CRT：中间证书、证书文件。可以是二进制格式，可以是文本格式，与 <span class="hljs-string">.DER</span> 格式相同，不保存私钥。常用于 Apache，Nginx 等。CRT扩展用于证书。 证书可以被编码为二进制DER或ASCII PEM。 CER和CRT扩展几乎是同义词。 最常见的于Unix 或类Unix系统。
-CSR：证书签名请求，认证请求由三个主要部分组成:认证请求信息、签名算法标识符和认证请求信息上的数字签名。第一部分包含重要信息，包括公钥。请求者的签名防止实体请求他人公钥的伪造证书。因此，生成CSR需要私钥，但私钥不是CSR的一部分。
-PEM：一般是文本格式，可保存证书，可保存私钥。
-DER <span class="hljs-string">.CER</span>：文件是二进制格式，只保存证书，不保存私钥。
-PFX <span class="hljs-string">.P12</span>：二进制格式，同时包含证书和私钥，一般有密码保护。
-JKS：二进制格式，同时包含证书和私钥，一般有密码保护。常用于 Weblogic，Tomcat，Jboss。
-PFK：常用于 IIS 等。
-KDB：常用于 IHS，Webspphere</code></pre></div>
-</blockquote>
-<h4 id="SSL和TSL">SSL和TSL</h4>
-<blockquote>
-<p>提供的主要服务:</p>
-<ol>
-<li class="lvl-3">认证用户和服务器，确保数据发送到正确的客户机和服务器；</li>
-<li class="lvl-3">加密数据以防止数据中途被窃取；</li>
-<li class="lvl-3">维护数据的完整性，确保数据在传输过程中不被改变</li>
-</ol>
-</blockquote>
-<p><strong>SSL：</strong></p>
-<blockquote>
-<p>**Secure Socket Layer安全套接字层: **为Netscape所研发，用数据加密(Encryption)技术，可确保数据在网络上之传输过程中不会被截取。当前版本为3.0。它已被广泛地用于Web浏览器与服务器之间的身份认证和加密数据传输。SSL协议位于TCP/IP协议与各种应用层协议之间,为数据通讯提供安全支持。</p>
-<p><strong>SSL协议可分为两层：</strong></p>
-<p><code>1.SSL记录协议（SSL Record Protocol）：</code>它建立在可靠的传输协议（如TCP）之上，为高层协议提供数据封装、压缩、加密等基本功能的支持。</p>
-<p><code>2.SSL握手协议（SSL Handshake Protocol）：</code>它建立在SSL记录协议之上，用于在实际的数据传输开始前，通讯双方进行身份认证、协商加密算法、交换加密密钥等</p>
-</blockquote>
-<p><strong>TLS：</strong></p>
-<blockquote>
-<p>Transport Layer Security传输层安全协议:用于两个应用程序之间提供保密性和数据完整性</p>
-<p>该协议由两层组成：<strong>TLS记录协议，TLS握手协议</strong></p>
-<p>TLS（传输层安全）是更为安全的升级版 SSL，由于 SSL 这一术语更为常用，因此我们仍然将我们的安全证书称作 SSL</p>
-</blockquote>
-<p><strong>TLS与SSL区别</strong></p>
-<blockquote>
-<ol>
-<li class="lvl-3">
-<p>版本号：TLS记录格式与SSL记录格式相同，但版本号的值不同，TLS的版本1.0使用的版本号为SSLv3.1。</p>
-</li>
-<li class="lvl-3">
-<p>报文鉴别码：SSLv3.0和TLS的MAC算法及MAC计算的范围不同。TLS使用了RFC-2104定义的HMAC算法。SSLv3.0使用了相似的算法，两者差别在于SSLv3.0中，填充字节与密钥之间采用的是连接运算，而HMAC算法采用的是异或运算。但是两者的安全程度是相同的。</p>
-</li>
-<li class="lvl-3">
-<p>伪随机函数：TLS使用了称为PRF的伪随机函数来将密钥扩展成数据块，是更安全的方式。</p>
-</li>
-<li class="lvl-3">
-<p>报警代码：TLS支持几乎所有的SSLv3.0报警代码，而且TLS还补充定义了很多报警代码，如解密失败（decryption_failed）、记录溢出（record_overflow）、未知CA（unknown_ca）、拒绝访问（access_denied）等。</p>
-</li>
-<li class="lvl-3">
-<p>密文族和客户证书：SSLv3.0和TLS存在少量差别，即TLS不支持Fortezza密钥交换、加密算法和客户证书。</p>
-</li>
-<li class="lvl-3">
-<p>certificate_verify和finished消息：SSLv3.0和TLS在用certificate_verify和finished消息计算MD5和SHA-1散列码时，计算的输入有少许差别，但安全性相当。</p>
-</li>
-<li class="lvl-3">
-<p>加密计算：TLS与SSLv3.0在计算主密值（master secret）时采用的方式不同。</p>
-</li>
-<li class="lvl-3">
-<p>填充：用户数据加密之前需要增加的填充字节。在SSL中，填充后的数据长度要达到密文块长度的最小整数倍。而在TLS中，填充后的数据长度可以是密文块长度的任意整数倍（但填充的最大长度为255字节），这种方式可以防止基于对报文长度进行分析的攻击。</p>
-</li>
-</ol>
-<p>TLS的主要目标是使SSL更安全，并使协议的规范更精确和完善。TLS 在SSL v3.0 的基础上，提供了以下增强内容：</p>
-<ol>
-<li class="lvl-3">
-<p>更安全的MAC算法</p>
-</li>
-<li class="lvl-3">
-<p>更严密的警报</p>
-</li>
-<li class="lvl-3">
-<p>“灰色区域”规范的更明确的定义</p>
-</li>
-</ol>
-</blockquote>
-<h4 id="HTTPS单向认证">HTTPS单向认证</h4>
-<blockquote>
-<p>1.客户端向服务端发送SSL协议版本号、加密算法种类、随机数等信息;</p>
-<p>2.服务端给客户端返回SSL协议版本号、加密算法种类、随机数等信息，同时也返回服务器端的证书，即公钥证书;</p>
-<p>3.客户端使用服务端返回的信息验证服务器的合法性，包括：</p>
+<p>迭代式开发也被称为迭代增量式开发，是一种与传统的瀑布式开发相反的软件开发过程，它弥补了传统开发方式的一些弱点，有更高的成功率。在迭代式开发中，整个开发工作被组织为一系列短小的、固定长度的小项目，每次迭代都包括需求分析、设计、实现与测试。采用迭代式开发时，工作可以在需求被完整地确定之前启动，并在一次迭代种完成系统的一部分功能或业务，再通过客户的反馈来细化需求，并开始新一轮的迭代。</p>
+<p>迭代式开发有如下特点：</p>
 <ul class="lvl-1">
 <li class="lvl-2">
-<p>证书是否过期;</p>
+<p>每次只设计和实现产品的一部分。</p>
 </li>
 <li class="lvl-2">
-<p>发行服务器证书的CA是否可靠;(通过查询浏览器或本机内的CA证书)</p>
+<p>一步一步地完成。</p>
 </li>
 <li class="lvl-2">
-<p>返回的公钥是否能正确解开返回证书中的数字签名;（通过使用本机或浏览器内置的CA公钥进行解密）</p>
-</li>
-<li class="lvl-2">
-<p>服务器证书上的域名是否和服务器的实际域名相匹配;</p>
-</li>
-<li class="lvl-2">
-<p>验证通过后，将继续进行通信，否则，终止通信;</p>
+<p>每次设计和实现一个阶段，这叫作一个迭代。</p>
 </li>
 </ul>
-<p>4.客户端向服务端发送自己所能支持的对称加密方案，供服务器端进行选择;</p>
-<p>5.服务器端在客户端提供的加密方案中选择加密程度最高的加密方式;</p>
-<p>6.服务器将选择好的加密方案通过<strong>明文</strong>方式返回给客户端;</p>
-<p>7.客户端接收到服务端返回的加密方式后，使用该加密方式生成产生随机码，用作通信过程中对称加密的密钥，使用服务端返回的公钥进行加密，将加密后的随机码发送至服务器;</p>
-<p>8.服务器收到客户端返回的加密信息后，使用自己的私钥进行解密，获取对称加密密钥;<br>
-在接下来的会话中，服务器和客户端将会使用该密码进行对称加密，保证通信过程中信息的安全;</p>
 </blockquote>
-<h4 id="HTTPS双向认证">HTTPS双向认证</h4>
-<p>相对于单向认证，增加了服务端对客户端的认证</p>
+<p><img src="https://pic2.zhimg.com/v2-d298635b8709380c43d2586e89743f49_b.jpg" srcset="/img/loading.gif" lazyload alt="迭代"></p>
+<h4 id="螺旋式开发">螺旋式开发</h4>
 <blockquote>
-<p>1.客户端向服务端发送SSL协议版本号、加密算法种类、随机数等信息;</p>
-<p>2.服务端给客户端返回SSL协议版本号、加密算法种类、随机数等信息，同时也返回服务器端的证书，即公钥证书;</p>
-<p>3.客户端使用服务端返回的信息验证服务器的合法性，包括：</p>
+<p>螺旋式开发是由巴利·波姆（Barry Boehm）在1988年正式发表的软件系统开发模型，它兼顾了快速原型的迭代特征及瀑布模型的系统化和严格监控，其最大的特点是引入了其他模型不具备的风险分析，使软件在无法排除重大风险时有机会停止，以减少损失。同时，在每个迭代阶段构建原型是螺旋模型用来减少风险的方法。螺旋模型更适合大型的昂贵的系统级的软件开发，一开始应用的规模很小，当项目被定义得更好、更稳定时逐渐展开。其核心在于不需要在刚开始时就把所有事情都定义清楚，可以先定义最重要的功能去实现它，然后听取客户的意见，再进入下一个阶段，入此不断循环、重复，直到得到满意的产品。螺旋模型在很大程度上是一种风险驱动的方法体系，因为在每个阶段及经常发生的循环之前，都必须先进行风险评估</p>
+<p>螺旋式开发有如下特点：</p>
 <ul class="lvl-1">
 <li class="lvl-2">
-<p>证书是否过期;</p>
+<p>制定计划：确定软件目标，选定实施方案，弄清楚项目开发的限制条件。</p>
 </li>
 <li class="lvl-2">
-<p>发行服务器证书的CA是否可靠;(通过查询浏览器或本机内的CA证书)</p>
+<p>风险分析：分析、评估所选方案，考虑如何识别和消除风险。</p>
 </li>
 <li class="lvl-2">
-<p>返回的公钥是否能正确解开返回证书中的数字签名;（通过使用本机或浏览器内置的CA公钥进行解密）</p>
+<p>实施工程：实施软件开发和验证。</p>
 </li>
 <li class="lvl-2">
-<p>服务器证书上的域名是否和服务器的实际域名相匹配;</p>
-</li>
-<li class="lvl-2">
-<p>验证通过后，将继续进行通信，否则，终止通信;</p>
+<p>客户评估：评价开发工作，提出修正建议，制定下一步计划</p>
 </li>
 </ul>
-<p>4.<strong>服务端要求客户端发送客户端的证书即客户端证书公钥，客户端会将自己的证书发送至服务端；</strong></p>
-<p>5.<strong>验证客户端的证书，通过验证后，会获得客户端的公钥；</strong></p>
-<p>6.客户端向服务端发送自己所能支持的对称加密方案，供服务器端进行选择</p>
-<p>7.服务器端在客户端提供的加密方案中选择加密程度最高的加密方式;</p>
-<p>8.<strong>将加密方案通过使用之前获取到的公钥进行加密，返回给客户端</strong></p>
-<p>9.服务器收到客户端返回的加密信息后，使用自己的私钥进行解密，获取对称加密密钥;<br>
-在接下来的会话中，服务器和客户端将会使用该密码进行对称加密，保证通信过程中信息的安全;</p>
-<p>10.服务端收到客户端发送的消息后，使用自己的私钥进行解密，获取对称加密的密钥，在接下来的会话中，服务器和客户端将会使用该密码进行对称加密，保证通信过程中信息的安全；</p>
 </blockquote>
-<h4 id="证书申请方式">证书申请方式</h4>
+<p><img src="https://pic2.zhimg.com/v2-c2d09dc5651246d63e7670ca05537939_b.jpg" srcset="/img/loading.gif" lazyload alt="螺旋"></p>
+<h4 id="敏捷开发-Agile">敏捷开发(Agile)</h4>
 <blockquote>
-<p>阿里云</p>
-<p>腾讯云</p>
-<p>certbot：：Let’s Encrypt是免费、开放和自动化的世界知名证书颁发机构，由非盈利组织互联网安全研究小组（ISRG）运营</p>
+<p>“敏捷”一词来源于2001年在美国犹他州举行的雪鸟会议，在这次会议上，Martin Fowler，Jim Highsmith等17位著名的软件开发专家提出了Agile(敏捷开发)这个概念，并共同签署了《敏捷宣言》。敏捷宣言的主要价值观如下：</p>
+<ul class="lvl-1">
+<li class="lvl-2">个体和互动高于流程和工具。</li>
+<li class="lvl-2">工作的软件高于详尽的文档。</li>
+<li class="lvl-2">客户合作高于合同谈判。</li>
+<li class="lvl-2">响应变化高于遵循计划</li>
+</ul>
+<p>简单地说，“敏捷开发”是把原有模式下的大需求拆分成多个小需求，并采用小步快跑的方式进行开发与迭代，原来的一个大环改为一个个小的闭环。在新迭代开始前，产品经理会将需求拆分成具体的开发任务，研发人员进行任务认领，每日站会进行任务的review，直到开发完成，发布新的可用版本</p>
+<p>注重客户反馈及时调整，采用短平快的迭代开发形式去达成目标。其核心思想就是“速度比完美重要”。</p>
+<p>优点：更加关注用户价值；响应能力强；允许变更；具有良好沟通机制。</p>
+<p>缺点：过于重视短期利益，范围仅限于开发和测试阶段，并没有覆盖到部署端,加重了运维的负担，因为运维追求的目标是稳定，而频繁的变更往往就是出现问题的根源，这与敏捷的理念产生了冲突。</p>
 </blockquote>
+<p><img src="https://pic3.zhimg.com/v2-29bcef534ecc9ddc2c60eb6f3ff47356_b.jpg" srcset="/img/loading.gif" lazyload alt="敏捷"></p>
+<h4 id="DevOps">DevOps</h4>
+<blockquote>
+<p>DevOps 运动始于 2007 年左右，当时技术社区对于开发与运维之间分开工作的方式，随着越来越多问题的出现，大家逐渐认识到，为了按时交付软件产品和服务，开发和运维必须紧密合作。2009年10月，在比利时根特市举办了首届DevOpsDays大会，这届会议出乎意料的成功，并引起了人们广泛的讨论。后面为了在Twitter上更好的传播，由DevOpsDays缩写为DevOps。</p>
+<p>DevOps的英文发音是/ de’vops/，这个词是由Development和Operations两个词的简写组合而成。</p>
+<p>在维基百科中对于DevOps的定义是：一种重视“软件开发人员（Dev）”和“IT运维技术人员（Ops）”之间沟通合作的文化、运动或惯例， 通过自动化“软件交付”和“架构变更”的流程，来使得构建、测试、发布软件能够更加地快捷、频繁和可靠。可以说，DevOps的出现正是为了打破开发和运维人员之间的壁垒，让两者得以更加通畅的沟通，以清除部门间存在的对立,DevOps完善了敏捷开发存在的短板，实现了真正的闭环。</p>
+<p>优点：显著提升生产力；增强可靠性和安全性；简化操作和监控任务。</p>
+<p>缺点：初始投资大；学习曲线陡峭；不太适用于高度定制的解决方案</p>
+</blockquote>
+<p><img src="https://pic2.zhimg.com/v2-908b1911e1e41b750a987ffd3e1471d9_b.jpg" srcset="/img/loading.gif" lazyload alt="DevOps"></p>
 <script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
                 
               </div>
@@ -465,7 +375,7 @@ KDB：常用于 IHS，Webspphere</code></pre></div>
     
       <span class="category-chain">
         
-  <a href="/categories/%E8%AF%81%E4%B9%A6%E7%AD%BE%E5%90%8D/" class="category-chain-item">证书签名</a>
+  <a href="/categories/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E5%92%8C%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86/" class="category-chain-item">软件工程和项目管理</a>
   
   
 
@@ -480,7 +390,7 @@ KDB：常用于 IHS，Webspphere</code></pre></div>
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/%E8%AF%81%E4%B9%A6%E7%AD%BE%E5%90%8D/" class="print-no-link">#证书签名</a>
+        <a href="/tags/%E5%BC%80%E5%8F%91%E6%A8%A1%E5%BC%8F/" class="print-no-link">#开发模式</a>
       
     </div>
   
@@ -492,8 +402,8 @@ KDB：常用于 IHS，Webspphere</code></pre></div>
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>签名/证书/CA</div>
-      <div>https://centyuan.github.io/2023/12/06/有趣的杂烩/签名证书CA/</div>
+      <div>开发模式</div>
+      <div>https://centyuan.github.io/2023/12/06/软件工程与项目管理/开发模式/</div>
     </div>
     <div class="license-meta">
       
@@ -537,9 +447,9 @@ KDB：常用于 IHS，Webspphere</code></pre></div>
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/12/06/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E4%B8%8E%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86/%E5%BC%80%E5%8F%91%E6%A8%A1%E5%BC%8F/" title="开发模式">
+                      <a href="/2023/12/06/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E4%B8%8E%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86/%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86/" title="项目管理">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">开发模式</span>
+                        <span class="hidden-mobile">项目管理</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -547,8 +457,8 @@ KDB：常用于 IHS，Webspphere</code></pre></div>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/12/05/K8s%E5%92%8CDocker/Kubernetes-Note/" title="Kubernetes Note">
-                        <span class="hidden-mobile">Kubernetes Note</span>
+                      <a href="/2023/12/06/%E6%9C%89%E8%B6%A3%E7%9A%84%E6%9D%82%E7%83%A9/%E7%AD%BE%E5%90%8D%E8%AF%81%E4%B9%A6CA/" title="签名/证书/CA">
+                        <span class="hidden-mobile">签名/证书/CA</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
