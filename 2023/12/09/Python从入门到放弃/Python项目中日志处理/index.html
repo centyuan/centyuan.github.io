@@ -1,0 +1,868 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/person_fluid.jpg">
+  <link rel="icon" href="/img/person_fluid.jpg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="hlyuan">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="logging  logging是Python内置的标准模块，可以设置输出日志等级，时间，其他信息(进程ID,进程名词,线程ID,线程名称) 参考: Python的日志记录工具 Python日志指南  输出到控制台 import logging   logging.basicConfig( 	level&#x3D;logging.DEBUG, 	format&#x3D;&quot;%(asctime)s - %(fi">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python项目中日志处理">
+<meta property="og:url" content="https://centyuan.github.io/2023/12/09/Python%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E6%94%BE%E5%BC%83/Python%E9%A1%B9%E7%9B%AE%E4%B8%AD%E6%97%A5%E5%BF%97%E5%A4%84%E7%90%86/index.html">
+<meta property="og:site_name" content="centyuan Blog">
+<meta property="og:description" content="logging  logging是Python内置的标准模块，可以设置输出日志等级，时间，其他信息(进程ID,进程名词,线程ID,线程名称) 参考: Python的日志记录工具 Python日志指南  输出到控制台 import logging   logging.basicConfig( 	level&#x3D;logging.DEBUG, 	format&#x3D;&quot;%(asctime)s - %(fi">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-12-09T07:34:22.249Z">
+<meta property="article:modified_time" content="2023-12-09T07:34:03.312Z">
+<meta property="article:author" content="hlyuan">
+<meta property="article:tag" content="Logging">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>Python项目中日志处理 - centyuan Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"centyuan.github.io","root":"/","version":"1.9.5","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.0.0"><link rel="alternate" href="/atom.xml" title="centyuan Blog" type="application/atom+xml">
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>centyuan</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/person_default.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Python项目中日志处理"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-12-09 15:34" pubdate>
+          2023年12月9日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          5.1k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          43 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Python项目中日志处理</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h4 id="logging">logging</h4>
+<blockquote>
+<p>logging是Python内置的标准模块，可以设置输出日志等级，时间，其他信息(进程ID,进程名词,线程ID,线程名称)</p>
+<p>参考:</p>
+<p><a target="_blank" rel="noopener" href="https://docs.python.org/zh-cn/3/library/logging.html">Python的日志记录工具</a></p>
+<p><a target="_blank" rel="noopener" href="https://docs.python.org/zh-cn/3/howto/logging.html">Python日志指南</a></p>
+</blockquote>
+<h5 id="输出到控制台">输出到控制台</h5>
+<div class="code-wrapper"><pre><code class="hljs haml">import logging 
+
+logging.basicConfig(
+	level=logging.DEBUG,
+	format=&quot;%(asctime)s - %(filename)s[line:%(lineno)d] - %(levelname)s:%(message)s&quot;
+)
+logging.info(&quot;this is a loggging info message&quot;)
+logging.debug(&quot;this is a loggging debug message&quot;)
+logging.warning(&quot;this is loggging a warning message&quot;)
+logging.error(&quot;this is an loggging error message&quot;)
+logging.critical(&quot;this is a loggging critical message&quot;)
+
+
+-<span class="language-ruby">-----------------------------------------------------------------------------------------------------------</span>
+logging.DEBUG：DEBUG以上的日志会输出
+format常用格式说明:
+<span class="hljs-tag">%(levelno)<span class="hljs-selector-tag">s</span></span>: 日志级别
+<span class="hljs-tag">%(levelname)<span class="hljs-selector-tag">s</span></span>: 日志级别名词
+<span class="hljs-tag">%(pathname)<span class="hljs-selector-tag">s</span></span>: 执行程序的路径,就是sys.argv[0]
+<span class="hljs-tag">%(funcName)<span class="hljs-selector-tag">s</span></span>: 当前函数
+<span class="hljs-tag">%(lineno)<span class="hljs-selector-tag">d</span></span>: 当前行号
+<span class="hljs-tag">%(asctime)<span class="hljs-selector-tag">s</span></span>: 时间
+<span class="hljs-tag">%(thread)<span class="hljs-selector-tag">d</span></span>: 线程ID
+<span class="hljs-tag">%(threadName)<span class="hljs-selector-tag">s</span></span>: 线程名称
+<span class="hljs-tag">%(process)<span class="hljs-selector-tag">d</span></span>: 进程ID
+<span class="hljs-tag">%(message)<span class="hljs-selector-tag">s</span></span>: 日志信息</code></pre></div>
+<h5 id="输出到文件">输出到文件</h5>
+<div class="code-wrapper"><pre><code class="hljs makefile">import logging 
+
+<span class="hljs-comment"># 1.创建一个logger</span>
+logger = logging.getLogger()
+
+<span class="hljs-comment"># 2.创建一个handler，用于日志写入文件</span>
+log_file = <span class="hljs-string">&quot;logging-test.log&quot;</span>
+fh = logging.FileHandler(log_file)
+fh.setLevel(logging.DEBUG)
+
+<span class="hljs-comment"># 3.定义handler输出格式</span>
+log_formatter = logging.Formatter( <span class="hljs-string">&quot;%(asctime)s - %(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s&quot;</span>)
+fh.setFormatter(log_formatter)
+
+<span class="hljs-comment"># 4.将logger添加到handler里面</span>
+logger.addHandler(fh)
+
+logger.info(<span class="hljs-string">&quot;Finish&quot;</span>)
+</code></pre></div>
+<h5 id="输出到ES">输出到ES</h5>
+<blockquote>
+<p>三种方案:</p>
+<p>​	flume+kafka+spark准实时写入ES</p>
+<p>​	logging+CMRESHanlder实时写入ES</p>
+<p>​	通过python elasticsearch包</p>
+</blockquote>
+<div class="code-wrapper"><pre><code class="hljs routeros"><span class="hljs-keyword">from</span> cmreslogging.handlers import CMRESHandler  # noqa: E402
+
+logger = logging.getLogger(<span class="hljs-string">&quot;ES_log&quot;</span>)
+logger.setLevel(logging.INFO)
+<span class="hljs-comment"># ES handler </span>
+cm_handler = CMRESHandler( 
+	hosts=[&#123;<span class="hljs-string">&quot;host&quot;</span>: <span class="hljs-string">&quot;localhost&quot;</span>, <span class="hljs-string">&quot;port&quot;</span>: 9200&#125;],
+    <span class="hljs-attribute">es_index_name</span>=<span class="hljs-string">&quot;log_index&quot;</span>,
+    <span class="hljs-attribute">auth_type</span>=CMRESHandler.AuthType.NO_AUTH,)
+    
+logger.addHandler(cm_handler)
+logger.<span class="hljs-built_in">info</span>(<span class="hljs-string">&quot;ES日志&quot;</span>)
+</code></pre></div>
+<h5 id="logging项目中使用">logging项目中使用</h5>
+<div class="code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">import</span> os
+<span class="hljs-keyword">import</span> logging
+<span class="hljs-keyword">from</span> logging.handlers <span class="hljs-keyword">import</span> RotatingFileHandler  <span class="hljs-comment"># noqa: E402</span>
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">Logger</span>:
+    __instance = <span class="hljs-literal">None</span>
+
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__new__</span>(<span class="hljs-params">cls, *args, **kwargs</span>):
+        <span class="hljs-keyword">if</span> cls.__instance <span class="hljs-keyword">is</span> <span class="hljs-literal">None</span>:
+            cls.__instance = <span class="hljs-built_in">object</span>.__new__(cls)
+        <span class="hljs-keyword">return</span> cls.__instance
+
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self,</span>
+<span class="hljs-params">             log_path:<span class="hljs-built_in">str</span> = <span class="hljs-literal">None</span>, </span>
+<span class="hljs-params">             log_name: <span class="hljs-built_in">str</span> = <span class="hljs-string">&quot;application.log&quot;</span>, </span>
+<span class="hljs-params">             log_level=logging.DEBUG,</span>
+<span class="hljs-params">             To_console = <span class="hljs-literal">True</span>,</span>
+<span class="hljs-params">             To_file = <span class="hljs-literal">False</span>,</span>
+<span class="hljs-params">             To_ES = <span class="hljs-literal">False</span>,</span>
+<span class="hljs-params">             ROTA = <span class="hljs-literal">False</span>,</span>
+<span class="hljs-params">             </span>):
+        <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> log_path:
+            log_path = os.getcwd() + os.sep + <span class="hljs-string">&quot;logs&quot;</span>+os.sep <span class="hljs-comment"># os.sep 路径分隔符(Linux使用/,window使用\)</span>
+
+      
+        log_formatter = logging.Formatter(
+            fmt=<span class="hljs-string">&quot;[%(asctime)s.%(msecs)03d][%(levelname)s][%(filename)s][%(lineno)d] %(message)s&quot;</span>,
+            datefmt=<span class="hljs-string">&quot;%Y-%m-%d %H:%M:%S&quot;</span>,
+        )
+        self.logger = logging.getLogger()
+        self.logger.setLevel(log_level)
+
+        <span class="hljs-comment"># 1.console流handler 输出到sys.stdout,sys.stderr输出到控制台</span>
+        <span class="hljs-keyword">if</span> To_console:
+            stream_handler = logging.StreamHandler()
+            stream_handler.setFormatter(log_formatter)
+            self.logger.addHandler(stream_handler)
+        
+        <span class="hljs-comment"># 2.文件</span>
+        <span class="hljs-keyword">if</span> To_file:
+            <span class="hljs-comment">#self.logger = logging.getLogger(log_path)</span>
+            <span class="hljs-keyword">if</span> ROTA: <span class="hljs-comment"># RotatingFileHandler 循环日志文件</span>
+                rota_log = log_path+<span class="hljs-string">&quot;rotate_&quot;</span>+log_name
+                <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> os.path.exists(rota_log):
+                    os.makedirs(rota_log)
+                rotate_handler = RotatingFileHandler(rota_log, maxBytes=<span class="hljs-number">1024</span> * <span class="hljs-number">1024</span> * <span class="hljs-number">50</span>, backupCount=<span class="hljs-number">5</span>)
+                <span class="hljs-comment"># maxBytes 最大字节数,backupCount 超过最大字节数保留5个</span>
+                self.logger.addHandler(rotate_handler)
+            <span class="hljs-keyword">else</span>:
+                log_file = log_path+log_name
+                <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> os.path.exists(log_file):
+                    os.makedirs(log_file)
+                fh = logging.FileHandler(log_file)
+                fh.setFormatter(log_formatter)
+                self.logger.addHandler(fh)
+        <span class="hljs-comment"># TimedRotatingFileHandler 定时生成新日志文件</span>
+
+        <span class="hljs-comment"># 3. ES</span>
+        <span class="hljs-keyword">if</span> To_ES:
+            cm_handler = CMRESHandler(
+                hosts=[&#123;<span class="hljs-string">&quot;host&quot;</span>: <span class="hljs-string">&quot;localhost&quot;</span>, <span class="hljs-string">&quot;port&quot;</span>: <span class="hljs-number">9200</span>&#125;],
+                es_index_name=<span class="hljs-string">&quot;log_index&quot;</span>,
+                auth_type=CMRESHandler.AuthType.NO_AUTH,
+            )
+            cm_handler.setFormatter(log_formatter)
+            self.logger.addHandler(cm_handler)
+
+    
+     
+
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">get_logger</span>(<span class="hljs-params">self</span>):
+        <span class="hljs-keyword">return</span> self.logger
+
+
+logger = Logger().get_logger()
+logger.info(<span class="hljs-string">&quot;日志&quot;</span>)
+</code></pre></div>
+<blockquote>
+<p><strong>RotatingFileHandler:</strong></p>
+<p>自带的日志处理器,将日志写入到指定的文件中，并控制文件大小和数量,实现日志轮转(及备份旧日志并创建新的日志)</p>
+<div class="code-wrapper"><pre><code class="hljs routeros">&gt;<span class="hljs-keyword">from</span> logging.handlers import RotatingFileHandler
+&gt;RotatingFileHandler(filename, <span class="hljs-attribute">mode</span>=<span class="hljs-string">&#x27;a&#x27;</span>, <span class="hljs-attribute">maxBytes</span>=0, <span class="hljs-attribute">backupCount</span>=0, <span class="hljs-attribute">encoding</span>=None, <span class="hljs-attribute">delay</span>=<span class="hljs-literal">False</span>)
+
+&gt;filename: 指定日志的文件路径和名称
+&gt;model: 模式,可选值为 ‘a’ 或 ‘w’,追加或覆盖
+&gt;maxBytes: 单个日志文件调度最大大小(单位:字节),当日志文件达到该大小时，会自动备份旧日志并创建新的日志文件。默认值为 0，表示不限制日志文件大小。
+&gt;backupCount: 备份文件数量,当生成的日志文件数量超过该数目时，会自动删除旧的备份日志文件。默认值为 0，表示不备份
+&gt;encoding: 日志文件的编码格式,默认为None,表示使用系统编码
+&gt;delay: <span class="hljs-literal">True</span>(延时打开文件,即在第一次写入日志时才打开日志文件),<span class="hljs-literal">False</span>(表示在初始化时即打开日志文件。默认值为 <span class="hljs-literal">False</span>)
+
+&gt;为maxBytes指定了&gt;0的值，则mode指定为w是没有意义的，RotatingFileHandler初始化时会自动将mode强制改为a</code></pre></div>
+<p><strong>TimedRotatingFileHandler:</strong></p>
+<p>与RotatingFileHandler类似,按照时间对文件进行切割，例如每天或每个小时生成一个新的日志文件</p>
+<div class="code-wrapper"><pre><code class="hljs routeros">&gt;<span class="hljs-keyword">from</span> logging.handlers import TimedRotatingFileHandler
+
+&gt;TimedRotatingFileHandler(filename, <span class="hljs-attribute">when</span>=<span class="hljs-string">&#x27;h&#x27;</span>, <span class="hljs-attribute">interval</span>=1, <span class="hljs-attribute">backupCount</span>=0, <span class="hljs-attribute">encoding</span>=None, <span class="hljs-attribute">delay</span>=<span class="hljs-literal">False</span>, <span class="hljs-attribute">utc</span>=<span class="hljs-literal">False</span>, <span class="hljs-attribute">atTime</span>=None)
+
+&gt;filename: 指定日志文件的路径和名称
+&gt;when: 日志轮转的时间间隔，可选值为 ‘S’、‘M’、‘H’、‘D’、‘W’ 和 ‘midnight’，分别表示秒、分、时、天、周和每天的午夜；默认值为 ‘midnight’，即每天的午夜轮转，值不区分大小
+&gt;internal: 时间间隔的数量，默认为 1；例如，当 <span class="hljs-attribute">when</span>=‘D’ 且 <span class="hljs-attribute">interval</span>=7 时，表示每周轮转一次
+&gt;backupCount: 备份文件数目；当生成的日志文件数量超过该数目时，会自动删除旧的备份日志文件；默认值为 0，表示不备份
+&gt;encoding: 日志文件的编码格式，默认为 None，表示使用系统默认编码
+&gt;delay: 可选值为 <span class="hljs-literal">True</span> 和 <span class="hljs-literal">False</span>；当为 <span class="hljs-literal">True</span> 时，表示延时打开文件，即在第一次写入日志时才打开日志文件；当为 <span class="hljs-literal">False</span> 时，表示在初始化时即打开日志文件；默认值为 <span class="hljs-literal">False</span>
+&gt;utc：是否使用 UTC 时间，默认为 <span class="hljs-literal">False</span>，表示使用本地时间
+&gt;atTime：用来设置轮转时间，格式为 ‘%H:%M:%S’，默认为午夜 12 点；需要注意的是该参数仅在when为W/midnight时有效</code></pre></div>
+</blockquote>
+<h5 id="异步线程写日志">异步线程写日志</h5>
+<blockquote>
+<p>独立开启线程，将待写的日志信息异步放入队列，做到日志输出不影响主流程性能</p>
+<p>参考:</p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/yindianhaidao/p/13201074.html">异步线程写日志</a></p>
+</blockquote>
+<h4 id="logru"><a target="_blank" rel="noopener" href="https://github.com/Delgan/loguru">logru</a></h4>
+<blockquote>
+<p>支持Python3.5以上，日志格式输出更加优雅简洁,配置将半结构化和彩色化的输出记录到标准错误，可以使用装饰器对<strong>异常进行追溯</strong></p>
+<p>参考:</p>
+<p><a target="_blank" rel="noopener" href="https://loguru.readthedocs.io/en/stable/overview.html">logru docs</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/struggleMan/p/17510494.html#%E5%BC%82%E6%AD%A5%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E5%A4%9A%E8%BF%9B%E7%A8%8B%E5%AE%89%E5%85%A8">logru doc汉化</a></p>
+</blockquote>
+<h4 id="logbook"><a target="_blank" rel="noopener" href="https://github.com/getlogbook/logbook">logbook</a></h4>
+<blockquote>
+<p>自称是 Python 标准库<code>logging</code>模块的酷炫替代品，其目的是让日志记录变得有趣</p>
+<p>参考：</p>
+<p><a target="_blank" rel="noopener" href="https://logbook.readthedocs.io/en/stable/">Logbook docs</a></p>
+</blockquote>
+<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Python%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E6%94%BE%E5%BC%83/" class="category-chain-item">Python从入门到放弃</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Logging/" class="print-no-link">#Logging</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Python项目中日志处理</div>
+      <div>https://centyuan.github.io/2023/12/09/Python从入门到放弃/Python项目中日志处理/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>hlyuan</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年12月9日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/12/06/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E4%B8%8E%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86/%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86/" title="项目管理Note">
+                        <span class="hidden-mobile">项目管理Note</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <div> <span id="timeDate">载入天数...</span> <span id="times">载入时分秒...</span> <script src="/js/duration.js"></script> </div> <a href="https://gitee/centyuan" target="_blank" rel="nofollow noopener"><span>centyuan</span></a> <i class="iconfont icon-love"></i> <a href="https://centyuan.github.io" target="_blank" rel="nofollow noopener"><span>BLog</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

@@ -16,15 +16,15 @@
   <meta name="author" content="hlyuan">
   <meta name="keywords" content="">
   
-    <meta name="description" content="公钥私钥  是概念上的区分，发出去的为公钥，自己手上的为私钥，实际生成RSA秘钥时，其中一份包含另一份的完整信息成为私钥，且公私钥都可以做加密方和解密方  CA  CA是证书的签发机构，它是公钥基础设施（Public Key Infrastructure，PKI）的核心。CA是负责签发证书、认证证书、管理已颁发证书的机关。CA 拥有一个证书（内含公钥和私钥）  证书  采用第三方(CA证书商)担保">
+    <meta name="description" content="公钥私钥  是概念上的区分，发出去的为公钥，自己手上的为私钥，实际生成RSA秘钥时，其中一份包含另一份的完整信息成为私钥，且公私钥都可以做加密方和解密方  CA  CA是证书的签发机构，被称为证书授权中心，它是公钥基础设施（Public Key Infrastructure，PKI）的核心。CA是负责签发证书、认证证书、管理已颁发证书的机关。CA 拥有一个证书（内含公钥和私钥） **根证书:**是">
 <meta property="og:type" content="article">
 <meta property="og:title" content="签名&#x2F;证书&#x2F;CA">
 <meta property="og:url" content="https://centyuan.github.io/2023/12/06/%E6%9C%89%E8%B6%A3%E7%9A%84%E6%9D%82%E7%83%A9/%E7%AD%BE%E5%90%8D%E8%AF%81%E4%B9%A6CA/index.html">
 <meta property="og:site_name" content="centyuan Blog">
-<meta property="og:description" content="公钥私钥  是概念上的区分，发出去的为公钥，自己手上的为私钥，实际生成RSA秘钥时，其中一份包含另一份的完整信息成为私钥，且公私钥都可以做加密方和解密方  CA  CA是证书的签发机构，它是公钥基础设施（Public Key Infrastructure，PKI）的核心。CA是负责签发证书、认证证书、管理已颁发证书的机关。CA 拥有一个证书（内含公钥和私钥）  证书  采用第三方(CA证书商)担保">
+<meta property="og:description" content="公钥私钥  是概念上的区分，发出去的为公钥，自己手上的为私钥，实际生成RSA秘钥时，其中一份包含另一份的完整信息成为私钥，且公私钥都可以做加密方和解密方  CA  CA是证书的签发机构，被称为证书授权中心，它是公钥基础设施（Public Key Infrastructure，PKI）的核心。CA是负责签发证书、认证证书、管理已颁发证书的机关。CA 拥有一个证书（内含公钥和私钥） **根证书:**是">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-12-06T12:45:07.373Z">
-<meta property="article:modified_time" content="2023-12-06T13:30:56.405Z">
+<meta property="article:modified_time" content="2023-12-07T12:09:22.409Z">
 <meta property="article:author" content="hlyuan">
 <meta property="article:tag" content="证书签名">
 <meta name="twitter:card" content="summary_large_image">
@@ -223,7 +223,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          4.2k 字
+          4.4k 字
         
       </span>
     
@@ -234,7 +234,7 @@
         
         
         
-          35 分钟
+          37 分钟
         
       </span>
     
@@ -282,17 +282,21 @@
 </blockquote>
 <h4 id="CA">CA</h4>
 <blockquote>
-<p>CA是证书的签发机构，它是公钥基础设施（Public Key Infrastructure，PKI）的核心。<strong>CA是负责签发证书、认证证书、管理已颁发证书的机关。CA 拥有一个证书（内含公钥和私钥）</strong></p>
+<p>CA是证书的签发机构，被称为证书授权中心，它是公钥基础设施（Public Key Infrastructure，PKI）的核心。<strong>CA是负责签发证书、认证证书、管理已颁发证书的机关。CA 拥有一个证书（内含公钥和私钥）</strong></p>
+<p>**根证书:**是CA认证中心给自己颁发的证书，是信任链的起始点，安装根证书意味对这个CA认证中心的信任</p>
 </blockquote>
 <h4 id="证书">证书</h4>
 <blockquote>
 <p>采用第三方(CA证书商)担保，确保证书中发出来的公钥是服务器提供的，在用证书中服务器的公钥加密信息与服务器通信</p>
-<p><strong>证书流程</strong></p>
+<p><strong>证书颁发过程</strong></p>
 <div class="code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta prompt_">&gt;</span><span class="language-bash">1.服务器把公钥和个人信息发送给证书商CA,证书商用私钥对其签名,形成CA证书，确保证书内的公钥是服务器提供的</span>
 <span class="hljs-meta prompt_">&gt;</span><span class="language-bash">2.证书商把CA证书给服务器</span>
 <span class="hljs-meta prompt_">&gt;</span><span class="language-bash">3.用户访问服务器,先向服务器申请证书，并用证书商的公钥解密，拿到服务器的信息和服务器公钥</span>
 <span class="hljs-meta prompt_">&gt;</span><span class="language-bash">4.用户使用服务器公钥和服务器通信(由于非对称加密较慢,实际中服务器和客户端会相互协商，指定某对称加密秘钥来进行通信加密)</span>
 <span class="hljs-meta prompt_">&gt;</span><span class="language-bash">5.用证书中的服务器公钥加密通信加密使用的对称秘钥</span></code></pre></div>
+<p><strong>如何对数字证书进行校验</strong></p>
+<div class="code-wrapper"><pre><code class="hljs stata">&gt;要验证数字证书的真伪，就需要找到签发这个证书的<span class="hljs-keyword">CA</span>证书，要验证<span class="hljs-keyword">CA</span>证书的真伪则需要找到签发<span class="hljs-keyword">CA</span>证书的<span class="hljs-keyword">CA</span>证书，就这样一直找到根证书</code></pre></div>
+<p>CA的公钥一般来说由浏览器开发商内置在浏览器或操作系统的内部。于是，该前提条件在各种信任机制上，基本保证成立</p>
 </blockquote>
 <h4 id="SSL证书">SSL证书</h4>
 <blockquote>

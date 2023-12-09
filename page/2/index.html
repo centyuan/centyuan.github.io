@@ -227,6 +227,67 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h2 class="index-header">
         
+        <a href="/2023/11/22/Python%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E6%94%BE%E5%BC%83/GIL(%E8%BF%9B%E7%A8%8B%E7%BA%BF%E7%A8%8B%E5%8D%8F%E7%A8%8B)/" target="_self">
+          GIL/进程线程协程切换
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2023/11/22/Python%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E6%94%BE%E5%BC%83/GIL(%E8%BF%9B%E7%A8%8B%E7%BA%BF%E7%A8%8B%E5%8D%8F%E7%A8%8B)/" target="_self">
+        <div>
+          GIL  Global interperter Lock全局解释器锁,并不是Python特性,CPython引入的概念，python完全可以不依赖GIL 为什么使用GIL? 每个线程在执行过程中都要先获取GIl，保证同一时刻只有一个线程运行,目的是解决多线程之间的数据完整性和状态同步, 并且因为使用引用技术管理内存，所以某个对象的引用计数不能被两个线程同时增加和减少，不然造成内存泄露,GIL对线程
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2023-11-22 22:18" pubdate>
+              2023-11-22
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Python%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E6%94%BE%E5%BC%83/" class="category-chain-item">Python从入门到放弃</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/GIL/">#GIL</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
         <a href="/2023/11/20/%E4%B8%AD%E9%97%B4%E4%BB%B6/rabbitmq_note/" target="_self">
           RabbitMQ Note
         </a>
@@ -381,7 +442,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B/" class="category-chain-item">软件工程</a>
+  <a href="/categories/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E4%B8%8E%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86/" class="category-chain-item">软件工程与项目管理</a>
   
   
 
@@ -763,67 +824,6 @@
             <i class="iconfont icon-tags"></i>
             
               <a href="/tags/RabbitMQ/">#RabbitMQ</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2023/11/06/%E6%9C%89%E8%B6%A3%E7%9A%84%E6%9D%82%E7%83%A9/paddleocr%E9%94%99%E8%AF%AF%20FatalErrorProcess%20abort%20signal%20is%20detected%20by%20the%20operating%20system/" target="_self">
-          paddleocr错误 FatalError:`Process abort signal is detected by the operating system
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2023/11/06/%E6%9C%89%E8%B6%A3%E7%9A%84%E6%9D%82%E7%83%A9/paddleocr%E9%94%99%E8%AF%AF%20FatalErrorProcess%20abort%20signal%20is%20detected%20by%20the%20operating%20system/" target="_self">
-        <div>
-          paddleocr错误 FatalError:Process abort signal  is detected by the operating system  查看issue#36281，并不是paddle内部错误，import paddle之后，paddle会注册全局的signal haddler捕获系统错误，主要是为了paddle能捕获自己出现的此类错误.由于使用gunicorn 启的we
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2023-11-06 15:02" pubdate>
-              2023-11-06
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E6%9C%89%E8%B6%A3%E7%9A%84%E6%9D%82%E7%83%A9/" class="category-chain-item">有趣的杂烩</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/PaddleOCR/">#PaddleOCR</a>
             
           </div>
         

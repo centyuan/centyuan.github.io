@@ -24,7 +24,7 @@
 <meta property="og:description" content="基本概念和术语 Mater  指集群的控制节点,运行着一组关键进程 &gt;Kube-apiserver: 提供了HTTP Rest接口服务，是Kubernetes所有资源的增删改查等操作的唯一入口 &gt;Kube-controller-manager: Kubernetes所有资源对象的自动化控制中心 &gt;Kube-scheduler: 负责资源调度(Pod调度)的进程 &gt;Etcd:">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-12-05T12:16:55.776Z">
-<meta property="article:modified_time" content="2023-12-06T14:37:25.404Z">
+<meta property="article:modified_time" content="2023-12-07T15:03:45.988Z">
 <meta property="article:author" content="hlyuan">
 <meta property="article:tag" content="K8s">
 <meta name="twitter:card" content="summary_large_image">
@@ -223,7 +223,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          5k 字
+          6.9k 字
         
       </span>
     
@@ -234,7 +234,7 @@
         
         
         
-          42 分钟
+          58 分钟
         
       </span>
     
@@ -542,6 +542,50 @@
 <p>用户任意定义的“附加&quot;信息，用来记录如下信息</p>
 <div class="code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta prompt_">&gt;</span><span class="language-bash">build信息，release信息，Docker镜像信息</span>
 <span class="hljs-meta prompt_">&gt;</span><span class="language-bash">日志库,监控库</span></code></pre></div>
+</blockquote>
+<h4 id="安装配置">安装配置</h4>
+<h5 id="Kubeadm工具快速安装">Kubeadm工具快速安装</h5>
+<h5 id="二进制方式安装">二进制方式安装</h5>
+<h5 id="Kubernetes集群的安全设置">Kubernetes集群的安全设置</h5>
+<blockquote>
+<p>在一个安全的内网环境中，Kubernetes的各个组件与Master之间可以通过kube-apiserver的非安全端口http://<kube-apiserver-ip>:8080进行访问。但如果API Server需要对外提供服务，或者集群中的某些容器也需要访问API Server以获取集群中的某些信息，则更安全的做法是启用HTTPS安全机制。Kubernetes提供了基于CA签名的双向数字证书认证方式和简单的基于HTTP Base或Token的认证方式，其中CA证书方式的安全性最高。本节先介绍如何以CA证书的方式配置Kubernetes集群，要求Master上的kube-apiserver、kube-controller-manager、kube-scheduler进程及各Node上的kubelet、kube-proxy进程进行CA签名双向数字证书安全设置。</p>
+</blockquote>
+<h4 id="kubectl命令用法详解">kubectl命令用法详解</h4>
+<blockquote>
+<p><strong>kubectl [command] [TYPE] [NAME] [flags]</strong></p>
+<p><strong>command:</strong> 子命令，用于操作Kubernetes集群资源对象,如create/delete/describe/get/apply</p>
+<p><strong>TYPE:</strong> 资源对象类型，单数，复数，简写形式表示</p>
+<p><strong>NAME:</strong> 资源对象的名称，不指定名称,返回TYPE的全部对象</p>
+<p><strong>flags:</strong> kubectl子命令的可选参数,</p>
+</blockquote>
+<p><strong>参考资料</strong></p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://github.com/kubernetes/kubernetes/blob/v1.25.10/pkg/scheduler/scheduler.go">https://github.com/kubernetes/kubernetes/blob/v1.25.10/pkg/scheduler/scheduler.go</a></p>
+<p>官方文档：</p>
+<ul class="lvl-1">
+<li class="lvl-2">
+<p>调度：<a target="_blank" rel="noopener" href="https://kubernetes.io/zh-cn/docs/concepts/scheduling-eviction/kube-scheduler/">https://kubernetes.io/zh-cn/docs/concepts/scheduling-eviction/kube-scheduler/</a></p>
+</li>
+<li class="lvl-2">
+<p>调度器配置：<a target="_blank" rel="noopener" href="https://kubernetes.io/zh-cn/docs/reference/scheduling/config/">https://kubernetes.io/zh-cn/docs/reference/scheduling/config/</a></p>
+</li>
+</ul>
+<p>可供学习的资料</p>
+<p><a target="_blank" rel="noopener" href="https://granulate.io/blog/a-deep-dive-into-kubernetes-scheduling/">https://granulate.io/blog/a-deep-dive-into-kubernetes-scheduling/</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.infoq.cn/article/or7crphtdlx1ivhsfngk">https://www.infoq.cn/article/or7crphtdlx1ivhsfngk</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/zhangmingcheng/p/16324140.html">https://www.cnblogs.com/zhangmingcheng/p/16324140.html</a></p>
+<p><a target="_blank" rel="noopener" href="https://xie.infoq.cn/article/33fb565b66b825a9683abf864">https://xie.infoq.cn/article/33fb565b66b825a9683abf864</a></p>
+<p><a target="_blank" rel="noopener" href="https://kubernetes.io/zh-cn/docs/concepts/scheduling-eviction/pod-priority-preemption/">https://kubernetes.io/zh-cn/docs/concepts/scheduling-eviction/pod-priority-preemption/</a></p>
+<p><a target="_blank" rel="noopener" href="https://kubernetes.io/docs/concepts/scheduling-eviction/scheduler-perf-tuning/">https://kubernetes.io/docs/concepts/scheduling-eviction/scheduler-perf-tuning/</a></p>
+<p><a target="_blank" rel="noopener" href="https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#affinity-and-anti-affinity">https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#affinity-and-anti-affinity</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.infoq.cn/article/3S9hqoOX0mODAVyM0VH3?utm_source=related_read_bottom&amp;utm_medium=article">https://www.infoq.cn/article/3S9hqoOX0mODAVyM0VH3?utm_source=related_read_bottom&amp;utm_medium=article</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.qikqiak.com/k3s/scheduler/overview/">https://www.qikqiak.com/k3s/scheduler/overview/</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/91f4c8967a92">https://www.jianshu.com/p/91f4c8967a92</a></p>
+<p><a target="_blank" rel="noopener" href="https://rx-m.com/kube-scheduler-kubecon-cloudnativecon-na-2021/">https://rx-m.com/kube-scheduler-kubecon-cloudnativecon-na-2021/</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/i_want_to_be_a_god/article/details/106969992">https://blog.csdn.net/i_want_to_be_a_god/article/details/106969992</a></p>
+<p><a target="_blank" rel="noopener" href="http://www.iceyao.com.cn/post/2020-08-31-k8s-scheduler-framework/">http://www.iceyao.com.cn/post/2020-08-31-k8s-scheduler-framework/</a></p>
+<p><a target="_blank" rel="noopener" href="https://qiankunli.github.io/2020/09/03/scheduler_score.html">https://qiankunli.github.io/2020/09/03/scheduler_score.html</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.crazytaxii.com/posts/k8s_scheduler_bind/">https://blog.crazytaxii.com/posts/k8s_scheduler_bind/</a></p>
 </blockquote>
 <script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
                 
