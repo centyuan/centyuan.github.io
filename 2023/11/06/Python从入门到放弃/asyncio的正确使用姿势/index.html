@@ -16,15 +16,15 @@
   <meta name="author" content="hlyuan">
   <meta name="keywords" content="">
   
-    <meta name="description" content="###引言  asyncio作为python协程的标准实现,使用事件循环驱动的协程实现并发,已在python3.4纳入标准库,本文是在使用asyncio过程中,基本使用和整理概述:子程序或函数在程序执行过程中,通过栈实现的层级调用。而协程在内部执行时可以中断去执行别的子程序,可以简单理解协程作为轻量级的线程。  1.基本描述 1.event_loop事件循环:协程函数注册到事件循环上,会依次相应的">
+    <meta name="description" content="###引言  asyncio作为python协程的标准实现,使用事件循环驱动的协程实现并发,已在python3.4纳入标准库,本文是在使用asyncio过程中,基本使用和整理概述:子程序或函数在程序执行过程中,通过栈实现的层级调用。而协程在内部执行时可以中断去执行别的子程序,可以简单理解协程作为轻量级的线程。  基本描述 1.event_loop事件循环:协程函数注册到事件循环上,会依次相应的执行">
 <meta property="og:type" content="article">
 <meta property="og:title" content="asyncio的正确使用姿势">
 <meta property="og:url" content="https://centyuan.github.io/2023/11/06/Python%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E6%94%BE%E5%BC%83/asyncio%E7%9A%84%E6%AD%A3%E7%A1%AE%E4%BD%BF%E7%94%A8%E5%A7%BF%E5%8A%BF/index.html">
 <meta property="og:site_name" content="centyuan Blog">
-<meta property="og:description" content="###引言  asyncio作为python协程的标准实现,使用事件循环驱动的协程实现并发,已在python3.4纳入标准库,本文是在使用asyncio过程中,基本使用和整理概述:子程序或函数在程序执行过程中,通过栈实现的层级调用。而协程在内部执行时可以中断去执行别的子程序,可以简单理解协程作为轻量级的线程。  1.基本描述 1.event_loop事件循环:协程函数注册到事件循环上,会依次相应的">
+<meta property="og:description" content="###引言  asyncio作为python协程的标准实现,使用事件循环驱动的协程实现并发,已在python3.4纳入标准库,本文是在使用asyncio过程中,基本使用和整理概述:子程序或函数在程序执行过程中,通过栈实现的层级调用。而协程在内部执行时可以中断去执行别的子程序,可以简单理解协程作为轻量级的线程。  基本描述 1.event_loop事件循环:协程函数注册到事件循环上,会依次相应的执行">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-11-06T02:32:43.028Z">
-<meta property="article:modified_time" content="2023-11-25T04:44:27.474Z">
+<meta property="article:modified_time" content="2023-12-16T14:52:39.887Z">
 <meta property="article:author" content="hlyuan">
 <meta property="article:tag" content="Python">
 <meta name="twitter:card" content="summary_large_image">
@@ -223,7 +223,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          4.1k 字
+          4.2k 字
         
       </span>
     
@@ -234,7 +234,7 @@
         
         
         
-          35 分钟
+          36 分钟
         
       </span>
     
@@ -280,12 +280,12 @@
 <blockquote>
 <p>asyncio作为python协程的标准实现,使用事件循环驱动的协程实现并发,已在python3.4纳入标准库,本文是在使用asyncio过程中,基本使用和整理概述:子程序或函数在程序执行过程中,通过栈实现的层级调用。而协程在内部执行时可以中断去执行别的子程序,可以简单理解协程作为轻量级的线程。</p>
 </blockquote>
-<p><strong>1.基本描述</strong><br>
-1.event_loop事件循环:协程函数注册到事件循环上,会依次相应的执行,支持注册Future和task类型的对象<br>
+<h4 id="基本描述">基本描述</h4>
+<p>1.event_loop事件循环:协程函数注册到事件循环上,会依次相应的执行,支持注册Future和task类型的对象<br>
 2.coroutine协程对象:async定义的函数,返回一个协程对象，函数的最终执行交给event_loop<br>
 3.future:是对协程的封装(提供了取消/回调等),代表一个未来对象,执行结束后会把最终结果设置到Future对象上,属于底层对象,日常开发使用task<br>
 4.task任务:是future的子类,对future再一次的封装</p>
-<p><strong>2.协程实现的几种方式?</strong></p>
+<h4 id="协程实现的几种方式">协程实现的几种方式</h4>
 <ul class="lvl-0">
 <li class="lvl-2">
 <p>python2.X:利用生成器通过yield+send实现协程</p>
@@ -300,7 +300,7 @@
 <p>python3.7:引入了asyncio.create_task和asyncio.run两个高级接口d</p>
 </li>
 </ul>
-<p><strong>3.正确使用姿势</strong></p>
+<h4 id="正确使用姿势">正确使用姿势</h4>
 <div class="code-wrapper"><pre><code class="hljs coffeescript"><span class="hljs-keyword">import</span> time 
 <span class="hljs-keyword">import</span> asyncio
 
@@ -340,12 +340,12 @@ def perf_(func)：
 <span class="hljs-keyword">if</span> __name__ ==<span class="hljs-string">&quot;__main__&quot;</span>:
     perf_(main())
 </code></pre></div>
-<p><strong>4.两种方案获取返回值</strong></p>
+<h4 id="两种方案获取返回值">两种方案获取返回值</h4>
 <blockquote>
 <p>1.通过回调add_done_callback()<br>
 2.通过task.result()接口,若任务没有完成,result()不会阻塞去等待结果,而是直接抛出asyncio.InvalidStateError异常</p>
 </blockquote>
-<p><strong>one:回调</strong></p>
+<h5 id="one-回调">one:回调</h5>
 <div class="code-wrapper"><pre><code class="hljs scss">
 import asyncio
 
@@ -362,7 +362,7 @@ if __name__ ==<span class="hljs-string">&quot;__main__&quot;</span>:
     task.<span class="hljs-built_in">add_done_callback</span>(callback)
     loop.<span class="hljs-built_in">run_until_complete</span>(task)
     loop.<span class="hljs-built_in">close</span>()</code></pre></div>
-<p><strong>two:task</strong></p>
+<h5 id="two-task">two:task</h5>
 <div class="code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">import</span> asyncio
 <span class="hljs-keyword">import</span> time
 
@@ -417,39 +417,51 @@ now = <span class="hljs-keyword">lambda</span>:time.perf_counter()
     <span class="hljs-comment"># show_perf(main2)</span>
     show_perf(main3)
 </code></pre></div>
-<p><strong>5.不要使用asyncio.create_task创建后台任务</strong><br>
-<a target="_blank" rel="noopener" href="https://www.bilibili.com/read/cv17261955">create_task存在的问题</a><br>
+<h5 id="不要使用asyncio-create-task创建后台任务">不要使用asyncio.create_task创建后台任务</h5>
+<p><a target="_blank" rel="noopener" href="https://www.bilibili.com/read/cv17261955">create_task存在的问题</a><br>
 <a target="_blank" rel="noopener" href="https://github.com/python/cpython/issues/91887">cpython-issue</a><br>
 asyncio仅仅会保留对Task的弱引用weakref,而弱引用不会阻止对象被python垃圾回收机制回收,可能导致正在运行的task被回掉</p>
 <div class="code-wrapper"><pre><code class="hljs ini"><span class="hljs-comment"># asyncio.create_task(back_task())</span>
 <span class="hljs-comment"># task was destroyed but it is pending</span>
 <span class="hljs-comment"># 解决方案是对创建的task强引用</span>
 <span class="hljs-attr">task</span> = asyncio.create_task(back_task())</code></pre></div>
-<p><strong>6.其他说明</strong></p>
-<div class="code-wrapper"><pre><code class="hljs ada"><span class="hljs-number">1</span>. wait和gather的区别
-wait:默认情况下,会等待全部任务完成,所以pending默认是空的,可以使用return_when参数来决定返回时机
-return_when:ALL_COMPLETED(默认全部返回),FIRST_COMPLETED(完成一个返回),FIRST_EXCEPTION(异常一个返回)
-done, pending = await asyncio.wait(tasks:list[<span class="hljs-keyword">task</span>])  # 传入<span class="hljs-keyword">task</span>列表，done为已完成的<span class="hljs-keyword">task</span>列表
-gather:返回<span class="hljs-keyword">task</span>执行的结果
-results = await asyncio.gather(*tasks)    # 传入多个<span class="hljs-keyword">task</span>,可以使用*tasks
-
-<span class="hljs-number">1</span>. get_event_loop和new_event_loop,set_event_loop区别
-主线程:get_event_loop会创建一个event_loop，并且多次调用始终返回该<span class="hljs-keyword">loop</span>
-其他线程:get_event_loop会报错,正确的使用是 <span class="hljs-keyword">loop</span>=asyncio.new_event_loop asyncio.set_event_loop(<span class="hljs-keyword">loop</span>)
-
-
-<span class="hljs-number">3</span>. asyncio.create_task vs asyncio.ensure_task vs <span class="hljs-keyword">loop</span>.create_task
-(<span class="hljs-number">1</span>.都是创建<span class="hljs-keyword">task</span>的方法,asyncio.create_task为<span class="hljs-number">3.7</span>新增的高阶用法
-(<span class="hljs-number">2</span>.asyncio.create_task就是使用的<span class="hljs-keyword">loop</span>.create_task
-(<span class="hljs-number">3</span>.<span class="hljs-keyword">loop</span>.create_task的参数是coroutine
-(<span class="hljs-number">4</span>.asyncio.ensure_task可以是(coroutine/Future/awaitable对象[实现__await__方法])
-    -coroutine对象:还是使用<span class="hljs-keyword">loop</span>.creat_task
-    -Future对象:直接返回
-    -awaitable对象:会await这个对象的__await__方法,在执行一次ensure_task,最后返回<span class="hljs-keyword">task</span>/future
-<span class="hljs-number">4</span>. asyncio.run
-asyncio.run():为<span class="hljs-number">3.7</span>新增的高级接口,隐式的创建<span class="hljs-keyword">loop</span>去执行<span class="hljs-keyword">task</span>,直接asyncio.run(main())
-asyncio.create_task:为<span class="hljs-number">3.7</span>新增的高级接口,创建任务
+<h4 id="uvloop代替asyncio默认事件循环">uvloop代替asyncio默认事件循环</h4>
+<div class="code-wrapper"><pre><code class="hljs haskell"><span class="hljs-keyword">import</span> uvloop
+<span class="hljs-title">asyncio</span>.set_event_loop_policy(uvloop.<span class="hljs-type">EventLoopPolicy</span>())
+<span class="hljs-meta"># 使得任何对 asyncio.get_event_loop() 的调用都将返回一个 uvloop 的实例</span></code></pre></div>
+<h4 id="其他说明">其他说明</h4>
+<blockquote>
+<p><strong>wait和gather的区别</strong></p>
+<div class="code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta prompt_">&gt;</span><span class="language-bash"><span class="hljs-built_in">wait</span>:默认情况下,会等待全部任务完成,所以pending默认是空的,可以使用return_when参数来决定返回时机</span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">return_when:</span>
+ALL_COMPLETED(默认全部返回),
+FIRST_COMPLETED(完成一个返回),
+FIRST_EXCEPTION(异常一个返回)
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash"><span class="hljs-keyword">done</span>, pending = await asyncio.wait(tasks:list[task])  <span class="hljs-comment"># 传入task列表，done为已完成的task列表</span></span>
+<span class="hljs-meta prompt_"></span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">gather:返回task执行的结果</span>
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">results = await asyncio.gather(*tasks)    <span class="hljs-comment"># 传入多个task,可以使用*tasks</span></span>
 </code></pre></div>
+<p><strong>get_event_loop和new_event_loop,set_event_loop区别</strong></p>
+<div class="code-wrapper"><pre><code class="hljs ada">&gt;主线程:
+get_event_loop会创建一个event_loop，并且多次调用始终返回该<span class="hljs-keyword">loop</span>
+&gt;其他线程:
+get_event_loop会报错
+正确的使用是:
+	<span class="hljs-keyword">loop</span>=asyncio.new_event_loop()
+	asyncio.set_event_loop(<span class="hljs-keyword">loop</span>)</code></pre></div>
+<p><strong>asyncio.create_task VS asyncio.ensure_task VS loop.create_task</strong></p>
+<div class="code-wrapper"><pre><code class="hljs oxygene">&gt;(<span class="hljs-number">1</span>.都是创建task的方法,asyncio.create_task为<span class="hljs-number">3.7</span>新增的高阶用法
+&gt;(<span class="hljs-number">2</span>.asyncio.create_task就是使用的<span class="hljs-keyword">loop</span>.create_task
+&gt;(<span class="hljs-number">3</span>.loop.create_task的参数是coroutine
+&gt;(<span class="hljs-number">4</span>.asyncio.ensure_task可以是(coroutine/<span class="hljs-keyword">Future</span>/awaitable对象[实现__await__方法])
+   -coroutine对象:还是使用<span class="hljs-keyword">loop</span>.creat_task
+   -<span class="hljs-keyword">Future</span>对象:直接返回
+   -awaitable对象:会<span class="hljs-keyword">await</span>这个对象的__await__方法,在执行一次ensure_task,最后返回task/<span class="hljs-keyword">future</span></code></pre></div>
+<p><strong>asyncio.run</strong><br>
+asyncio.run():为3.7新增的高级接口</p>
+<p>隐式的创建loop去执行task,直接asyncio.run(main())</p>
+</blockquote>
 <script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
                 
               </div>
