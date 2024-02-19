@@ -25,7 +25,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://pic4.zhimg.com/v2-a285cd76374ece7f56a7b7e450ae3fab_b.jpg">
 <meta property="article:published_time" content="2024-02-19T14:12:01.908Z">
-<meta property="article:modified_time" content="2024-02-19T14:09:55.175Z">
+<meta property="article:modified_time" content="2024-02-19T14:17:19.434Z">
 <meta property="article:author" content="hlyuan">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://pic4.zhimg.com/v2-a285cd76374ece7f56a7b7e450ae3fab_b.jpg">
@@ -299,7 +299,6 @@
 <p><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=mzz1ldrRcuc">如何微调你的chatgpt？fine-tuning实例教学</a></p>
 <p><a target="_blank" rel="noopener" href="https://platform.openai.com/docs/guides/fine-tuning/fine-tuning">openai fine-tuning guides</a></p>
 </blockquote>
-<p>​</p>
 <h4 id="Azure-Studio-训练自己的GPT">Azure  Studio 训练自己的GPT</h4>
 <blockquote>
 <p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/azure/ai-services/openai/how-to/fine-tuning?tabs=turbo%2Cpython&amp;pivots=programming-language-studio">Azure OpenAI 微调模型文档</a></p>
@@ -456,17 +455,17 @@
 <p>大多数打语言模型都无法处理过长的文本,如何让大模型&quot;读懂&quot;一个PDF尼</p>
 <p>1.基于pdf创建向量Embedding,并在数据库中存储</p>
 <p>2.提问Prompt，将问题向量去数据库检索相似的向量,将检索的相似的向量原文一起给到GPT</p>
-<div class="code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta prompt_">&gt;</span><span class="language-bash">准备搜索数据（仅一次）</span>
-收集：即获取你要用的数据，例如OpenAI的案例是下载几百篇有关2022年奥运会的维基百科文章
-切块：将文档分成短小的、大多是自包含的部分以进行嵌入
-嵌入：使用OpenAI API对每个部分数据获得embeddings结果
-存储：存储embedding是（对于大型数据集，可以使用向量数据库）
-<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">搜索（每次查询一次）</span>
-给定用户问题，从OpenAI API生成查询的embeddings
-使用embeddings，按照与查询相关性对文本部分进行排序
-<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">提问（每次查询一次）</span>
-将问题和最相关的部分插入到发送给GPT的消息中
-返回GPT的答案</code></pre></div>
+<div class="code-wrapper"><pre><code class="hljs">准备搜索数据（仅一次）
+  收集：即获取你要用的数据，例如OpenAI的案例是下载几百篇有关2022年奥运会的维基百科文章
+  切块：将文档分成短小的、大多是自包含的部分以进行嵌入
+  嵌入：使用OpenAI API对每个部分数据获得embeddings结果
+  存储：存储embedding是（对于大型数据集，可以使用向量数据库）
+搜索（每次查询一次）
+  给定用户问题，从OpenAI API生成查询的embeddings
+  使用embeddings，按照与查询相关性对文本部分进行排序
+提问（每次查询一次）
+  将问题和最相关的部分插入到发送给GPT的消息中
+  返回GPT的答案</code></pre></div>
 </blockquote>
 <script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
                 
@@ -475,6 +474,27 @@
             <hr/>
             <div>
               <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" class="category-chain-item">机器学习</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
   
   
 </div>

@@ -24,7 +24,7 @@
 <meta property="og:description" content="提示工程技术 指令  从明确的说明开始: prompt的顺序很重要，在提示开始时明确告诉模型的角色，以及你希望它执行的任务(角色分配和目标设置)，有助于生成更高质量的输出 使用定界符标识输入的不同部分: &#96;&#96;&#96;或&quot;&quot;&quot;或— 或&lt;&gt;  为每周新闻稿编写简介，包括以下内容： - 我的公司名为 contoso - 兴高采烈的问候 - 感谢团队在艰难的几个月里辛勤">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-02-19T14:12:01.907Z">
-<meta property="article:modified_time" content="2024-02-19T14:09:48.776Z">
+<meta property="article:modified_time" content="2024-02-19T14:17:07.318Z">
 <meta property="article:author" content="hlyuan">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -222,7 +222,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2.2k 字
+          2.1k 字
         
       </span>
     
@@ -233,7 +233,7 @@
         
         
         
-          19 分钟
+          18 分钟
         
       </span>
     
@@ -363,25 +363,25 @@
 <p>已下面这些情感分析示例：<br>
 {示例:结果}<br>
 请问句子{query}的情感是</p>
-<div class="code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta prompt_">&gt;</span><span class="language-bash">已知信息: 高俅为了让他的义子得到林冲的老婆，和陆谦设计陷害林冲。叫亲信假装成卖宝刀的在大街上卖宝刀给林冲，然后派人以看林冲新买的宝刀为名，将之骗到军事禁地白虎节堂。高俅以林冲拿刀到白虎堂刺杀他为由。</span>
-<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">根据已知信息,回答我的问题,如果无法从中获得答案,请说<span class="hljs-string">&quot;根据已知信息无法回答该问题&quot;</span>,不允许在答案中添加编造成分,答案请用中文</span>
-<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">问题是: 为什么陷害林冲</span></code></pre></div>
+<div class="code-wrapper"><pre><code class="hljs makefile"><span class="hljs-section">已知信息: 高俅为了让他的义子得到林冲的老婆，和陆谦设计陷害林冲。叫亲信假装成卖宝刀的在大街上卖宝刀给林冲，然后派人以看林冲新买的宝刀为名，将之骗到军事禁地白虎节堂。高俅以林冲拿刀到白虎堂刺杀他为由。</span>
+根据已知信息,回答我的问题,如果无法从中获得答案,请说<span class="hljs-string">&quot;根据已知信息无法回答该问题&quot;</span>,不允许在答案中添加编造成分,答案请用中文
+<span class="hljs-section">问题是: 为什么陷害林冲</span></code></pre></div>
 <p>分辨gpt3还是gpt4</p>
-<div class="code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta prompt_">&gt;</span><span class="language-bash">你好，请回答，你是谁？你是gpt-4吗？你的数据更新到什么时候？</span>
-<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">Hello, please answer, Who are you? Are you gpt-4? When is your data up to <span class="hljs-built_in">date</span>?</span>
-<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">你的知识截止时间是什么时候？</span>
-<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">When is your knowledge deadline?</span>
-<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">昨天的当天是明天的什么</span>
-<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">爸妈结婚，为啥没邀请我参加</span>
-<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">树上 10 只鸟，打掉 1 只，还剩几只？</span></code></pre></div>
+<div class="code-wrapper"><pre><code class="hljs pgsql">你好，请回答，你是谁？你是gpt<span class="hljs-number">-4</span>吗？你的数据更新到什么时候？
+Hello, please answer, Who are you? Are you gpt<span class="hljs-number">-4</span>? <span class="hljs-keyword">When</span> <span class="hljs-keyword">is</span> your data up <span class="hljs-keyword">to</span> <span class="hljs-type">date</span>?
+你的知识截止时间是什么时候？
+<span class="hljs-keyword">When</span> <span class="hljs-keyword">is</span> your knowledge deadline?
+昨天的当天是明天的什么
+爸妈结婚，为啥没邀请我参加
+树上 <span class="hljs-number">10</span> 只鸟，打掉 <span class="hljs-number">1</span> 只，还剩几只？</code></pre></div>
 <p>广告商</p>
-<div class="code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta prompt_">&gt;</span><span class="language-bash">我想让你充当广告商。</span>
-<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">您将创建一个活动来推广您选择的产品或服务。</span>
-<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">- 您将选择目标受众，</span>
-<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">- 制定关键信息和口号，</span>
-<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">- 选择宣传媒体渠道，</span>
-<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">- 并决定实现目标所需的任何其他活动。</span>
-<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">我的第一个建议请求是“我需要帮助针对 18-30 岁的年轻人制作一种新型能量饮料的广告活动。</span></code></pre></div>
+<div class="code-wrapper"><pre><code class="hljs asciidoc">我想让你充当广告商。
+您将创建一个活动来推广您选择的产品或服务。
+<span class="hljs-bullet">- </span>您将选择目标受众，
+<span class="hljs-bullet">- </span>制定关键信息和口号，
+<span class="hljs-bullet">- </span>选择宣传媒体渠道，
+<span class="hljs-bullet">- </span>并决定实现目标所需的任何其他活动。
+我的第一个建议请求是“我需要帮助针对 18-30 岁的年轻人制作一种新型能量饮料的广告活动。</code></pre></div>
 </blockquote>
 <p><strong><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1e8411o7NP">吴恩达最新《面向开发者的ChatGPT提示工程》</a></strong></p>
 <p><strong><a target="_blank" rel="noopener" href="https://github.com/PlexPt/awesome-chatgpt-prompts-zh">ChatGPT 中文调教指南</a></strong></p>
@@ -396,6 +396,27 @@
             <hr/>
             <div>
               <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" class="category-chain-item">机器学习</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
   
   
 </div>
@@ -461,8 +482,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2024/02/19/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/LLM-RAG/" title="">
-                        <span class="hidden-mobile"></span>
+                      <a href="/2024/02/19/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/LLM-RAG/" title="大模型主流应用RAG">
+                        <span class="hidden-mobile">大模型主流应用RAG</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
