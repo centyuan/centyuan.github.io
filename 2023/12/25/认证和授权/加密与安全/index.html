@@ -16,23 +16,24 @@
   <meta name="author" content="hlyuan">
   <meta name="keywords" content="">
   
-    <meta name="description" content="编码算法 ASCII  字母A的编码是十六进制的0x41，字母B是0x42 ASCII编码最多只能有128个字符，要想对更多的文字进行编码，就需要用Unicode。而中文的中使用Unicode编码就是0x4e2d，使用UTF-8则需要3个字节编码x  UTF-8  &gt;# Unicode,以&amp;#(&amp;#X为Unicode 16进制) &gt;# &amp;#20170;&amp;">
+    <meta name="description" content="ASCII  字母 A的编码是十六进制的 0x41，字母 B是 0x42 ASCII编码最多只能有128个字符，要想对更多的文字进行编码，就需要用Unicode。而中文的中使用Unicode编码就是 0x4e2d，使用UTF-8则需要3个字节编码x  UTF-8  # Unicode,以&amp;#(&amp;#X为Unicode 16进制) # 今偷  # UTF-8,以\u开头 e &#x3D; &amp;#x">
 <meta property="og:type" content="article">
-<meta property="og:title" content="centyuan Blog">
+<meta property="og:title" content="编码算法">
 <meta property="og:url" content="https://centyuan.github.io/2023/12/25/%E8%AE%A4%E8%AF%81%E5%92%8C%E6%8E%88%E6%9D%83/%E5%8A%A0%E5%AF%86%E4%B8%8E%E5%AE%89%E5%85%A8/index.html">
 <meta property="og:site_name" content="centyuan Blog">
-<meta property="og:description" content="编码算法 ASCII  字母A的编码是十六进制的0x41，字母B是0x42 ASCII编码最多只能有128个字符，要想对更多的文字进行编码，就需要用Unicode。而中文的中使用Unicode编码就是0x4e2d，使用UTF-8则需要3个字节编码x  UTF-8  &gt;# Unicode,以&amp;#(&amp;#X为Unicode 16进制) &gt;# &amp;#20170;&amp;">
+<meta property="og:description" content="ASCII  字母 A的编码是十六进制的 0x41，字母 B是 0x42 ASCII编码最多只能有128个字符，要想对更多的文字进行编码，就需要用Unicode。而中文的中使用Unicode编码就是 0x4e2d，使用UTF-8则需要3个字节编码x  UTF-8  # Unicode,以&amp;#(&amp;#X为Unicode 16进制) # 今偷  # UTF-8,以\u开头 e &#x3D; &amp;#x">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-12-25T13:19:46.917Z">
-<meta property="article:modified_time" content="2023-12-25T13:19:20.892Z">
+<meta property="article:modified_time" content="2024-02-19T14:22:36.705Z">
 <meta property="article:author" content="hlyuan">
+<meta property="article:tag" content="认证和授权">
 <meta name="twitter:card" content="summary_large_image">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>centyuan Blog</title>
+  <title>编码算法 - centyuan Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -199,7 +200,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text=""></span>
+            <span id="subtitle" data-typed-text="编码算法"></span>
           
         </div>
 
@@ -222,7 +223,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          3.4k 字
+          3.3k 字
         
       </span>
     
@@ -233,7 +234,7 @@
         
         
         
-          29 分钟
+          28 分钟
         
       </span>
     
@@ -270,28 +271,27 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header"></h1>
+            <h1 id="seo-header">编码算法</h1>
             
             
               <div class="markdown-body">
                 
-                <h4 id="编码算法">编码算法</h4>
-<h5 id="ASCII">ASCII</h5>
+                <h5 id="ASCII">ASCII</h5>
 <blockquote>
-<p>字母<code>A</code>的编码是十六进制的<code>0x41</code>，字母<code>B</code>是<code>0x42</code></p>
-<p>ASCII编码最多只能有128个字符，要想对更多的文字进行编码，就需要用Unicode。而中文的中使用Unicode编码就是<code>0x4e2d</code>，使用UTF-8则需要3个字节编码x</p>
+<p>字母 <code>A</code>的编码是十六进制的 <code>0x41</code>，字母 <code>B</code>是 <code>0x42</code></p>
+<p>ASCII编码最多只能有128个字符，要想对更多的文字进行编码，就需要用Unicode。而中文的中使用Unicode编码就是 <code>0x4e2d</code>，使用UTF-8则需要3个字节编码x</p>
 </blockquote>
 <h5 id="UTF-8">UTF-8</h5>
 <blockquote>
-<div class="code-wrapper"><pre><code class="hljs leaf">&gt;<span class="hljs-punctuation">#</span> Unicode,以&amp;<span class="hljs-punctuation">#</span><span class="hljs-params">(&amp;#<span class="hljs-variable">X</span>为<span class="hljs-variable">Unicode</span> 16进制)</span>
-&gt;<span class="hljs-punctuation">#</span> &amp;<span class="hljs-punctuation">#</span>20170;&amp;<span class="hljs-punctuation">#</span>20599;
+<div class="code-wrapper"><pre><code class="hljs leaf"><span class="hljs-punctuation">#</span> Unicode,以&amp;<span class="hljs-punctuation">#</span><span class="hljs-params">(&amp;#<span class="hljs-variable">X</span>为<span class="hljs-variable">Unicode</span> 16进制)</span>
+<span class="hljs-punctuation">#</span> 今偷
 
-&gt;<span class="hljs-punctuation">#</span> UTF-8,以\u开头
-&gt;e = &#x27;\u89e3\u6790\u5305\u5f02\u5e38&#x27;
-&gt;<span class="hljs-punctuation">#</span> 显示为中文
-&gt;print(&quot;\u89e3\u6790\u5305\u5f02\u5e38&quot;)  <span class="hljs-punctuation">#</span> 解析包异常
-&gt;<span class="hljs-punctuation">#</span> 显示为中文
-&gt;result = e.encode(&quot;utf-8&quot;).decode()</code></pre></div>
+<span class="hljs-punctuation">#</span> UTF-8,以\u开头
+e = &#x27;\u89e3\u6790\u5305\u5f02\u5e38&#x27;
+<span class="hljs-punctuation">#</span> 显示为中文
+print(&quot;\u89e3\u6790\u5305\u5f02\u5e38&quot;)  <span class="hljs-punctuation">#</span> 解析包异常
+<span class="hljs-punctuation">#</span> 显示为中文
+result = e.encode(&quot;utf-8&quot;).decode()</code></pre></div>
 </blockquote>
 <h5 id="URL编码">URL编码</h5>
 <blockquote>
@@ -300,24 +300,24 @@
 <p>之所以需要URL编码，是因为出于兼容性考虑，很多服务器只识别ASCII字符。但如果URL中包含中文、日文这些非ASCII字符怎么办？不要紧，URL编码有一套规则：</p>
 <ul class="lvl-1">
 <li class="lvl-2">
-<p>如果字符是<code>A</code><sub>`Z`，`a`</sub><code>z</code>，<code>0</code>~<code>9</code>以及<code>-</code>、<code>_</code>、<code>.</code>、<code>*</code>，则保持不变；</p>
+<p>如果字符是 <code>A</code><sub>`Z`，`a`</sub><code>z</code>，<code>0</code>~<code>9</code>以及 <code>-</code>、<code>_</code>、<code>.</code>、<code>*</code>，则保持不变；</p>
 </li>
 <li class="lvl-2">
-<p>如果是其他字符，先转换为UTF-8编码，然后对每个字节以<code>%XX</code>表示。</p>
+<p>如果是其他字符，先转换为UTF-8编码，然后对每个字节以 <code>%XX</code>表示。</p>
 </li>
 </ul>
-<div class="code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta prompt_">&gt;</span><span class="language-bash"><span class="hljs-comment"># URL编码,以%开头</span></span>
-<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">import json</span>
-<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">from urllib import parse</span>
-<span class="hljs-meta prompt_"></span>
-<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">ss = <span class="hljs-string">&quot;http://www.baidu.com&quot;</span></span>
-<span class="hljs-meta prompt_">&gt;</span><span class="language-bash"><span class="hljs-built_in">print</span>(parse.quote(ss))  <span class="hljs-comment"># 编码:http%3A//www.baidu.com</span></span>
-<span class="hljs-meta prompt_">&gt;</span><span class="language-bash"><span class="hljs-comment"># print(parse.unquote()) 解码</span></span></code></pre></div>
+<div class="code-wrapper"><pre><code class="hljs clean"># URL编码,以%开头
+<span class="hljs-keyword">import</span> json
+<span class="hljs-keyword">from</span> urllib <span class="hljs-keyword">import</span> parse
+
+ss = <span class="hljs-string">&quot;http://www.baidu.com&quot;</span>
+print(parse.quote(ss))  # 编码:http%<span class="hljs-number">3</span>A<span class="hljs-comment">//www.baidu.com</span>
+# print(parse.unquote()) 解码</code></pre></div>
 </blockquote>
 <h5 id="Base64编码">Base64编码</h5>
 <blockquote>
 <p>base64 编码,以=结尾</p>
-<p>URL编码是对字符进行编码，表示成<code>%xx</code>的形式，而Base64编码是对二进制数据进行编码，表示成文本格式</p>
+<p>URL编码是对字符进行编码，表示成 <code>%xx</code>的形式，而Base64编码是对二进制数据进行编码，表示成文本格式</p>
 </blockquote>
 <h4 id="哈希算法">哈希算法</h4>
 <blockquote>
@@ -379,9 +379,9 @@
 <blockquote>
 <p>Hmac算法就是一种基于密钥的消息认证码算法，它的全称是Hash-based Message Authentication Code，是一种更安全的消息摘要算法。</p>
 <p>我们回顾一下哈希算法：</p>
-<div class="code-wrapper"><pre><code class="hljs isbl">&gt;<span class="hljs-variable">digest</span> = <span class="hljs-function"><span class="hljs-title">hash</span>(<span class="hljs-variable">input</span>)</span></code></pre></div>
+<div class="code-wrapper"><pre><code class="hljs abnf"><span class="hljs-attribute">digest</span> <span class="hljs-operator">=</span> hash(input)</code></pre></div>
 <p>正是因为相同的输入会产生相同的输出，我们加盐的目的就在于，使得输入有所变化：</p>
-<div class="code-wrapper"><pre><code class="hljs isbl">&gt;<span class="hljs-variable">digest</span> = <span class="hljs-function"><span class="hljs-title">hash</span>(<span class="hljs-variable">salt</span> + <span class="hljs-variable">input</span>)</span></code></pre></div>
+<div class="code-wrapper"><pre><code class="hljs ini"><span class="hljs-attr">digest</span> = hash(salt + input)</code></pre></div>
 <p>这个salt可以看作是一个额外的“认证码”，同样的输入，不同的认证码，会产生不同的输出。因此，要验证输出的哈希，必须同时提供“认证码”</p>
 </blockquote>
 <p>Hmac算法总是和某种哈希算法配合起来用的。例如，我们使用MD5算法，对应的就是HmacMD5算法，它相当于“加盐”的MD5：</p>
@@ -503,6 +503,34 @@
             <div>
               <div class="post-metas my-3">
   
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E8%AE%A4%E8%AF%81%E5%92%8C%E6%8E%88%E6%9D%83/" class="category-chain-item">认证和授权</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E8%AE%A4%E8%AF%81%E5%92%8C%E6%8E%88%E6%9D%83/" class="print-no-link">#认证和授权</a>
+      
+    </div>
   
 </div>
 
@@ -512,7 +540,7 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div></div>
+      <div>编码算法</div>
       <div>https://centyuan.github.io/2023/12/25/认证和授权/加密与安全/</div>
     </div>
     <div class="license-meta">
