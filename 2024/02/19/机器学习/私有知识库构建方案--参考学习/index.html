@@ -1,0 +1,832 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/person_fluid.jpg">
+  <link rel="icon" href="/img/person_fluid.jpg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="hlyuan">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="基础概述与拓展  基于Transformer架构的模型主要三大分类: 1、autoregressive自回归模型（AR模型,仅解码器架构Decoder-only）：代表作GPT。本质上是一个left-to-right的语言模型。通常用于生成式任务，在长文本生成方面取得了巨大的成功，比如自然语言生成（NLG）领域的任务：摘要、翻译或抽象问答。当扩展到十亿级别参数时，表现出了少样本学习能力。缺点是单">
+<meta property="og:type" content="article">
+<meta property="og:title" content="私有知识库构建方案">
+<meta property="og:url" content="https://centyuan.github.io/2024/02/19/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E7%A7%81%E6%9C%89%E7%9F%A5%E8%AF%86%E5%BA%93%E6%9E%84%E5%BB%BA%E6%96%B9%E6%A1%88--%E5%8F%82%E8%80%83%E5%AD%A6%E4%B9%A0/index.html">
+<meta property="og:site_name" content="centyuan Blog">
+<meta property="og:description" content="基础概述与拓展  基于Transformer架构的模型主要三大分类: 1、autoregressive自回归模型（AR模型,仅解码器架构Decoder-only）：代表作GPT。本质上是一个left-to-right的语言模型。通常用于生成式任务，在长文本生成方面取得了巨大的成功，比如自然语言生成（NLG）领域的任务：摘要、翻译或抽象问答。当扩展到十亿级别参数时，表现出了少样本学习能力。缺点是单">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://pic4.zhimg.com/v2-a285cd76374ece7f56a7b7e450ae3fab_b.jpg">
+<meta property="article:published_time" content="2024-02-19T14:12:01.908Z">
+<meta property="article:modified_time" content="2024-02-19T14:09:55.175Z">
+<meta property="article:author" content="hlyuan">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://pic4.zhimg.com/v2-a285cd76374ece7f56a7b7e450ae3fab_b.jpg">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>私有知识库构建方案 - centyuan Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"centyuan.github.io","root":"/","version":"1.9.5","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.0.0"><link rel="alternate" href="/atom.xml" title="centyuan Blog" type="application/atom+xml">
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>centyuan</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/person_default.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="私有知识库构建方案"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-02-19 22:12" pubdate>
+          2024年2月19日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3.8k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          32 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">私有知识库构建方案</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p><img src="https://pic4.zhimg.com/v2-a285cd76374ece7f56a7b7e450ae3fab_b.jpg" srcset="/img/loading.gif" lazyload alt="LLM Evolutionary Tree"></p>
+<h4 id="基础概述与拓展">基础概述与拓展</h4>
+<blockquote>
+<p>基于Transformer架构的模型主要三大分类:</p>
+<p>1、autoregressive自回归模型（AR模型,仅解码器架构Decoder-only）：代表作GPT。本质上是一个left-to-right的语言模型。通常用于生成式任务，在长文本生成方面取得了巨大的成功，比如自然语言生成（NLG）领域的任务：摘要、翻译或抽象问答。当扩展到十亿级别参数时，表现出了少样本学习能力。缺点是单向注意力机制，在NLU任务中，无法完全捕捉上下文的依赖关系。</p>
+<p>2、autoencoding自编码模型（AE模型,仅编码器架构Encoder-only）：代表作BERT。是通过某个降噪目标（比如MLM）训练的双向文本编码器。编码器会产出适用于NLU任务的上下文表示，但无法直接用于文本生成。</p>
+<p>3、encoder-decoder（Seq2seq模型）：代表作T5。采用双向注意力机制，通常用于条件生成任务，比如文本摘要、机器翻译等</p>
+<p><strong><a target="_blank" rel="noopener" href="https://kexue.fm/archives/9529">为什么现在的LLM都是Decoder-only的架构？</a></strong></p>
+<p><strong><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/588325646/answer/2940298964">为什么现在的LLM都是Decoder only的架构？</a></strong></p>
+<p><strong><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/406751681">生成式预训练模型：UniLM、BART、T5、GPT</a></strong></p>
+<p><strong><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/614766286">大语言模型调研汇总</a></strong></p>
+<p><strong><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_56591814/article/details/119759105">从循环神经网络、transformer到GPT2</a></strong></p>
+<p><strong><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/123211148">循环神经网络讲解（RNN/LSTM/GRU）</a></strong></p>
+<p><strong><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/637985826">LLMs模型速览上（GPTs、LaMDA、GLM/ChatGLM、PaLM/Flan-PaLM）</a></strong></p>
+</blockquote>
+<h4 id="ChatGPT-Fine-tune">ChatGPT +Fine-tune</h4>
+<blockquote>
+<p>ChatGPT的唯一方式就是官方说的微调出一个自己的模型，然后上传到ChatGPT，聊天时选用这个模型就好</p>
+<p>参考文档:</p>
+<p><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=mzz1ldrRcuc">如何微调你的chatgpt？fine-tuning实例教学</a></p>
+<p><a target="_blank" rel="noopener" href="https://platform.openai.com/docs/guides/fine-tuning/fine-tuning">openai fine-tuning guides</a></p>
+</blockquote>
+<p>​</p>
+<h4 id="Azure-Studio-训练自己的GPT">Azure  Studio 训练自己的GPT</h4>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/azure/ai-services/openai/how-to/fine-tuning?tabs=turbo%2Cpython&amp;pivots=programming-language-studio">Azure OpenAI 微调模型文档</a></p>
+</blockquote>
+<h4 id="开源LLM-本地部署和微调">开源LLM + 本地部署和微调</h4>
+<h5 id="开源大模型">开源大模型</h5>
+<h6 id="ChatGLM">ChatGLM</h6>
+<blockquote>
+<p>清华和智谱公司搞的开源LLM,ChatGLM-6B 是一个开源的、支持中英双语的对话语言模型，基于 <strong><a href="https://link.zhihu.com/?target=https%3A//github.com/THUDM/GLM">General Language Model (GLM)</a></strong> 架构，具有 62 亿参数。结合模型量化技术，用户可以在消费级的显卡上进行本地部署（INT4 量化级别下最低只需 6GB 显存）。 ChatGLM-6B 使用了和 ChatGPT 相似的技术，针对中文问答和对话进行了优化。经过约 1T 标识符的中英双语训练，辅以监督微调、反馈自助、人类反馈强化学习等技术的加持，62 亿参数的 ChatGLM-6B 已经能生成相当符合人类偏好的回答。</p>
+<p><strong><a target="_blank" rel="noopener" href="https://luxiangdong.com/2023/10/30/chatglm3/#/ChatGLM3-6B%E6%9D%A5%E4%BA%86">ChatGLM3-6B针对RAG能力对比测试</a></strong></p>
+<p><strong>github:</strong><a target="_blank" rel="noopener" href="https://github.com/THUDM/ChatGLM3">ChatGLM3-6B</a></p>
+<p><strong>官方体验地址:</strong><a target="_blank" rel="noopener" href="https://www.chatglm.cn/">智谱清言</a></p>
+<p><strong><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/630134021">清华ChatGLM底层原理详解</a></strong></p>
+<p><strong><a target="_blank" rel="noopener" href="https://chatglm.cn/blog">ChatGLM-blog</a></strong></p>
+</blockquote>
+<h6 id="Alpaca">Alpaca</h6>
+<blockquote>
+<p>**Alpaca 7B是由Meta的LLaMA 7B模型通过52K指令微调得到的模型。Alpaca与OpenAI的text-davinci-003（GPT-3.5）表现类似，模型容量惊人的小，易于复现，且复现成本低（&lt;600美元）。**斯坦福发布了模型训练方法和数据，并打算在未来发布模型权重</p>
+<p><strong><a target="_blank" rel="noopener" href="https://github.com/tatsu-lab/stanford_alpaca">github-stanford-alpaca</a></strong></p>
+<p><strong>github <a target="_blank" rel="noopener" href="https://github.com/tloen/alpaca-lora">alpaca-lora</a></strong></p>
+<p><strong>github <a target="_blank" rel="noopener" href="https://github.com/ymcui/Chinese-LLaMA-Alpaca">Chinese-LLAMA-Alpaca</a></strong></p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/629998652">Alpaca-lora本地化部署实践</a></p>
+</blockquote>
+<h6 id="Vicuna">Vicuna</h6>
+<blockquote>
+<p>可达到 ChatGPT/Bard 90% 以上水平</p>
+<p>来自加州大学伯克利分校、CMU、斯坦福大学和加州大学圣地亚哥分校的成员，共同推出了一个 Vicuna-13B 开源聊天机器人，由增强的数据集和易于使用、可扩展的基础设施支持。</p>
+<p>以 GPT-4 为评判标准的初步评估显示，Vicuna-13B 达到了 OpenAI ChatGPT 和 Google Bard 90% 以上的质量，同时在 90% 以上的情况下超过了 LLaMA 和 Stanford Alpaca 等其他模型的表现。训练 Vicuna-13B 成本约为 300 美元。训练和服务代码，以及在线<a href="https://link.zhihu.com/?target=https%3A//www.oschina.net/action/GoToLink%3Furl%3Dhttps%3A%2F%2Fchat.lmsys.org%2F">演示</a>都是公开的，可用于非商业用途</p>
+<p><strong><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/633246784">本地化部署Vicuna模型-教程</a></strong></p>
+<p><strong><a target="_blank" rel="noopener" href="https://huggingface.co/lmsys/vicuna-13b-v1.5">Hugging Face 地址</a></strong></p>
+<p><strong><a target="_blank" rel="noopener" href="https://huggingface.co/lmsys">Hugging Face lmsys</a></strong></p>
+<p><strong><a target="_blank" rel="noopener" href="https://github.com/lm-sys/FastChat/tree/main/fastchat">FastChat-github</a></strong></p>
+<p><strong><a href="https://link.zhihu.com/?target=https%3A//vicuna.lmsys.org/">Vicuna: An Open-Source Chatbot Impressing GPT-4 with 90% ChatGPT Quality</a></strong></p>
+</blockquote>
+<h6 id="LLaMA2">LLaMA2</h6>
+<blockquote>
+<p>Meta加微软，开源，免费开放给商业</p>
+<p>Meta宣布和微软深化合作，正式推出新一代开源大型语言模型Llama 2，并将该模型免费开放给商业和研究使用。当时Meta表示LLaMA拥有超高性能，使用130亿参数的LLaMA在规模仅为ChatGPT 的十分之一的情况下，性能表现可以优于GPT-3。使用650 亿参数的 LLaMA 则可以与 DeepMind700 亿参数的 Chinchilla模型和谷歌5400 亿参数的 PaLM模型比肩</p>
+<p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1oc411R7Fy/?vd_source=3a5c8a14693f88eaee1ab81779a7f8cb">lama2模型申请与本地部署详细</a></p>
+</blockquote>
+<h4 id="外部LLM-ChatGPT-ChatGLM3-向量数据库">外部LLM(ChatGPT/ChatGLM3) + 向量数据库</h4>
+<blockquote>
+<p>当我们有一份文档需要 GPT 处理时，例如客服培训资料或者操作手册，可以先将这份文档的所有内容转化成向量（这个过程称之为 Vector Embedding），然后当用户提出相关问题时，我们将用户的搜索内容转换成向量，然后在数据库中搜索最相似的向量，匹配最相似的几个上下文，最后将上下文返回给 GPT。这样不仅可以大大减少 GPT 的计算量，从而提高响应速度，更重要的是降低成本，并绕过 GPT 的 tokens 限制</p>
+</blockquote>
+<p>截至目前，汇总到目前的向量数据库有以下几种选择：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">向量数据库</th>
+<th style="text-align:left">URL</th>
+<th style="text-align:left">GitHub Star</th>
+<th style="text-align:left">Language</th>
+<th style="text-align:left">Cloud</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">chroma</td>
+<td style="text-align:left"><a target="_blank" rel="noopener" href="https://github.com/chroma-core/chroma">https://github.com/chroma-core/chroma</a></td>
+<td style="text-align:left">7.4K</td>
+<td style="text-align:left">Python</td>
+<td style="text-align:left">❌</td>
+</tr>
+<tr>
+<td style="text-align:left">milvus</td>
+<td style="text-align:left"><a target="_blank" rel="noopener" href="https://github.com/milvus-io/milvus">https://github.com/milvus-io/milvus</a></td>
+<td style="text-align:left">21.5K</td>
+<td style="text-align:left">Go/Python/C++</td>
+<td style="text-align:left">✅</td>
+</tr>
+<tr>
+<td style="text-align:left">pinecone</td>
+<td style="text-align:left"><a target="_blank" rel="noopener" href="https://www.pinecone.io/">https://www.pinecone.io/</a></td>
+<td style="text-align:left">❌</td>
+<td style="text-align:left">❌</td>
+<td style="text-align:left">✅</td>
+</tr>
+<tr>
+<td style="text-align:left">qdrant</td>
+<td style="text-align:left"><a target="_blank" rel="noopener" href="https://github.com/qdrant/qdrant">https://github.com/qdrant/qdrant</a></td>
+<td style="text-align:left">11.8K</td>
+<td style="text-align:left">Rust</td>
+<td style="text-align:left">✅</td>
+</tr>
+<tr>
+<td style="text-align:left">typesense</td>
+<td style="text-align:left"><a target="_blank" rel="noopener" href="https://github.com/typesense/typesense">https://github.com/typesense/typesense</a></td>
+<td style="text-align:left">12.9K</td>
+<td style="text-align:left">C++</td>
+<td style="text-align:left">❌</td>
+</tr>
+<tr>
+<td style="text-align:left">weaviate</td>
+<td style="text-align:left"><a target="_blank" rel="noopener" href="https://github.com/weaviate/weaviate">https://github.com/weaviate/weaviate</a></td>
+<td style="text-align:left">6.9K</td>
+<td style="text-align:left">Go</td>
+<td style="text-align:left">✅</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV11a4y1c7SW/">向量数据库技术鉴赏</a></p>
+</blockquote>
+<h4 id="内部部署开源LLM-向量数据库">内部部署开源LLM + 向量数据库</h4>
+<h6 id="Langchain-Chatchat">Langchain-Chatchat</h6>
+<blockquote>
+<p>Langchain-Chatchat（原Langchain-ChatGLM）基于 Langchain 与 ChatGLM 等语言模型的本地知识库问答</p>
+<p><strong>github:</strong> <a target="_blank" rel="noopener" href="https://github.com/chatchat-space/Langchain-Chatchat">Langchain-Chatchat</a></p>
+<p><strong><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV13M4y1e7cN/?share_source=copy_web&amp;vd_source=e6c5aafe684f30fbe41925d61ca6d514">ChatGLM + LangChain 实践培训</a></strong></p>
+<p><strong><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1t8411y7fp/">ChatGLM+Langchain构建本地知识库，只需6G显存，支持实时上传文档</a></strong></p>
+</blockquote>
+<h6 id="privateGPT">privateGPT</h6>
+<blockquote>
+<p><strong>github:</strong> <a target="_blank" rel="noopener" href="https://github.com/imartinez/privateGPT">privateGPT</a></p>
+</blockquote>
+<h6 id="FastGPT-不推荐">FastGPT(不推荐)</h6>
+<blockquote>
+<p><strong>github:</strong><a target="_blank" rel="noopener" href="https://github.com/labring/FastGPT">FastGPT</a></p>
+</blockquote>
+<h6 id="其他方案">其他方案</h6>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/652685138">https://zhuanlan.zhihu.com/p/652685138</a></p>
+</blockquote>
+<h4 id="Other">Other</h4>
+<h5 id="gpt对话分享">gpt对话分享</h5>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://sharegpt.com/">ShareGPT</a></p>
+</blockquote>
+<h5 id="大语言模型评估排行榜汇总">大语言模型评估排行榜汇总</h5>
+<blockquote>
+<p>LMSYS:<a target="_blank" rel="noopener" href="https://chat.lmsys.org/?leaderboard">排行榜地址</a></p>
+<blockquote>
+<p>排行榜由Chatboot Arena、MT-Bench、MMLU主要基准组成。</p>
+<ul class="lvl-2">
+<li class="lvl-2">Chatbot Arena- 一个大语言模型基准平台，以众包的方式进行匿名、随机的战斗。目前有 47K+ 用户的投票数据，采用Elo 评级方法进行计算结果。该项基准正在考虑增加更多的开源/闭源模型。</li>
+<li class="lvl-2">MT-Bench- 一个具有挑战性的多轮问题集，使用 GPT-4 对模型响应进行评分。</li>
+<li class="lvl-2">MMLU-（5-shot）——测试大语言模型的多任务准确性，该测试覆盖了基础数学、美国历史、计算机科学、法律等57项任务</li>
+</ul>
+</blockquote>
+<p>c-Eval: <a target="_blank" rel="noopener" href="https://cevalbenchmark.com/static/leaderboard.html">排行榜地址</a></p>
+<blockquote>
+<p>C-Eval是一个针对基础模型的综合中文评估套件。它由 13948 道多项选择题组成，涵盖 52 个不同学科和四个难度级别</p>
+</blockquote>
+<p>SuperCLUElyb: <a target="_blank" rel="noopener" href="https://www.superclueai.com/">排行榜地址</a></p>
+<blockquote>
+<p>SuperCLUE-琅琊榜是一个中文大模型匿名对战平台，由中文语言理解测评基准开源社区CLUE的成员发起的，目前已有5.8K投票数据，使用Elo评级系统来计算模型的相对性能</p>
+</blockquote>
+</blockquote>
+<p>instructor: <a target="_blank" rel="noopener" href="https://github.com/jxnl/instructor">https://github.com/jxnl/instructor</a></p>
+<p>cohere: <a target="_blank" rel="noopener" href="https://cohere.com">https://cohere.com</a></p>
+<p>AppAgent: <a target="_blank" rel="noopener" href="https://github.com/mnotgod96/AppAgent">https://github.com/mnotgod96/AppAgent</a></p>
+<h5 id="如何基于Embedding让大模型解决长文本-如PDF-的输入问题">如何基于Embedding让大模型解决长文本(如PDF)的输入问题</h5>
+<blockquote>
+<p>大多数打语言模型都无法处理过长的文本,如何让大模型&quot;读懂&quot;一个PDF尼</p>
+<p>1.基于pdf创建向量Embedding,并在数据库中存储</p>
+<p>2.提问Prompt，将问题向量去数据库检索相似的向量,将检索的相似的向量原文一起给到GPT</p>
+<div class="code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta prompt_">&gt;</span><span class="language-bash">准备搜索数据（仅一次）</span>
+收集：即获取你要用的数据，例如OpenAI的案例是下载几百篇有关2022年奥运会的维基百科文章
+切块：将文档分成短小的、大多是自包含的部分以进行嵌入
+嵌入：使用OpenAI API对每个部分数据获得embeddings结果
+存储：存储embedding是（对于大型数据集，可以使用向量数据库）
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">搜索（每次查询一次）</span>
+给定用户问题，从OpenAI API生成查询的embeddings
+使用embeddings，按照与查询相关性对文本部分进行排序
+<span class="hljs-meta prompt_">&gt;</span><span class="language-bash">提问（每次查询一次）</span>
+将问题和最相关的部分插入到发送给GPT的消息中
+返回GPT的答案</code></pre></div>
+</blockquote>
+<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>私有知识库构建方案</div>
+      <div>https://centyuan.github.io/2024/02/19/机器学习/私有知识库构建方案--参考学习/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>hlyuan</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年2月19日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/02/19/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E6%8F%90%E7%A4%BA%E8%AF%8DPrompt%E5%B7%A5%E7%A8%8B--%E5%8F%82%E8%80%83%E5%AD%A6%E4%B9%A0/" title="提示词Prompt">
+                        <span class="hidden-mobile">提示词Prompt</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <div> <span id="timeDate">载入天数...</span> <span id="times">载入时分秒...</span> <script src="/js/duration.js"></script> </div> <a href="https://gitee/centyuan" target="_blank" rel="nofollow noopener"><span>centyuan</span></a> <i class="iconfont icon-love"></i> <a href="https://centyuan.github.io" target="_blank" rel="nofollow noopener"><span>BLog</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

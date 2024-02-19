@@ -1,0 +1,975 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/person_fluid.jpg">
+  <link rel="icon" href="/img/person_fluid.jpg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="hlyuan">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="title: 大模型主流应用RAG  前言 RAG(Retrieval Augmented Generation)，检索增强生成（RAG）指的是在使用LLMs回答问题之前，从外部知识库中检索相关信息，本质还是基于提示词工程，根据问题和相关文档进行检索，利用LLM的推理能力和向量数据库的进行语义相识度搜索，将与问题语义相识的文档带入Prompt。  论文:Retrieval-Augmented G">
+<meta property="og:type" content="article">
+<meta property="og:title" content="centyuan Blog">
+<meta property="og:url" content="https://centyuan.github.io/2024/02/19/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/LLM-RAG/index.html">
+<meta property="og:site_name" content="centyuan Blog">
+<meta property="og:description" content="title: 大模型主流应用RAG  前言 RAG(Retrieval Augmented Generation)，检索增强生成（RAG）指的是在使用LLMs回答问题之前，从外部知识库中检索相关信息，本质还是基于提示词工程，根据问题和相关文档进行检索，利用LLM的推理能力和向量数据库的进行语义相识度搜索，将与问题语义相识的文档带入Prompt。  论文:Retrieval-Augmented G">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://github.com/chatchat-space/Langchain-Chatchat/blob/master/img/langchain+chatglm.png">
+<meta property="og:image" content="https://pic2.zhimg.com/100/v2-e5beb6ea9c08cdcf4ae4d5cdaefa0541_r.jpg">
+<meta property="og:image" content="https://pic4.zhimg.com/v2-cfeaf2d1288b2851752a6a463c35b427_b.jpg">
+<meta property="article:published_time" content="2024-02-19T14:11:52.179Z">
+<meta property="article:modified_time" content="2024-01-30T11:41:40.428Z">
+<meta property="article:author" content="hlyuan">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://github.com/chatchat-space/Langchain-Chatchat/blob/master/img/langchain+chatglm.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>centyuan Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"centyuan.github.io","root":"/","version":"1.9.5","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.0.0"><link rel="alternate" href="/atom.xml" title="centyuan Blog" type="application/atom+xml">
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>centyuan</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/person_default.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text=""></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-02-19 22:11" pubdate>
+          2024年2月19日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          6.8k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          58 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header"></h1>
+            
+            
+              <div class="markdown-body">
+                
+                <blockquote>
+<p>title: 大模型主流应用RAG</p>
+</blockquote>
+<h4 id="前言">前言</h4>
+<p>RAG(<strong>Retrieval Augmented Generation</strong>)，检索增强生成（RAG）指的是在使用LLMs回答问题之前，从外部知识库中检索相关信息，本质还是基于提示词工程，根据问题和相关文档进行检索，利用LLM的推理能力和向量数据库的进行语义相识度搜索，将与问题语义相识的文档带入Prompt。</p>
+<blockquote>
+<p>论文:<a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2312.10997.pdf">Retrieval-Augmented Generation for Large Language Models: A Survey</a></p>
+</blockquote>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/673910600">LLM之RAG理论（二）| RAG综述论文详解</a></p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/676982074">大模型主流应用RAG的介绍——从架构到技术细节</a></p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/644079274">问答系统使用 Embedding 召回的局限及解决方案</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/v_JULY_v/article/details/131552592">基于LangChain+LLM的本地知识库问答：从企业单文档问答到批量文档问答</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/v_JULY_v/article/details/135257848">知识库问答LangChain+LLM的二次开发：商用时的典型问题及其改进方案</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/628651389/answer/3321989558?utm_psn=1730185514337189888">检索增强生成（RAG）有什么好的优化方案？</a></p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/676996307">Rerank——RAG中百尺竿头更进一步的神器，从原理到解决方案</a></p>
+<p><strong>知识库</strong></p>
+<p><strong>Embedding Model</strong></p>
+<p><img src="https://github.com/chatchat-space/Langchain-Chatchat/blob/master/img/langchain+chatglm.png" srcset="/img/loading.gif" lazyload alt="Embedding"></p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1749306">用万字长文聊一聊 Embedding 技术原理</a></p>
+</blockquote>
+<p><strong>分类</strong></p>
+<blockquote>
+<ul class="lvl-1">
+<li class="lvl-2">
+<p>基于矩阵分解的方式，代表方式是SVD</p>
+</li>
+<li class="lvl-2">
+<p>基于内容的Embedding：1.静态Embedding(如 word2vec、GloVe 和 FastText), 2.动态Embedding(如 ELMo、GPT 和 BERT)</p>
+</li>
+<li class="lvl-2">
+<p>基于物品序列：item2vec</p>
+</li>
+<li class="lvl-2">
+<p>基于图的Embedding: 分为浅层图模型和深层图模型。浅层图模型有deepwalk、Node2vec、EGES，深层图模型有GCN、GraphSAGE等</p>
+</li>
+</ul>
+</blockquote>
+<blockquote>
+<p>1.BAAI/bge-large-zh-v1.5         # HuggingFaceBgeEmbeddings(model=“BAAI/bge-large-zh-v1.5”)<br>
+2.GanymedeNil/text2vec-large-chinese/text2vec-base-chinese    #  开源版本<br>
+3.text-embedding-ada-002            # openai 需要付费<br>
+4.models/embedding-001            # google embedding</p>
+<div class="code-wrapper"><pre><code class="hljs ini"><span class="hljs-attr">result</span> = genai.embed_content(
+   <span class="hljs-attr">model</span>=<span class="hljs-string">&quot;models/embedding-001&quot;</span>,
+   <span class="hljs-attr">content</span>=<span class="hljs-string">&quot;What is the meaning of life?&quot;</span>,
+   <span class="hljs-attr">task_type</span>=<span class="hljs-string">&quot;retrieval_document&quot;</span>,
+   <span class="hljs-attr">title</span>=<span class="hljs-string">&quot;Embedding of single string&quot;</span>)</code></pre></div>
+</blockquote>
+<div class="code-wrapper"><pre><code class="hljs mathematica">嵌入算法<span class="hljs-operator">:</span>
+词嵌入<span class="hljs-built_in">Word</span> <span class="hljs-variable">Embedding</span><span class="hljs-operator">:</span> 
+句子<span class="hljs-operator">/</span>文档嵌入 <span class="hljs-variable">Sentence</span><span class="hljs-operator">/</span><span class="hljs-variable">Document</span> <span class="hljs-variable">Embedding</span>： 
+图嵌入<span class="hljs-built_in">Graph</span> <span class="hljs-variable">Embedding</span><span class="hljs-operator">:</span> 
+常用嵌入技术<span class="hljs-operator">:</span> 
+<span class="hljs-variable">Word2Vec</span><span class="hljs-operator">:</span> <span class="hljs-variable">Google</span>开发的一种计算词向量的模型，有两种训练架构：<span class="hljs-variable">CBOW</span>（<span class="hljs-variable">Continuous</span> <span class="hljs-variable">Bag</span> <span class="hljs-variable">of</span> <span class="hljs-variable">Words</span>）和<span class="hljs-built_in">Skip</span><span class="hljs-operator">-</span><span class="hljs-variable">gram</span>
+<span class="hljs-variable">Glove</span><span class="hljs-operator">:</span>斯坦福大学开发的模型，通过对词与词之间共现概率的矩阵进行分解来学习词向量
+<span class="hljs-variable">FastText</span>（<span class="hljs-variable">Global</span> <span class="hljs-built_in">Vectors</span> <span class="hljs-variable">for</span> <span class="hljs-built_in">Word</span> <span class="hljs-variable">Representation</span>）：<span class="hljs-variable">Facebook</span>开发，和<span class="hljs-variable">Word2Vec</span>类似，但它在训练过程中考虑了词的内部结构，即子词（<span class="hljs-variable">subwords</span>）信息
+<span class="hljs-variable">ELMo</span>（<span class="hljs-variable">Embeddings</span> <span class="hljs-variable">from</span> <span class="hljs-built_in">Language</span> <span class="hljs-variable">Models</span>）：使用双向<span class="hljs-variable">LSTM</span>训练得到的深度语言模型来生成词嵌入，能够捕捉词在不同语境中的用法。
+<span class="hljs-variable">BERT</span>（<span class="hljs-variable">Bidirectional</span> <span class="hljs-variable">Encoder</span> <span class="hljs-variable">Representations</span> <span class="hljs-variable">from</span> <span class="hljs-variable">Transformers</span>）：<span class="hljs-variable">Google</span>开发，使用了<span class="hljs-variable">Transformer</span>的<span class="hljs-variable">Encoder</span>来预训练深度双向表示，可以产生依赖于上下文的词嵌入。
+<span class="hljs-variable">Transformer</span>：不单独是一个嵌入模型，但其编码器和解码器都使用自注意力机制来处理序列信息，并被广泛用于生成上下文敏感的嵌入。
+每种嵌入技术都有它的特点和适用场景，选择哪种技术取决于具体的任务需求和资源限制。随着深度学习的发展，越来越多的嵌入模型被提出，并在各种自然语言处理任务中取得了优异的性能</code></pre></div>
+<p><strong>向量数据库</strong></p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/2312534">向量数据库｜一文全面了解向量数据库的基本概念、原理、算法、选型</a></p>
+</blockquote>
+<p>推荐使用milvus</p>
+<blockquote>
+<p>collection-&gt;segment-&gt;entity(搜索中:会搜素Milvus每个segment,并返回合并后的结果)</p>
+<p>Sharding-分片:单个 Collection 包含 2 个分片（Shard）</p>
+<p>Partition-分区:分区是集合（Collection）的一个分区。Milvus 支持将收集数据划分为物理存储上的多个部分。这个过程称为分区，每个分区可以包含多个段</p>
+<blockquote>
+<p>分区的意义在于通过划定分区减少数据读取，而分片的意义在于多台机器上并行写入操作。</p>
+<p>Milvus 允许您将大量向量数据分成少量分区。然后，搜索和其他操作可以限制在一个分区内以提高性能。</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>Resource</th>
+<th>Limit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Partition</td>
+<td>4,096</td>
+</tr>
+<tr>
+<td>Shard</td>
+<td>64</td>
+</tr>
+<tr>
+<td>Field</td>
+<td>64</td>
+</tr>
+<tr>
+<td>Index</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Entity</td>
+<td>unlimited</td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">向量数据库</th>
+<th style="text-align:left">URL</th>
+<th style="text-align:left">GitHub Star</th>
+<th style="text-align:left">Language</th>
+<th style="text-align:left">Cloud</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">chroma</td>
+<td style="text-align:left"><a target="_blank" rel="noopener" href="https://github.com/chroma-core/chroma">https://github.com/chroma-core/chroma</a></td>
+<td style="text-align:left">7.4K</td>
+<td style="text-align:left">Python</td>
+<td style="text-align:left">❌</td>
+</tr>
+<tr>
+<td style="text-align:left">milvus</td>
+<td style="text-align:left"><a target="_blank" rel="noopener" href="https://github.com/milvus-io/milvus">https://github.com/milvus-io/milvus</a></td>
+<td style="text-align:left">21.5K</td>
+<td style="text-align:left">Go/Python/C++</td>
+<td style="text-align:left">✅</td>
+</tr>
+<tr>
+<td style="text-align:left">pinecone</td>
+<td style="text-align:left"><a target="_blank" rel="noopener" href="https://www.pinecone.io/">https://www.pinecone.io/</a></td>
+<td style="text-align:left">❌</td>
+<td style="text-align:left">❌</td>
+<td style="text-align:left">✅</td>
+</tr>
+<tr>
+<td style="text-align:left">qdrant</td>
+<td style="text-align:left"><a target="_blank" rel="noopener" href="https://github.com/qdrant/qdrant">https://github.com/qdrant/qdrant</a></td>
+<td style="text-align:left">11.8K</td>
+<td style="text-align:left">Rust</td>
+<td style="text-align:left">✅</td>
+</tr>
+<tr>
+<td style="text-align:left">typesense</td>
+<td style="text-align:left"><a target="_blank" rel="noopener" href="https://github.com/typesense/typesense">https://github.com/typesense/typesense</a></td>
+<td style="text-align:left">12.9K</td>
+<td style="text-align:left">C++</td>
+<td style="text-align:left">❌</td>
+</tr>
+<tr>
+<td style="text-align:left">weaviate</td>
+<td style="text-align:left"><a target="_blank" rel="noopener" href="https://github.com/weaviate/weaviate">https://github.com/weaviate/weaviate</a></td>
+<td style="text-align:left">6.9K</td>
+<td style="text-align:left">Go</td>
+<td style="text-align:left">✅</td>
+</tr>
+</tbody>
+</table>
+<p><strong>影响最后实际效果的因素很多</strong></p>
+<blockquote>
+<p><strong>文本分割算法、embedding、向量的存储 搜索 匹配 召回 排序、大模型本身的生成能力</strong></p>
+<div class="code-wrapper"><pre><code class="hljs basic"><span class="hljs-symbol">1 </span>如何解决检索出错：embedding算法是关键之一
+<span class="hljs-symbol">2 </span>如何解决检索到相关但不根据知识库回答而是根据模型自有的预训练知识回答
+<span class="hljs-symbol">3 </span>如何针对结构化文档采取更好的chunk分割：基于规则
+<span class="hljs-symbol">4 </span>如何解决非结构化文档分割不够准确的问题：比如最好按照语义切分
+<span class="hljs-symbol">5 </span>如何确保召回结果的全面性与准确性：多路召回与最后的去重/精排
+<span class="hljs-symbol">6 </span>如何解决基于文档中表格的问答</code></pre></div>
+</blockquote>
+<blockquote>
+<p>1.知识库本身语料的格式问题。如果有大量的短文本占据一行或冗余的数据，其表示的意思和信息很有限。因此在做本地知识库的时候，如果前后语句的语义是连贯的但又不在一行，我们需要人工将这些段落做一下整理，将短的文本凑到一行。尽量避免多行的短文本</p>
+<p>2.文本分割的效果。很多文本分割的处理方式比较粗暴，就是单纯的按照标点如句号、分号来分割，这其实打断了原本比较连贯的文本，效果不一定好。当然，如果多加上前后几句文本，效果可能会有改善，但是这个度不好控制。比较理想的方式是采用语义分割</p>
+<div class="code-wrapper"><pre><code class="hljs clean"><span class="hljs-number">1.</span>中文标点符号(正则匹配标点符号)
+
+<span class="hljs-number">2.</span>Langchain 的 text_splitter
+<span class="hljs-keyword">from</span> langchain.text_splitter <span class="hljs-keyword">import</span> CharacterTextSplitter  # 按照指定分隔符分割 默认<span class="hljs-string">&quot;\n\n&quot;</span>chunk_size=字符长度,chunk_overlap=重复字符(中间重复)
+<span class="hljs-keyword">from</span> langchain.text_splitter <span class="hljs-keyword">import</span> MarkdownTextSplitter   # 沿着Markdown的标题,代码块或水平规则来分割文本
+<span class="hljs-keyword">from</span> langchain.text_splitter <span class="hljs-keyword">import</span> PythonCodeTextSplitter  # 沿着Python类和方法的定义分割文本
+<span class="hljs-keyword">from</span> langchain.text_splitter <span class="hljs-keyword">import</span> RecursiveCharacterTextSplitter # 用于通用文本的分割器。它以一个字符列表为参数，尽可能地把所有的段落(然后是句子，然后是单词)放在一起
+<span class="hljs-keyword">from</span> langchain.text_splitter <span class="hljs-keyword">import</span> TokenTextSplitter      # 根据openAI的token分割器
+<span class="hljs-keyword">from</span> langchain.text_splitter <span class="hljs-keyword">import</span> SpacyTextSplitter   # spaCy是一个NLP领域的文本预处理Python库(包括分词,词性标注,依存分析,词性还原,命名实体识别)
+<span class="hljs-keyword">from</span> langchain.text_splitter <span class="hljs-keyword">import</span> NLTKTextSplitter   # 
+或处理html的分块方式
+<span class="hljs-number">3.</span>Spacy Text Splitter
+
+阿里达摩院开源的语义分割:nlp_bert_document-segmentation_chinese-base(https:<span class="hljs-comment">//modelscope.cn/models/damo/nlp_bert_document-segmentation_chinese-base/summary)</span>
+百度PaddleNLP</code></pre></div>
+<p>3.Embedding 模型计算向量以及向量间的相似度，选择不同的模型，这个效果肯定会有差异</p>
+<p>MTEB: Massive Text Embedding Benchmark 大规模文本嵌入基准测试</p>
+<p>榜单地址:<a target="_blank" rel="noopener" href="https://huggingface.co/spaces/mteb/leaderboard">https://huggingface.co/spaces/mteb/leaderboard</a></p>
+<p>**<a target="_blank" rel="noopener" href="https://github.com/huggingface/text-embeddings-inference">text-embeddings-inference</a>**加速推理</p>
+<div class="code-wrapper"><pre><code class="hljs routeros">1.BAAI/bge-large-zh-v1.5         # HuggingFaceBgeEmbeddings(<span class="hljs-attribute">model</span>=<span class="hljs-string">&quot;BAAI/bge-large-zh-v1.5&quot;</span>)
+2.text2vec-large-chinese /text2vec-base-chinese    #  开源版本
+3.text-embedding-ada-002            # openai 需要付费
+4.models/embedding-001            # google embedding 
+```
+result = genai.embed_content(
+<span class="hljs-attribute">model</span>=<span class="hljs-string">&quot;models/embedding-001&quot;</span>,
+<span class="hljs-attribute">content</span>=<span class="hljs-string">&quot;What is the meaning of life?&quot;</span>,
+<span class="hljs-attribute">task_type</span>=<span class="hljs-string">&quot;retrieval_document&quot;</span>,
+<span class="hljs-attribute">title</span>=<span class="hljs-string">&quot;Embedding of single string&quot;</span>)
+```
+5.GanymedeNil/text2vec-large-chinese</code></pre></div>
+<p>4.大模型本身的能力，如现在 chatgpt-4 应该是傲视群雄，大模型基本是分为 chatgpt-4 和其他了。当然，使用 chatgpt 本身有信息安全问题以及费用问题。国内清华开源的 chatGLM-6b 是一个效果和性价比尚可的替代</p>
+</blockquote>
+<p><strong>1.语料处理</strong></p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://github.com/run-llama/llama_index">llama_index</a></p>
+<p>LlamaIndex (formerly GPT Index) is a data framework for your LLM applications</p>
+</blockquote>
+<p><strong>2.Text Splitter</strong></p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/670771195">适合的文本分块策略</a></p>
+</blockquote>
+<p><strong>3.Embedding选择</strong></p>
+<p><strong>4.LLM选择和集成</strong></p>
+<blockquote>
+<p>打造智能客服：LLM和本地 知识库的完美协同原理</p>
+<p><strong>召回文档怎么结合LLM</strong></p>
+<ol>
+<li class="lvl-3">
+<p>Sutff：将检索retrieval的相应文档给到prompt上下文context中</p>
+</li>
+<li class="lvl-3">
+<p>refine: 不断拿出一个检索的文档给到prompt的上下文，在将这个过程进行迭代</p>
+</li>
+<li class="lvl-3">
+<p>map reduce: 每个文档给到prompt得到答案，将所有答案合并再去推理</p>
+</li>
+<li class="lvl-3">
+<p>map re-rank: 每个文档的回答进行打分，rank后拿到最佳</p>
+</li>
+</ol>
+</blockquote>
+<p><strong>RAG优化</strong></p>
+<p><strong>检索增强生成（RAG）有什么好的优化方案？</strong></p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/628651389/answer/3321989558?utm_psn=1730185514337189888">参考</a></p>
+<p><strong>基础</strong></p>
+<div class="code-wrapper"><pre><code class="hljs inform7">文档块切分:设置适当的块间重叠、多粒度文档块切分、基于语义的文档切分、文档块摘要\
+文本嵌入模型：基于新语料微调嵌入模型、动态表征。
+提示工程优化：优化模板增加提示词约束、提示词改写。
+大模型迭代：基于正反馈微调模型、量化感知训练、提供大context window的推理模型
+还可对query召回的文档块集合进行处理，比如：元数据过滤<span class="hljs-comment">[7]</span>、重排序减少文档块数量<span class="hljs-comment">[2]</span></code></pre></div>
+<p><strong>RAG架构优化</strong></p>
+<blockquote>
+<p>经典的RAG架构中，context增强只用到了向量<a target="_blank" rel="noopener" href="https://www.zhihu.com/search?q=%E6%95%B0%E6%8D%AE%E5%BA%93&amp;search_source=Entity&amp;hybrid_search_source=Entity&amp;hybrid_search_extra=%7B">数据库</a>。这种方法有一些缺点，比如无法获取<a target="_blank" rel="noopener" href="https://www.zhihu.com/search?q=%E9%95%BF%E7%A8%8B%E5%85%B3%E8%81%94&amp;search_source=Entity&amp;hybrid_search_source=Entity&amp;hybrid_search_extra=%7B">长程关联</a>知识[3]、信息密度低（尤其当LLM context window较小时不友好）</p>
+<p>那此题是否可解？答案是肯定的。一个比较好的方案是增加一路与向量库平行的KG（<a target="_blank" rel="noopener" href="https://www.zhihu.com/search?q=%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1&amp;search_source=Entity&amp;hybrid_search_source=Entity&amp;hybrid_search_extra=%7B">知识图谱</a>）上下文增强策略。其技术架构图大致如下</p>
+</blockquote>
+</blockquote>
+<p><img src="https://pic2.zhimg.com/100/v2-e5beb6ea9c08cdcf4ae4d5cdaefa0541_r.jpg" srcset="/img/loading.gif" lazyload alt="RAG"></p>
+<p><img src="https://pic4.zhimg.com/v2-cfeaf2d1288b2851752a6a463c35b427_b.jpg" srcset="/img/loading.gif" lazyload alt="RAG技术细节"></p>
+<p><strong>RAG(更适合知识密集性场景)三种类型</strong></p>
+<blockquote>
+<p><strong>Naive RAG</strong></p>
+<p><strong>Advanced RAG</strong></p>
+<p><strong>Modular RAG</strong></p>
+</blockquote>
+<p><strong>论文地址</strong><a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2312.10997.pdf">https://arxiv.org/pdf/2312.10997.pdf</a></p>
+<p><strong>RAG的成功要求</strong>：一个成功的RAG系统应该有两个主要功能：检索必须找到与用户查询最相关的文档，生成必须有效地利用这些文档来回答用户查询</p>
+<blockquote>
+<p><strong>Naive RAG索引问题优化: 增强数据粒度,优化索引结构,添加元数据,对齐优化,混合索引</strong></p>
+<p><strong>索引问题优化的目标是: 提高文本的标准化(去除不相关的信息和特殊字符)/一致性(消除实体和术语中的歧义和重复或冗余的信息),确保事实的准确性以及上下文的丰富性,以保证RAG系统的性能</strong></p>
+<p><strong>1.数据索引</strong></p>
+<div class="code-wrapper"><pre><code class="hljs awk">包括:数据提取和清洗原始数据<span class="hljs-regexp">/分块chunking(LLM有上下文长度限制)/</span>向量化embedding 等方面</code></pre></div>
+<blockquote>
+<p><strong>1.增强数据粒度</strong></p>
+<div class="code-wrapper"><pre><code class="hljs gcode">采用不同的分块方式
+<span class="hljs-number">1.</span>基本的字符数分割<span class="hljs-comment">(chunk_overlap中间重复字符)</span>
+<span class="hljs-number">2.</span>标点符号<span class="hljs-comment">(换行符/句号)</span>/文档的固有结构分割<span class="hljs-comment">(Markdown/html)</span>
+<span class="hljs-number">3.</span>语义分割<span class="hljs-comment">(SpacyTextSplitter/NLTKTextSplitter/或阿里达摩院nlp_bert_document-segmentation_chinese-base分割模型)</span></code></pre></div>
+<p><strong>2.优化索引结构</strong></p>
+<div class="code-wrapper"><pre><code class="hljs">调整块的大小,尽可能收集相关信息并减少上下文噪声</code></pre></div>
+<p><strong>3.添加元数据信息</strong></p>
+<div class="code-wrapper"><pre><code class="hljs">将引用的元数据嵌入到块中,例如用户筛选的日期和目的，通过过滤元数据来提高效率和相关性</code></pre></div>
+<p><strong>4.对齐优化</strong></p>
+<div class="code-wrapper"><pre><code class="hljs">解决对齐问题和之间的差异文件,包括引入假设问题,创建适合每个文档回答的问题</code></pre></div>
+</blockquote>
+<p><strong>2.检索召回retriever(5-10个Topk最优)</strong></p>
+<div class="code-wrapper"><pre><code class="hljs makefile"><span class="hljs-section">检索召回存在的问题:主要是检索质量问题</span>
+1.精度低,检索集中并非所有块都与查询相关
+2.低召回率,所有相关块没有全部被召回,LLM没有获得足够的上下文</code></pre></div>
+<blockquote>
+<p><strong>1.元数据过滤</strong></p>
+<div class="code-wrapper"><pre><code class="hljs">过滤掉不相关的文本,以便于减小检索范围提高检索结果的相关性</code></pre></div>
+<p><strong>2.混合搜索</strong></p>
+<div class="code-wrapper"><pre><code class="hljs">利用不同搜索技术的优势,如基于关键字的搜索,语义搜索和矢量搜素来适应不同的查询类型和信息需求,确保对最相关和上下文丰富的信息的一致搜索。混合检索可以作为检索策略的有力补充，增强RAG管道的整体性能</code></pre></div>
+<p><strong>3.重排</strong></p>
+<div class="code-wrapper"><pre><code class="hljs"></code></pre></div>
+</blockquote>
+<p><strong>3.生成generation</strong></p>
+<blockquote>
+<p><strong>1.Prompt压缩</strong></p>
+<div class="code-wrapper"><pre><code class="hljs">压缩不相关的上下文，突出关键段落，减少整体上下文长度</code></pre></div>
+<p><strong>2.指令instruction优化</strong></p>
+<div class="code-wrapper"><pre><code class="hljs gcode">将问题进行分解<span class="hljs-comment">(查询转换)</span>
+<span class="hljs-number">1.</span>查询语句的相关性复制:<span class="hljs-comment">(通过LLM将查询转换为多个相似但不同的查询)</span>
+<span class="hljs-number">2.</span>并发的向量搜素:<span class="hljs-comment">(对所有查询执行并发的向量搜索)</span>
+<span class="hljs-number">3.</span>智能重新排名:<span class="hljs-comment">(聚合和细化所有结果使用倒数排序融合RRF)</span>
+倒数排序融合<span class="hljs-comment">(RRF)</span>：是一种将具有不同相关性指标的多个结果集组合成单个结构集的方法,组合来自不同查询的排名,非常适合组合来自可能具有不同分数尺度或分布的查询结果
+倒数排序融合RRF<span class="hljs-comment">(https://zhuanlan.zhihu.com/p/664143375)</span></code></pre></div>
+<p><strong>3.嵌入Prompt</strong></p>
+<div class="code-wrapper"><pre><code class="hljs vhdl"><span class="hljs-number">1</span>.stuff:所有检索的文档填充到<span class="hljs-keyword">Context</span>中
+<span class="hljs-number">2</span>.refine: 迭代：每个文档填充到<span class="hljs-keyword">Context</span>
+<span class="hljs-number">3</span>.<span class="hljs-keyword">map</span> reduce: 合并推理(每个文档填充到<span class="hljs-keyword">Context</span>给LLM得到Answer)
+<span class="hljs-number">4</span>.<span class="hljs-keyword">map</span> re-rank: 每个文档的回答进行打分，rank后拿到最佳</code></pre></div>
+<p><strong>3.专家LLMs选择</strong></p>
+</blockquote>
+</blockquote>
+<p><strong>参考项目</strong></p>
+<blockquote>
+<p><strong>LangChain-ChagGLM-Webui</strong></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/X-D-Lab/LangChain-ChatGLM-Webui/tree/master">https://github.com/X-D-Lab/LangChain-ChatGLM-Webui/tree/master</a></p>
+<p><strong>Langchain-Chatchat</strong></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/chatchat-space/Langchain-Chatchat?tab=readme-ov-file">https://github.com/chatchat-space/Langchain-Chatchat?tab=readme-ov-file</a></p>
+<p><strong>LongChainKBQA</strong></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/wp931120/LongChainKBQA">https://github.com/wp931120/LongChainKBQA</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/zyqytsoft/article/details/131159174">https://blog.csdn.net/zyqytsoft/article/details/131159174</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/sunhua93/article/details/102764783">一文读懂BERT</a></p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/50443871">NLP的巨人肩膀</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=ugWDIIOHtPA&amp;list=PLJV_el3uVTsOK_ZK5L0Iv_EQoL1JefRL4&amp;index=61">李宏毅Transformer</a></p>
+<div class="code-wrapper"><pre><code class="hljs sqf"><span class="hljs-number">1</span>.AIGC生成系统
+<span class="hljs-number">2</span>.GPT和AI <span class="hljs-built_in">agent</span>
+<span class="hljs-number">3</span>.知识库问答</code></pre></div>
+</blockquote>
+<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div></div>
+      <div>https://centyuan.github.io/2024/02/19/机器学习/LLM-RAG/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>hlyuan</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年2月19日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2024/02/19/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E6%8F%90%E7%A4%BA%E8%AF%8DPrompt%E5%B7%A5%E7%A8%8B--%E5%8F%82%E8%80%83%E5%AD%A6%E4%B9%A0/" title="提示词Prompt">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">提示词Prompt</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/12/25/%E8%AE%A4%E8%AF%81%E5%92%8C%E6%8E%88%E6%9D%83/%E5%8A%A0%E5%AF%86%E4%B8%8E%E5%AE%89%E5%85%A8/" title="">
+                        <span class="hidden-mobile"></span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <div> <span id="timeDate">载入天数...</span> <span id="times">载入时分秒...</span> <script src="/js/duration.js"></script> </div> <a href="https://gitee/centyuan" target="_blank" rel="nofollow noopener"><span>centyuan</span></a> <i class="iconfont icon-love"></i> <a href="https://centyuan.github.io" target="_blank" rel="nofollow noopener"><span>BLog</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
